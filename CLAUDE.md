@@ -6,18 +6,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Kiwi OS is a **personal cockpit** (single-user dashboard) for Mathias Quillateau — aggregates work, finances, job search, and side projects into one screen. Not a SaaS, not multi-tenant.
 
-Currently **Phase 0 (cadrage/scoping)**. The repo contains docs, `.gitignore`, `LICENSE`, `README.md`, and empty `apps/` / `packages/` directories. No code has been scaffolded yet. See `docs/ROADMAP.md` for phase plan; phased setup prompts live in `docs/KIWI-OS-Phase1-Prompts.md`.
+Currently **Phase 1 (scaffolding)**. `apps/api/` (FastAPI) and `apps/web/` (Next.js) are initialized with /health endpoint and 5 workspace pages respectively. See `docs/ROADMAP.md` for phase plan; phased setup prompts live in `docs/KIWI-OS-Phase1-Prompts.md`.
 
-There are no build/lint/test commands yet — they will appear as `apps/web` (Next.js) and `apps/api` (FastAPI) are initialized in Phase 1+.
-
-## Planned architecture
+## Actual stack
 
 Monorepo layout:
 
-- `apps/web/` — Next.js 14 (App Router) + TypeScript + Tailwind + Framer Motion + shadcn/ui + Zustand + TanStack Query + Recharts
+- `apps/web/` — **Next.js 16** (App Router) + **React 19** + TypeScript + **Tailwind CSS 4** + Framer Motion + shadcn/ui + Zustand + TanStack Query + Recharts
 - `apps/api/` — FastAPI + Python 3.12 + SQLAlchemy 2 (async) + Alembic + APScheduler
 - `packages/shared/` — shared TypeScript types
-- PostgreSQL 16 + Redis 7 via `docker-compose.yml` (to be created)
+- PostgreSQL 16 + Redis 7 via `docker-compose.yml`
+
+**Tailwind 4 nuance**: tokens are defined via `@theme` in `apps/web/app/globals.css`, NOT in a `tailwind.config.ts` (which does not exist). The Kiwi palette, fonts, and radius live there.
+
+**Next.js 16 nuance**: `themeColor` must be exported via `export const viewport: Viewport`, not inside `metadata` (deprecated since Next 14). `npm run lint` now runs `eslint` directly (no more `next lint`). Consult `node_modules/next/dist/docs/` for any API since your training data predates Next 16.
 
 The backend uses an **adapter pattern** for external sources (GitHub, MyJobHunter, weather, Gmail, etc.) — each adapter normalizes foreign data before it hits the internal API. Redis caches external calls with per-source TTLs (weather 1h, GitHub 15min, MyJobHunter 5min). The frontend never calls external APIs directly; it always goes through the FastAPI backend.
 
