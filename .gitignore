@@ -1,0 +1,80 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+.npm/
+.yarn/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Next.js
+.next/
+out/
+dist/
+build/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+
+# Coverage
+coverage/
+.nyc_output/
+*.lcov
+
+# Inspiration folder (images, not to version)
+inspiration/*
+!inspiration/.gitkeep
+!inspiration/README.md
+
+# Docker
+.docker/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Secrets
+*.pem
+*.key
+*.crt
+
+# Personal documentation (private, contains sensitive info)
+docs/
+
+# Inspiration references (local only)
+inspiration/
+!inspiration/.gitkeep
