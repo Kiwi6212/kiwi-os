@@ -16,7 +16,7 @@ permissions:
   security-events: write
 
 jobs:
-  scout:
+  scout-scan:
     name: Scout CVE scan (${{ matrix.image }})
     runs-on: ubuntu-latest
     strategy:
@@ -72,10 +72,36 @@ jobs:
           sarif_file: scout-${{ steps.slug.outputs.value }}.sarif
           category: docker-scout-${{ steps.slug.outputs.value }}
 
-      - name: Fail job on Critical CVE
+  scout-compare:
+    name: Scout diff-only gate (${{ matrix.image }})
+    if: github.event_name == 'pull_request'
+    needs: scout-scan
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - postgres:16-alpine
+          - redis:7-alpine
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Docker Hub login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Compare PR image against main baseline
         uses: docker/scout-action@v1
         with:
-          command: cves
+          command: compare
           image: ${{ matrix.image }}
-          only-severities: critical
+          to: ${{ matrix.image }}
+          to-ref: main
+          ignore-unchanged: true
+          only-severities: critical,high
           exit-code: true
+          exit-on: vulnerability
+          github-token: ${{ secrets.GITHUB_TOKEN }}
