@@ -41,6 +41,14 @@ Data migration note: WorkBoard and FinTrack (existing separate apps of the user)
 
 When starting a frontend prompt, anchor it with "Follow Design Brief Kiwi OS v1" so tokens stay consistent.
 
+## External APIs notes
+
+### GitHub adapter (`apps/api/app/adapters/github.py`)
+
+- Uses **`/search/commits`** API, NOT `/users/{user}/events`. GitHub stripped the `payload.commits` array from PushEvents in 2025 — even with an authenticated token, the events endpoint returns only push metadata (`ref`, `head`, `before`) without commit details. `/search/commits` returns full commit metadata (sha, message, author date, repo) with query filters like `author:Kiwi6212 author-date:>2026-04-13`.
+- **Rate limit**: 30 req/min authenticated on search endpoints. Widely below our needs thanks to Redis cache with TTL `github_cache_ttl_seconds` (default 900s / 15 min) wrapped around every adapter call via `app/core/cache.py::get_or_set_json`.
+- **Token scope**: fine-grained PAT requires `Contents: Read-only` + `Metadata: Read-only` on every repo you want scanned. Classic PATs need `public_repo` (for public repos only) or `repo` (for private too). The token goes in `apps/api/.env` as `GITHUB_TOKEN` — never commit the actual value, only the empty template in `.env.example`.
+
 ## Language conventions
 
 User-facing docs, commit messages, and product copy are in **French**. Code, identifiers, and technical comments stay in **English**. The PRD, roadmap, and design brief are all in French — don't translate them when referencing.
