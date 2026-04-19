@@ -1,6 +1,6 @@
 export default function ProductivityPage() {
   return (
-    <main className="min-h-screen p-8">
+    <div className="p-8">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold text-kiwi-500 mb-2">Productivité</h1>
         <p className="text-slate-400 mb-8">Phase 1 — scaffolding</p>
@@ -11,6 +11,6 @@ export default function ProductivityPage() {
           </p>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

@@ -1,0 +1,86 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Home, Zap, Wallet, Target, Code2 } from "lucide-react";
+
+const NAV_ITEMS = [
+  { href: "/", label: "Accueil", icon: Home },
+  { href: "/productivity", label: "Productivité", icon: Zap },
+  { href: "/finances", label: "Finances", icon: Wallet },
+  { href: "/job-search", label: "Job Search", icon: Target },
+  { href: "/portfolio", label: "Portfolio", icon: Code2 },
+];
+
+export function Sidebar() {
+  const pathname = usePathname();
+
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href);
+  };
+
+  return (
+    <aside className="fixed left-0 top-0 h-screen w-60 border-r border-slate-800 bg-slate-950/50 backdrop-blur-sm">
+      <div className="flex h-full flex-col">
+        <div className="flex items-center gap-3 border-b border-slate-800 px-6 py-5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-kiwi-500/15">
+            <span className="text-xl">🥝</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm font-semibold text-slate-100">
+              Kiwi OS
+            </span>
+            <span className="text-xs text-slate-500">v0.1.0</span>
+          </div>
+        </div>
+
+        <nav className="flex-1 space-y-1 p-4">
+          {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
+            const active = isActive(href);
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={
+                  active
+                    ? "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 bg-kiwi-500/15 text-kiwi-400"
+                    : "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200"
+                }
+              >
+                <Icon
+                  className={
+                    active
+                      ? "h-5 w-5 text-kiwi-500"
+                      : "h-5 w-5 text-slate-500 group-hover:text-slate-300"
+                  }
+                  strokeWidth={2}
+                />
+                <span className="font-medium">{label}</span>
+                {active && (
+                  <span className="ml-auto h-1.5 w-1.5 rounded-full bg-kiwi-500" />
+                )}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="border-t border-slate-800 p-4">
+          <div className="flex items-center gap-3 rounded-lg bg-slate-800/30 px-3 py-2">
+            <div className="h-8 w-8 rounded-full bg-kiwi-500/20 flex items-center justify-center">
+              <span className="text-xs font-semibold text-kiwi-400">KC</span>
+            </div>
+            <div className="flex flex-col flex-1 min-w-0">
+              <span className="text-sm font-medium text-slate-200 truncate">
+                Mathias
+              </span>
+              <span className="text-xs text-slate-500 truncate">
+                Personal cockpit
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  );
+}

@@ -1,6 +1,6 @@
 export default function JobSearchPage() {
   return (
-    <main className="min-h-screen p-8">
+    <div className="p-8">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold text-kiwi-500 mb-2">Job Search</h1>
         <p className="text-slate-400 mb-8">Phase 1 — scaffolding</p>
@@ -10,6 +10,6 @@ export default function JobSearchPage() {
           </p>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
