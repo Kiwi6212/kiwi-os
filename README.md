@@ -128,4 +128,4 @@ This is a personal project — not accepting contributions. But feel free to for
 
 ---
 
-Built with ♥ in Cergy by [Mathias Quillateau](https://github.com/Kiwi6212)
+Built with by [Mathias ](https://github.com/Kiwi6212)
