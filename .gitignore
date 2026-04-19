@@ -48,6 +48,7 @@ desktop.ini
 .idea/
 *.swp
 *.swo
+.claude/
 
 # Coverage
 coverage/
