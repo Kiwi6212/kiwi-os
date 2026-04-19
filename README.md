@@ -117,6 +117,7 @@ docker exec -it kiwi-redis redis-cli ping   # → PONG
 - [Product Requirements Document](./docs/PRD-Dashboard-OS.md)
 - [Design Brief](./docs/DESIGN-BRIEF-Kiwi-OS-v1.md)
 - [Roadmap](./docs/ROADMAP.md)
+- [Security Policy](./SECURITY.md) - Security posture, reporting, and accepted risks
 
 ## 🤝 Contributing
 
