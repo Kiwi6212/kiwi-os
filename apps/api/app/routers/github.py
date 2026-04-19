@@ -4,8 +4,12 @@ from fastapi import APIRouter, HTTPException, Query, Request, status
 
 from app.adapters.github import GitHubAdapter
 from app.core.config import get_settings
-from app.schemas.github import GitHubActivityFeed, GitHubStats
-from app.services.github import get_github_activity, get_github_stats
+from app.schemas.github import ContributionCalendar, GitHubActivityFeed, GitHubStats
+from app.services.github import (
+    get_contribution_calendar,
+    get_github_activity,
+    get_github_stats,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -54,6 +58,22 @@ async def github_activity(
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail=f"GitHub activity unavailable: {exc}",
+        ) from exc
+    finally:
+        await adapter.aclose()
+
+
+@router.get("/calendar", response_model=ContributionCalendar)
+async def github_calendar(request: Request) -> ContributionCalendar:
+    redis = request.app.state.redis
+    adapter = _make_adapter()
+    try:
+        return await get_contribution_calendar(adapter, redis)
+    except Exception as exc:
+        logger.exception("GitHub calendar fetch failed")
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"GitHub calendar unavailable: {exc}",
         ) from exc
     finally:
         await adapter.aclose()

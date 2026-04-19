@@ -3,6 +3,49 @@ from typing import Any
 
 import httpx
 
+_CONTRIBUTION_GRAPHQL_QUERY = """
+query($login: String!) {
+  user(login: $login) {
+    contributionsCollection {
+      contributionCalendar {
+        totalContributions
+        weeks {
+          contributionDays {
+            date
+            contributionCount
+            contributionLevel
+          }
+        }
+      }
+      commitContributionsByRepository(maxRepositories: 10) {
+        repository {
+          name
+          nameWithOwner
+          url
+          isPrivate
+        }
+        contributions {
+          totalCount
+        }
+      }
+    }
+    repositories(first: 10, orderBy: {field: CREATED_AT, direction: DESC}, ownerAffiliations: OWNER) {
+      nodes {
+        name
+        nameWithOwner
+        url
+        isPrivate
+        createdAt
+        primaryLanguage {
+          name
+          color
+        }
+      }
+    }
+  }
+}
+"""
+
 
 class GitHubAdapter:
     def __init__(self, token: str | None, username: str) -> None:
@@ -52,6 +95,24 @@ class GitHubAdapter:
         body = response.json()
         total = body.get("total_count", 0)
         return int(total) if isinstance(total, int) else 0
+
+    async def fetch_contribution_calendar(self) -> dict[str, Any]:
+        response = await self._client.post(
+            "/graphql",
+            json={
+                "query": _CONTRIBUTION_GRAPHQL_QUERY,
+                "variables": {"login": self.username},
+            },
+        )
+        response.raise_for_status()
+        body = response.json()
+        if body.get("errors"):
+            raise RuntimeError(f"GitHub GraphQL errors: {body['errors']}")
+        data = body.get("data", {})
+        user = data.get("user")
+        if not user:
+            raise RuntimeError(f"GitHub user '{self.username}' not found in GraphQL response")
+        return user
 
     async def aclose(self) -> None:
         await self._client.aclose()

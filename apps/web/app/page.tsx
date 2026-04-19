@@ -9,8 +9,10 @@ import {
   Clock,
   ExternalLink,
 } from "lucide-react";
+import Link from "next/link";
 import { KpiCard } from "@/components/kpi-card";
 import { BentoCard } from "@/components/bento-card";
+import { ContributionHeatmap } from "@/components/contribution-heatmap";
 
 type HealthResponse = {
   status: string;
@@ -25,16 +27,24 @@ type GitHubStats = {
   fetched_at: string;
 };
 
-type CommitActivity = {
-  repo: string;
-  message: string;
-  sha: string;
-  url: string;
-  timestamp: string;
+type ContributionLevel =
+  | "NONE"
+  | "FIRST_QUARTILE"
+  | "SECOND_QUARTILE"
+  | "THIRD_QUARTILE"
+  | "FOURTH_QUARTILE";
+
+type ContributionDay = {
+  date: string;
+  count: number;
+  level: ContributionLevel;
 };
 
-type GitHubActivityFeed = {
-  items: CommitActivity[];
+type ContributionCalendarData = {
+  total_contributions: number;
+  weeks: ContributionDay[][];
+  repo_breakdown: unknown[];
+  recent_repos: unknown[];
   fetched_at: string;
 };
 
@@ -62,14 +72,13 @@ async function getGithubStats(): Promise<GitHubStats | null> {
   }
 }
 
-async function getGithubActivity(): Promise<GitHubActivityFeed | null> {
+async function getGithubCalendar(): Promise<ContributionCalendarData | null> {
   try {
-    const res = await fetch(
-      "http://localhost:8000/api/github/activity?limit=4",
-      { cache: "no-store" },
-    );
+    const res = await fetch("http://localhost:8000/api/github/calendar", {
+      cache: "no-store",
+    });
     if (!res.ok) return null;
-    return (await res.json()) as GitHubActivityFeed;
+    return (await res.json()) as ContributionCalendarData;
   } catch {
     return null;
   }
@@ -83,28 +92,15 @@ function getGreeting(): string {
   return "Bonsoir";
 }
 
-function formatRelativeTime(iso: string): string {
-  const diffSec = Math.max(
-    0,
-    Math.floor((Date.now() - new Date(iso).getTime()) / 1000),
-  );
-  if (diffSec < 60) return "à l'instant";
-  if (diffSec < 3600) return `il y a ${Math.floor(diffSec / 60)} min`;
-  if (diffSec < 86400) return `il y a ${Math.floor(diffSec / 3600)} h`;
-  if (diffSec < 604800) return `il y a ${Math.floor(diffSec / 86400)} j`;
-  return `il y a ${Math.floor(diffSec / 604800)} sem`;
-}
-
 export default async function HomePage() {
-  const [health, stats, activity] = await Promise.all([
+  const [health, stats, calendar] = await Promise.all([
     getApiHealth(),
     getGithubStats(),
-    getGithubActivity(),
+    getGithubCalendar(),
   ]);
   const greeting = getGreeting();
 
-  const commitsValue =
-    stats !== null ? String(stats.commits_this_week) : "—";
+  const commitsValue = stats !== null ? String(stats.commits_this_week) : "—";
 
   return (
     <div className="p-8">
@@ -159,50 +155,41 @@ export default async function HomePage() {
 
           <div className="col-span-12 md:col-span-8">
             <BentoCard delay={0.2}>
-              <div className="flex items-center gap-2 mb-5">
-                <GitCommit className="h-5 w-5 text-slate-400" strokeWidth={2} />
-                <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide">
-                  Activité récente
-                </h2>
-              </div>
-              {activity && activity.items.length > 0 ? (
-                <div className="space-y-3">
-                  {activity.items.map((item) => (
-                    <a
-                      key={item.sha}
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-start gap-3 text-sm rounded-lg -mx-2 px-2 py-1 transition-colors hover:bg-slate-800/40"
-                    >
-                      <div className="h-2 w-2 rounded-full bg-kiwi-500/50 mt-1.5 shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-slate-300 truncate">{item.message}</p>
-                        <p className="text-xs text-slate-500 font-mono">
-                          {formatRelativeTime(item.timestamp)}
-                          <span className="text-slate-600"> · {item.repo}</span>
-                        </p>
-                      </div>
-                    </a>
-                  ))}
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-2">
+                  <GitCommit
+                    className="h-5 w-5 text-slate-400"
+                    strokeWidth={2}
+                  />
+                  <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide">
+                    Contributions
+                  </h2>
                 </div>
+                {calendar && (
+                  <span className="text-xs text-slate-500 font-mono">
+                    {calendar.total_contributions} cette année
+                  </span>
+                )}
+              </div>
+              {calendar ? (
+                <ContributionHeatmap
+                  weeks={calendar.weeks}
+                  totalContributions={calendar.total_contributions}
+                  compact
+                />
               ) : (
                 <p className="text-sm text-slate-500 py-4">
-                  {activity
-                    ? "Aucun commit récent."
-                    : "GitHub adapter unreachable."}
+                  GitHub calendar unreachable.
                 </p>
               )}
               <div className="mt-4 pt-4 border-t border-slate-800">
-                <a
-                  href="https://github.com/Kiwi6212"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href="/portfolio"
                   className="text-xs text-slate-500 hover:text-kiwi-400 inline-flex items-center gap-1 transition-colors"
                 >
-                  Voir tous les commits sur GitHub
+                  Voir le portfolio complet
                   <ExternalLink className="h-3 w-3" strokeWidth={2} />
-                </a>
+                </Link>
               </div>
             </BentoCard>
           </div>
