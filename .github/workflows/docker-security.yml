@@ -1,0 +1,68 @@
+name: Docker Security Scan
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"
+  pull_request:
+    paths:
+      - "docker-compose.yml"
+      - "apps/api/Dockerfile"
+      - "apps/web/Dockerfile"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: write
+
+jobs:
+  scout:
+    name: Scout CVE scan (${{ matrix.image }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - postgres:16-alpine
+          - redis:7-alpine
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compute safe image slug
+        id: slug
+        run: |
+          slug=$(echo "${{ matrix.image }}" | tr ':/' '__')
+          echo "value=$slug" >> "$GITHUB_OUTPUT"
+
+      - name: Docker Hub login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Docker Scout - scan + SARIF + PR summary
+        uses: docker/scout-action@v1
+        with:
+          command: cves
+          image: ${{ matrix.image }}
+          sarif-file: scout-${{ steps.slug.outputs.value }}.sarif
+          only-severity: critical,high
+          write-comment: ${{ github.event_name == 'pull_request' }}
+          summary: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload SARIF to GitHub Security tab
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: scout-${{ steps.slug.outputs.value }}.sarif
+          category: docker-scout-${{ steps.slug.outputs.value }}
+
+      - name: Fail job on Critical CVE
+        uses: docker/scout-action@v1
+        with:
+          command: cves
+          image: ${{ matrix.image }}
+          only-severity: critical
+          exit-code: true
