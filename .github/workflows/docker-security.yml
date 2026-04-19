@@ -47,14 +47,27 @@ jobs:
           command: cves
           image: ${{ matrix.image }}
           sarif-file: scout-${{ steps.slug.outputs.value }}.sarif
-          only-severity: critical,high
+          only-severities: critical,high
           write-comment: ${{ github.event_name == 'pull_request' }}
           summary: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Sanitize SARIF (clamp region fields to >= 1)
+        run: |
+          f="scout-${{ steps.slug.outputs.value }}.sarif"
+          jq 'walk(
+                if type == "object"
+                then with_entries(
+                  if (.key | IN("startLine","startColumn","endLine","endColumn"))
+                     and (.value | type == "number")
+                  then .value = ([.value, 1] | max)
+                  else . end)
+                else . end)' "$f" > "$f.tmp" && mv "$f.tmp" "$f"
+
       - name: Upload SARIF to GitHub Security tab
         if: always()
-        uses: github/codeql-action/upload-sarif@v3
+        continue-on-error: true
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: scout-${{ steps.slug.outputs.value }}.sarif
           category: docker-scout-${{ steps.slug.outputs.value }}
@@ -64,5 +77,5 @@ jobs:
         with:
           command: cves
           image: ${{ matrix.image }}
-          only-severity: critical
+          only-severities: critical
           exit-code: true
