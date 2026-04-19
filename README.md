@@ -71,6 +71,47 @@ kiwi-os/
 - Nginx + Let's Encrypt
 - Deployed at `kiwi.myjobhunter.fr`
 
+## 🚀 Getting Started
+
+### Prérequis
+
+- Docker Desktop démarré
+- Node.js 20+ (pour `apps/web` à venir)
+- Python 3.12+ (pour `apps/api` à venir)
+
+### Démarrer l'infrastructure locale
+
+```bash
+# Copier le template d'env
+cp .env.example .env
+
+# Démarrer PostgreSQL + Redis
+docker compose up -d
+
+# Vérifier que les 2 services sont "healthy"
+docker compose ps
+
+# Suivre les logs
+docker compose logs -f
+```
+
+Scripts PowerShell helpers :
+
+```powershell
+.\scripts\dev.ps1    # Démarre les services
+.\scripts\stop.ps1   # Arrête les services
+```
+
+### Vérifications rapides
+
+```bash
+# PostgreSQL
+docker exec -it kiwi-postgres psql -U kiwi -d kiwios -c "SELECT version();"
+
+# Redis
+docker exec -it kiwi-redis redis-cli ping   # → PONG
+```
+
 ## 📖 Documentation
 
 - [Product Requirements Document](./docs/PRD-Dashboard-OS.md)

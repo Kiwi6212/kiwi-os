@@ -1,0 +1,44 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: kiwi-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: kiwi
+      POSTGRES_PASSWORD: kiwi_dev_password
+      POSTGRES_DB: kiwios
+    ports:
+      - "5432:5432"
+    volumes:
+      - kiwi_postgres_data:/var/lib/postgresql/data
+    networks:
+      - kiwi-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kiwi -d kiwios"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: kiwi-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - kiwi_redis_data:/data
+    networks:
+      - kiwi-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  kiwi-network:
+    driver: bridge
+
+volumes:
+  kiwi_postgres_data:
+  kiwi_redis_data:
