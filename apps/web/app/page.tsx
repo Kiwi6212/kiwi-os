@@ -84,6 +84,27 @@ async function getGithubCalendar(): Promise<ContributionCalendarData | null> {
   }
 }
 
+type ApplicationStats = {
+  total: number;
+  by_status: Record<string, number>;
+  active_count: number;
+  response_rate: number;
+  interview_rate: number;
+  favorites_count: number;
+};
+
+async function getApplicationStats(): Promise<ApplicationStats | null> {
+  try {
+    const res = await fetch("http://localhost:8000/api/applications/stats", {
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    return (await res.json()) as ApplicationStats;
+  } catch {
+    return null;
+  }
+}
+
 function getGreeting(): string {
   const hour = new Date().getHours();
   if (hour < 6) return "Bonne nuit";
@@ -93,10 +114,11 @@ function getGreeting(): string {
 }
 
 export default async function HomePage() {
-  const [health, stats, calendar] = await Promise.all([
+  const [health, stats, calendar, appStats] = await Promise.all([
     getApiHealth(),
     getGithubStats(),
     getGithubCalendar(),
+    getApplicationStats(),
   ]);
   const greeting = getGreeting();
 
@@ -128,7 +150,7 @@ export default async function HomePage() {
           <div className="col-span-12 md:col-span-3">
             <KpiCard
               label="Candidatures actives"
-              value="—"
+              value={appStats ? String(appStats.active_count) : "—"}
               icon={<Target className="h-5 w-5" strokeWidth={2} />}
               accent="cyan"
               delay={0.05}

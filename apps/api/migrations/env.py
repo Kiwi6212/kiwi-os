@@ -9,6 +9,7 @@ from alembic import context
 
 from app.core.config import get_settings
 from app.models.base import Base
+from app.models import application  # noqa: F401 — register models for autogenerate
 
 config = context.config
 
