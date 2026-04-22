@@ -3,9 +3,8 @@ import {
   Target,
   Zap,
   Code2,
-  Calendar,
   GitCommit,
-  Briefcase,
+  Cloud,
   Clock,
   ExternalLink,
 } from "lucide-react";
@@ -13,6 +12,7 @@ import Link from "next/link";
 import { KpiCard } from "@/components/kpi-card";
 import { BentoCard } from "@/components/bento-card";
 import { ContributionHeatmap } from "@/components/contribution-heatmap";
+import { WeatherCard } from "@/components/weather-card";
 
 type HealthResponse = {
   status: string;
@@ -197,23 +197,12 @@ export default async function HomePage() {
           <div className="col-span-12 md:col-span-4">
             <BentoCard delay={0.25}>
               <div className="flex items-center gap-2 mb-5">
-                <Briefcase className="h-5 w-5 text-slate-400" strokeWidth={2} />
+                <Cloud className="h-5 w-5 text-slate-400" strokeWidth={2} />
                 <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide">
-                  Prochain entretien
+                  Météo
                 </h2>
               </div>
-              <div className="py-8 text-center">
-                <Calendar
-                  className="h-10 w-10 text-slate-600 mx-auto mb-3"
-                  strokeWidth={1.5}
-                />
-                <p className="text-sm text-slate-400 mb-1">
-                  Aucun entretien planifié
-                </p>
-                <p className="text-xs text-slate-500">
-                  Intégration MyJobHunter à venir
-                </p>
-              </div>
+              <WeatherCard />
             </BentoCard>
           </div>
 
