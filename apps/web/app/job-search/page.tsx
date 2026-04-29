@@ -2,6 +2,10 @@ import { Briefcase, Clock, Target, TrendingUp } from "lucide-react";
 
 import { ApplicationListClient } from "@/components/application-list-client";
 import { BentoCard } from "@/components/bento-card";
+import {
+  JobSearchDetailedStats,
+  type DetailedStats,
+} from "@/components/job-search-detailed-stats";
 import { KpiCard } from "@/components/kpi-card";
 
 type ApplicationStats = {
@@ -11,7 +15,7 @@ type ApplicationStats = {
   response_rate: number;
   interview_rate: number;
   favorites_count: number;
-};
+} & DetailedStats;
 
 async function getStats(): Promise<ApplicationStats | null> {
   try {
@@ -111,6 +115,12 @@ export default async function JobSearchPage() {
                 })}
               </div>
             </BentoCard>
+          </div>
+        )}
+
+        {stats && stats.total > 0 && (
+          <div className="mb-6">
+            <JobSearchDetailedStats stats={stats} />
           </div>
         )}
 

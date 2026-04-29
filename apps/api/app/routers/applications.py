@@ -1,3 +1,5 @@
+from datetime import date
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -9,7 +11,31 @@ from app.schemas.application import (
     ApplicationOut,
     ApplicationStats,
     ApplicationUpdate,
+    CompanyCount,
+    FollowUpReminder,
+    SalaryRange,
 )
+
+SALARY_BUCKETS: tuple[tuple[str, int, int | None], ...] = (
+    ("0-30k", 0, 30_000),
+    ("30-40k", 30_000, 40_000),
+    ("40-50k", 40_000, 50_000),
+    ("50-60k", 50_000, 60_000),
+    ("60-80k", 60_000, 80_000),
+    ("80k+", 80_000, None),
+)
+
+
+def _bucket_for_salary(amount: int | None) -> str:
+    if amount is None:
+        return "Non spécifié"
+    for label, low, high in SALARY_BUCKETS:
+        if high is None:
+            if amount >= low:
+                return label
+        elif low <= amount < high:
+            return label
+    return "Non spécifié"
 
 router = APIRouter()
 
@@ -101,6 +127,73 @@ async def get_stats(db: AsyncSession = Depends(get_db)) -> ApplicationStats:
     )
     favorites_count = favorites_result.scalar() or 0
 
+    all_apps_result = await db.execute(select(Application))
+    all_apps = list(all_apps_result.scalars().all())
+
+    response_statuses = {
+        ApplicationStatus.INTERVIEW,
+        ApplicationStatus.ACCEPTED,
+        ApplicationStatus.REJECTED,
+    }
+    deltas: list[int] = []
+    for app in all_apps:
+        if (
+            app.status in response_statuses
+            and app.date_applied is not None
+            and app.last_contact is not None
+            and app.last_contact >= app.date_applied
+        ):
+            deltas.append((app.last_contact - app.date_applied).days)
+    avg_response_time_days = (
+        round(sum(deltas) / len(deltas), 1) if deltas else None
+    )
+
+    salary_counter: dict[str, int] = {label: 0 for label, _, _ in SALARY_BUCKETS}
+    salary_counter["Non spécifié"] = 0
+    for app in all_apps:
+        amount = app.salary_max if app.salary_max is not None else app.salary_min
+        bucket = _bucket_for_salary(amount)
+        salary_counter[bucket] = salary_counter.get(bucket, 0) + 1
+    by_salary_range = [
+        SalaryRange(range=label, count=salary_counter[label])
+        for label, _, _ in SALARY_BUCKETS
+    ]
+    by_salary_range.append(
+        SalaryRange(range="Non spécifié", count=salary_counter["Non spécifié"])
+    )
+
+    top_companies_result = await db.execute(
+        select(Application.company, func.count(Application.id).label("c"))
+        .group_by(Application.company)
+        .order_by(func.count(Application.id).desc())
+        .limit(5)
+    )
+    top_companies = [
+        CompanyCount(company=row[0], count=row[1]) for row in top_companies_result.all()
+    ]
+
+    today = date.today()
+    follow_up_result = await db.execute(
+        select(Application)
+        .where(
+            Application.follow_up_date.is_not(None),
+            Application.follow_up_done.is_(False),
+        )
+        .order_by(Application.follow_up_date.asc())
+        .limit(10)
+    )
+    upcoming_follow_ups = [
+        FollowUpReminder(
+            id=app.id,
+            company=app.company,
+            position=app.position,
+            follow_up_date=app.follow_up_date,
+            days_until=(app.follow_up_date - today).days,
+        )
+        for app in follow_up_result.scalars().all()
+        if app.follow_up_date is not None
+    ]
+
     return ApplicationStats(
         total=total,
         by_status=by_status,
@@ -108,6 +201,10 @@ async def get_stats(db: AsyncSession = Depends(get_db)) -> ApplicationStats:
         response_rate=response_rate,
         interview_rate=interview_rate,
         favorites_count=favorites_count,
+        avg_response_time_days=avg_response_time_days,
+        by_salary_range=by_salary_range,
+        top_companies=top_companies,
+        upcoming_follow_ups=upcoming_follow_ups,
     )
 
 
