@@ -25,6 +25,8 @@ import {
   TrendingDown,
   TrendingUp,
 } from "lucide-react";
+import { StatsPlaceholder } from "./stats-placeholder";
+import { FINANCES_SPEC, PRODUCTIVITY_SPEC } from "@/lib/placeholder-specs";
 
 type DeltaMetric = {
   current: number;
@@ -508,6 +510,20 @@ export function StatsClient() {
             );
           })}
         </div>
+      </section>
+
+      <section>
+        <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide mb-4">
+          Finances
+        </h2>
+        <StatsPlaceholder {...FINANCES_SPEC} />
+      </section>
+
+      <section>
+        <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide mb-4">
+          Productivité
+        </h2>
+        <StatsPlaceholder {...PRODUCTIVITY_SPEC} />
       </section>
     </div>
   );
