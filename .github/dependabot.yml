@@ -10,37 +10,38 @@ updates:
     commit-message:
       prefix: "chore(ci)"
 
-  # TODO Phase 1 — re-enable when apps/web is scaffolded (package.json created)
-  # - package-ecosystem: "npm"
-  #   directory: "/apps/web"
-  #   schedule:
-  #     interval: "weekly"
-  #   open-pull-requests-limit: 5
-  #   labels:
-  #     - "dependencies"
-  #     - "frontend"
-  #   commit-message:
-  #     prefix: "chore(deps)"
+  - package-ecosystem: "npm"
+    directory: "/apps/web"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "frontend"
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
 
-  # TODO Phase 1 — re-enable when apps/api is scaffolded (requirements.txt or pyproject.toml created)
-  # - package-ecosystem: "pip"
-  #   directory: "/apps/api"
-  #   schedule:
-  #     interval: "weekly"
-  #   open-pull-requests-limit: 5
-  #   labels:
-  #     - "dependencies"
-  #     - "backend"
-  #   commit-message:
-  #     prefix: "chore(deps)"
-
-  # TODO Phase 1 — re-enable when Dockerfiles are added (scans Dockerfile, NOT docker-compose.yml)
-  # - package-ecosystem: "docker"
-  #   directory: "/"
-  #   schedule:
-  #     interval: "weekly"
-  #   labels:
-  #     - "dependencies"
-  #     - "docker"
-  #   commit-message:
-  #     prefix: "chore(docker)"
+  - package-ecosystem: "pip"
+    directory: "/apps/api"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "backend"
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
