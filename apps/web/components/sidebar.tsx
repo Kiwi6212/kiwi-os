@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Zap, Wallet, Target, Code2 } from "lucide-react";
+import { Home, Zap, Wallet, Target, Code2, BarChart3 } from "lucide-react";
 
 const NAV_ITEMS = [
   { href: "/", label: "Accueil", icon: Home },
@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { href: "/finances", label: "Finances", icon: Wallet },
   { href: "/job-search", label: "Job Search", icon: Target },
   { href: "/portfolio", label: "Portfolio", icon: Code2 },
+  { href: "/stats", label: "Stats", icon: BarChart3 },
 ];
 
 export function Sidebar() {
