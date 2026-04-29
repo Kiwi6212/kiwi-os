@@ -53,6 +53,24 @@ class ApplicationOut(ApplicationBase):
     model_config = ConfigDict(from_attributes=True)
 
 
+class SalaryRange(BaseModel):
+    range: str
+    count: int
+
+
+class CompanyCount(BaseModel):
+    company: str
+    count: int
+
+
+class FollowUpReminder(BaseModel):
+    id: int
+    company: str
+    position: str
+    follow_up_date: date
+    days_until: int
+
+
 class ApplicationStats(BaseModel):
     total: int
     by_status: dict[str, int]
@@ -60,3 +78,8 @@ class ApplicationStats(BaseModel):
     response_rate: float
     interview_rate: float
     favorites_count: int
+
+    avg_response_time_days: float | None = None
+    by_salary_range: list[SalaryRange] = Field(default_factory=list)
+    top_companies: list[CompanyCount] = Field(default_factory=list)
+    upcoming_follow_ups: list[FollowUpReminder] = Field(default_factory=list)
