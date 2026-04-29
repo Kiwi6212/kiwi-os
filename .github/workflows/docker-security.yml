@@ -27,7 +27,7 @@ jobs:
           - redis:7-alpine
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Compute safe image slug
         id: slug
@@ -85,7 +85,7 @@ jobs:
           - redis:7-alpine
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Docker Hub login
         uses: docker/login-action@v3
