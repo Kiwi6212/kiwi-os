@@ -45,6 +45,7 @@ desktop.ini
 # IDE
 .vscode/*
 !.vscode/extensions.json
+!.vscode/tasks.json
 .idea/
 *.swp
 *.swo

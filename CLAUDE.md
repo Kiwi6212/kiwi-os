@@ -2,6 +2,43 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Quick start
+
+When opening this project in VS Code, the following tasks run automatically (defined in `.vscode/tasks.json`):
+
+- `Kiwi OS: Start Docker` — runs `docker compose up -d` (postgres + redis)
+- `Kiwi OS: Start Backend (uvicorn)` — runs uvicorn on port 8000 with `--reload`
+- `Kiwi OS: Start Frontend (Next.js)` — runs `npm run dev` on port 3000
+- `Kiwi OS: Open in browser` — opens http://localhost:3000 after ~5 seconds
+
+To run them manually: `Ctrl+Shift+P` → "Tasks: Run Task" → choose the task.
+
+To stop: close the dedicated terminals (Backend / Frontend) with `Ctrl+C`, then run "Kiwi OS: Stop Docker" task.
+
+### Manual commands (if needed)
+
+Docker only:
+
+```bash
+docker compose up -d    # start
+docker compose stop     # stop
+docker compose ps       # status
+```
+
+Backend:
+
+```bash
+cd apps/api
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+```
+
+Frontend:
+
+```bash
+cd apps/web
+npm run dev
+```
+
 ## Project state
 
 Kiwi OS is a **personal cockpit** (single-user dashboard) for Mathias Quillateau — aggregates work, finances, job search, and side projects into one screen. Not a SaaS, not multi-tenant.
