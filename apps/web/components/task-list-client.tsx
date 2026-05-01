@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { TaskTable } from "./task-table";
 import { TaskFormModal, type TaskFormData } from "./task-form-modal";
+import { PomodoroWidget } from "./pomodoro-widget";
 import {
   type Task,
   type TaskCategory,
@@ -130,6 +131,11 @@ export function TaskListClient() {
 
   return (
     <div className="space-y-6">
+      <PomodoroWidget
+        tasks={tasks}
+        onSessionEnd={() => setRefreshKey((k) => k + 1)}
+      />
+
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <KpiCard

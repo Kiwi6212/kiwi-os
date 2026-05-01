@@ -37,3 +37,12 @@ body {
   color: #E2E8F0;
   font-family: var(--font-sans);
 }
+
+@keyframes pulse-once {
+  0%, 100% { opacity: 0; }
+  20%, 50% { opacity: 1; }
+}
+
+.animate-pulse-once {
+  animation: pulse-once 2s ease-in-out;
+}
