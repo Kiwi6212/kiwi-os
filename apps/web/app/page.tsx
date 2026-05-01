@@ -105,6 +105,53 @@ async function getApplicationStats(): Promise<ApplicationStats | null> {
   }
 }
 
+type TaskStatsResponse = {
+  total: number;
+  by_status: Record<string, number>;
+  by_category: Record<string, number>;
+  overdue: number;
+  completed_this_week: number;
+};
+
+type TimeStatsResponse = {
+  total_seconds_today: number;
+  total_seconds_this_week: number;
+  by_day_last_7_days: unknown[];
+  by_task_this_week: unknown[];
+};
+
+async function getTaskStats(): Promise<TaskStatsResponse | null> {
+  try {
+    const res = await fetch("http://localhost:8000/api/tasks/stats", {
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    return (await res.json()) as TaskStatsResponse;
+  } catch {
+    return null;
+  }
+}
+
+async function getTimeStats(): Promise<TimeStatsResponse | null> {
+  try {
+    const res = await fetch("http://localhost:8000/api/time/stats", {
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    return (await res.json()) as TimeStatsResponse;
+  } catch {
+    return null;
+  }
+}
+
+function formatHoursShort(seconds: number): string {
+  if (seconds < 60) return `${seconds}s`;
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  if (h > 0) return `${h}h${m.toString().padStart(2, "0")}`;
+  return `${m}min`;
+}
+
 function getGreeting(): string {
   const hour = new Date().getHours();
   if (hour < 6) return "Bonne nuit";
@@ -114,15 +161,28 @@ function getGreeting(): string {
 }
 
 export default async function HomePage() {
-  const [health, stats, calendar, appStats] = await Promise.all([
-    getApiHealth(),
-    getGithubStats(),
-    getGithubCalendar(),
-    getApplicationStats(),
-  ]);
+  const [health, stats, calendar, appStats, taskStats, timeStats] =
+    await Promise.all([
+      getApiHealth(),
+      getGithubStats(),
+      getGithubCalendar(),
+      getApplicationStats(),
+      getTaskStats(),
+      getTimeStats(),
+    ]);
   const greeting = getGreeting();
 
   const commitsValue = stats !== null ? String(stats.commits_this_week) : "—";
+
+  const activeTasksValue = taskStats
+    ? String(
+        (taskStats.by_status.todo ?? 0) +
+          (taskStats.by_status.in_progress ?? 0),
+      )
+    : "—";
+  const todayTimeValue = timeStats
+    ? formatHoursShort(timeStats.total_seconds_today)
+    : "—";
 
   return (
     <div className="p-8">
@@ -137,46 +197,49 @@ export default async function HomePage() {
         </div>
 
         <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-12 md:col-span-3">
-            <KpiCard
-              label="Solde courant"
-              value="—"
-              unit="€"
-              icon={<Wallet className="h-5 w-5" strokeWidth={2} />}
-              accent="kiwi"
-              delay={0.0}
-            />
-          </div>
-          <div className="col-span-12 md:col-span-3">
-            <KpiCard
-              label="Candidatures actives"
-              value={appStats ? String(appStats.active_count) : "—"}
-              icon={<Target className="h-5 w-5" strokeWidth={2} />}
-              accent="cyan"
-              delay={0.05}
-            />
-          </div>
-          <div className="col-span-12 md:col-span-3">
-            <KpiCard
-              label="Tâches aujourd'hui"
-              value="—"
-              icon={<Zap className="h-5 w-5" strokeWidth={2} />}
-              accent="amber"
-              delay={0.1}
-            />
-          </div>
-          <div className="col-span-12 md:col-span-3">
-            <KpiCard
-              label="Commits cette semaine"
-              value={commitsValue}
-              icon={<Code2 className="h-5 w-5" strokeWidth={2} />}
-              accent="violet"
-              delay={0.15}
-            />
+          <div className="col-span-12">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              <KpiCard
+                label="Solde courant"
+                value="—"
+                unit="€"
+                icon={<Wallet className="h-5 w-5" strokeWidth={2} />}
+                accent="kiwi"
+                delay={0.0}
+              />
+              <KpiCard
+                label="Candidatures actives"
+                value={appStats ? String(appStats.active_count) : "—"}
+                icon={<Target className="h-5 w-5" strokeWidth={2} />}
+                accent="cyan"
+                delay={0.05}
+              />
+              <KpiCard
+                label="Tâches actives"
+                value={activeTasksValue}
+                icon={<Zap className="h-5 w-5" strokeWidth={2} />}
+                accent="amber"
+                delay={0.1}
+              />
+              <KpiCard
+                label="Temps aujourd'hui"
+                value={todayTimeValue}
+                icon={<Clock className="h-5 w-5" strokeWidth={2} />}
+                accent="kiwi"
+                delay={0.15}
+              />
+              <KpiCard
+                label="Commits cette semaine"
+                value={commitsValue}
+                icon={<Code2 className="h-5 w-5" strokeWidth={2} />}
+                accent="violet"
+                delay={0.2}
+              />
+            </div>
           </div>
 
           <div className="col-span-12 md:col-span-8">
-            <BentoCard delay={0.2}>
+            <BentoCard delay={0.25}>
               <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center gap-2">
                   <GitCommit
@@ -217,7 +280,7 @@ export default async function HomePage() {
           </div>
 
           <div className="col-span-12 md:col-span-4">
-            <BentoCard delay={0.25}>
+            <BentoCard delay={0.3}>
               <div className="flex items-center gap-2 mb-5">
                 <Cloud className="h-5 w-5 text-slate-400" strokeWidth={2} />
                 <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide">
@@ -229,7 +292,7 @@ export default async function HomePage() {
           </div>
 
           <div className="col-span-12">
-            <BentoCard delay={0.3}>
+            <BentoCard delay={0.35}>
               <div className="flex items-center gap-2 mb-5">
                 <Clock className="h-5 w-5 text-slate-400" strokeWidth={2} />
                 <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide">

@@ -12,6 +12,7 @@ import {
 import { TaskTable } from "./task-table";
 import { TaskFormModal, type TaskFormData } from "./task-form-modal";
 import { PomodoroWidget } from "./pomodoro-widget";
+import { TimeEntriesHistory } from "./time-entries-history";
 import {
   type Task,
   type TaskCategory,
@@ -228,6 +229,12 @@ export function TaskListClient() {
           onEdit={openEditModal}
         />
       )}
+
+      <TimeEntriesHistory
+        tasks={tasks}
+        refreshKey={refreshKey}
+        onChange={triggerRefresh}
+      />
 
       {isModalOpen && (
         <TaskFormModal
