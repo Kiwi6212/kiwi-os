@@ -10,7 +10,7 @@ import {
   MapPin,
   Sun,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type CurrentWeather = {
   temperature: number;
@@ -100,11 +100,41 @@ type GeoStatus = "loading" | "granted" | "denied" | "unsupported";
 
 const PARIS_COORDS = { lat: 48.8566, lon: 2.3522 };
 
+const HOURLY_SLOT_MIN = 52;
+const HOURLY_SLOT_GAP = 8;
+const HOURLY_SLOT_MIN_COUNT = 3;
+const HOURLY_SLOT_DEFAULT = 8;
+
+function calculateHourlySlots(width: number, max: number): number {
+  if (max <= 0) return 0;
+  if (width <= 0) return Math.min(HOURLY_SLOT_DEFAULT, max);
+  const slots = Math.floor(
+    (width + HOURLY_SLOT_GAP) / (HOURLY_SLOT_MIN + HOURLY_SLOT_GAP),
+  );
+  return Math.max(HOURLY_SLOT_MIN_COUNT, Math.min(slots, max));
+}
+
 export function WeatherCard() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [geoStatus, setGeoStatus] = useState<GeoStatus>("loading");
   const [error, setError] = useState<string | null>(null);
   const [usingFallback, setUsingFallback] = useState(false);
+  const [hourlySlots, setHourlySlots] = useState(HOURLY_SLOT_DEFAULT);
+  const hourlyRef = useRef<HTMLDivElement | null>(null);
+  const maxHours = weather?.hourly.length ?? 0;
+
+  useEffect(() => {
+    const el = hourlyRef.current;
+    if (!el || maxHours === 0) return;
+    const update = () => {
+      const w = el.getBoundingClientRect().width;
+      setHourlySlots(calculateHourlySlots(w, maxHours));
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [maxHours]);
 
   useEffect(() => {
     let cancelled = false;
@@ -214,11 +244,21 @@ export function WeatherCard() {
           <h3 className="text-xs uppercase tracking-wider text-slate-500 mb-2">
             Aujourd&apos;hui
           </h3>
-          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-thin">
-            {weather.hourly.slice(0, 8).map((h) => (
+          <div
+            ref={hourlyRef}
+            className="grid w-full"
+            style={{
+              gridTemplateColumns: `repeat(${Math.max(hourlySlots, 1)}, minmax(0, 1fr))`,
+            }}
+          >
+            {weather.hourly.slice(0, hourlySlots).map((h, i, arr) => (
               <div
                 key={h.time}
-                className="flex flex-col items-center gap-1 min-w-[2.5rem] shrink-0"
+                className={`flex flex-col items-center gap-1 px-1 py-1 ${
+                  i < arr.length - 1
+                    ? "border-r border-slate-800/50"
+                    : ""
+                }`}
                 title={`${getWeatherLabel(h.weather_code)} · Pluie ${h.precipitation_probability}%`}
               >
                 <span className="text-xs text-slate-500 font-mono">
