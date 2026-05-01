@@ -7,7 +7,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import get_settings
 from app.core.database import create_engine, create_session_factory
 from app.core.redis import create_redis_client
-from app.routers import applications, github, health, stats, tasks, weather
+from app.routers import (
+    applications,
+    github,
+    health,
+    pomodoro,
+    stats,
+    tasks,
+    time_entries,
+    weather,
+)
 
 
 @asynccontextmanager
@@ -49,6 +58,8 @@ def create_app() -> FastAPI:
     )
     app.include_router(stats.router, prefix="/api/stats", tags=["stats"])
     app.include_router(tasks.router, prefix="/api/tasks", tags=["tasks"])
+    app.include_router(time_entries.router, prefix="/api/time", tags=["time"])
+    app.include_router(pomodoro.router, prefix="/api/pomodoro", tags=["pomodoro"])
     return app
 
 

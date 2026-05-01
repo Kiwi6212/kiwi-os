@@ -1,13 +1,17 @@
 from datetime import datetime
 from enum import Enum
+from typing import TYPE_CHECKING
 
 from sqlalchemy import DateTime
 from sqlalchemy import Enum as SAEnum
 from sqlalchemy import Index, Integer, String, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
 from app.models.base import Base
+
+if TYPE_CHECKING:
+    from app.models.time_entry import TimeEntry
 
 
 class TaskCategory(str, Enum):
@@ -101,6 +105,13 @@ class Task(Base):
     )
     completed_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
+    )
+
+    time_entries: Mapped[list["TimeEntry"]] = relationship(
+        "TimeEntry",
+        back_populates="task",
+        cascade="all",
+        passive_deletes=True,
     )
 
     __table_args__ = (
