@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import get_settings
 from app.core.database import create_engine, create_session_factory
 from app.core.redis import create_redis_client
-from app.routers import applications, github, health, stats, weather
+from app.routers import applications, github, health, stats, tasks, weather
 
 
 @asynccontextmanager
@@ -48,6 +48,7 @@ def create_app() -> FastAPI:
         applications.router, prefix="/api/applications", tags=["applications"]
     )
     app.include_router(stats.router, prefix="/api/stats", tags=["stats"])
+    app.include_router(tasks.router, prefix="/api/tasks", tags=["tasks"])
     return app
 
 
