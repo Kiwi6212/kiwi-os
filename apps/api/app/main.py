@@ -17,6 +17,7 @@ from app.routers import (
     time_entries,
     weather,
 )
+from app.routers.finance import accounts, categories, transactions
 
 
 @asynccontextmanager
@@ -60,6 +61,21 @@ def create_app() -> FastAPI:
     app.include_router(tasks.router, prefix="/api/tasks", tags=["tasks"])
     app.include_router(time_entries.router, prefix="/api/time", tags=["time"])
     app.include_router(pomodoro.router, prefix="/api/pomodoro", tags=["pomodoro"])
+    app.include_router(
+        accounts.router,
+        prefix="/api/finances/accounts",
+        tags=["finance-accounts"],
+    )
+    app.include_router(
+        categories.router,
+        prefix="/api/finances/categories",
+        tags=["finance-categories"],
+    )
+    app.include_router(
+        transactions.router,
+        prefix="/api/finances/transactions",
+        tags=["finance-transactions"],
+    )
     return app
 
 

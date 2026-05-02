@@ -15,6 +15,11 @@ from app.models import (  # noqa: F401 — register models for autogenerate
     task,
     time_entry,
 )
+from app.models.finance import (  # noqa: F401 — finance subpackage
+    account,
+    category,
+    transaction,
+)
 
 config = context.config
 
