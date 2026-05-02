@@ -24,6 +24,7 @@ from app.routers.finance import (
     subscriptions,
     transactions,
 )
+from app.routers.finance import stats as finance_stats
 
 
 @asynccontextmanager
@@ -91,6 +92,11 @@ def create_app() -> FastAPI:
         budgets.router,
         prefix="/api/finances/budgets",
         tags=["finance-budgets"],
+    )
+    app.include_router(
+        finance_stats.router,
+        prefix="/api/finances/stats",
+        tags=["finance-stats"],
     )
     return app
 
