@@ -17,7 +17,9 @@ from app.models import (  # noqa: F401 — register models for autogenerate
 )
 from app.models.finance import (  # noqa: F401 — finance subpackage
     account,
+    budget,
     category,
+    subscription,
     transaction,
 )
 
