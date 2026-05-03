@@ -13,18 +13,28 @@ import {
 import {
   type Account,
   type AccountCreate,
+  type BudgetCreate,
+  type BudgetWithSpending,
   type Category,
   type FinanceStats,
+  type Subscription,
+  type SubscriptionCreate,
   type Transaction,
   type TransactionCreate,
   type TransferCreate,
   formatCurrency,
   parseAccount,
+  parseBudgetWithSpending,
   parseStats,
+  parseSubscription,
   parseTransaction,
 } from "@/lib/types/finance";
 import { AccountFormModal } from "./account-form-modal";
 import { AccountsList } from "./accounts-list";
+import { BudgetFormModal } from "./budget-form-modal";
+import { BudgetsList } from "./budgets-list";
+import { SubscriptionFormModal } from "./subscription-form-modal";
+import { SubscriptionsList } from "./subscriptions-list";
 import { TransactionFormModal } from "./transaction-form-modal";
 import { TransferModal } from "./transfer-modal";
 import {
@@ -73,6 +83,15 @@ export function FinancesClient() {
 
   const [transferModalOpen, setTransferModalOpen] = useState(false);
 
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+  const [budgets, setBudgets] = useState<BudgetWithSpending[]>([]);
+  const [subModalOpen, setSubModalOpen] = useState(false);
+  const [editingSub, setEditingSub] = useState<Subscription | null>(null);
+  const [budgetModalOpen, setBudgetModalOpen] = useState(false);
+  const [editingBudget, setEditingBudget] = useState<BudgetWithSpending | null>(
+    null,
+  );
+
   useEffect(() => {
     let cancelled = false;
     void (async () => {
@@ -94,15 +113,25 @@ export function FinancesClient() {
         if (filters.type !== null) txParams.set("type", filters.type);
         if (filters.search.trim()) txParams.set("search", filters.search.trim());
 
-        const [accRes, catRes, statsRes, txRes] = await Promise.all([
-          fetch(`${API_BASE}/api/finances/accounts`),
-          fetch(`${API_BASE}/api/finances/categories`),
-          fetch(`${API_BASE}/api/finances/stats`),
-          fetch(`${API_BASE}/api/finances/transactions?${txParams}`),
-        ]);
+        const [accRes, catRes, statsRes, txRes, subRes, budgetRes] =
+          await Promise.all([
+            fetch(`${API_BASE}/api/finances/accounts`),
+            fetch(`${API_BASE}/api/finances/categories`),
+            fetch(`${API_BASE}/api/finances/stats`),
+            fetch(`${API_BASE}/api/finances/transactions?${txParams}`),
+            fetch(`${API_BASE}/api/finances/subscriptions`),
+            fetch(`${API_BASE}/api/finances/budgets/current`),
+          ]);
 
         if (cancelled) return;
-        if (!accRes.ok || !catRes.ok || !statsRes.ok || !txRes.ok) {
+        if (
+          !accRes.ok ||
+          !catRes.ok ||
+          !statsRes.ok ||
+          !txRes.ok ||
+          !subRes.ok ||
+          !budgetRes.ok
+        ) {
           throw new Error("Erreur de chargement");
         }
 
@@ -116,6 +145,12 @@ export function FinancesClient() {
         const rawTxs = (await txRes.json()) as Parameters<
           typeof parseTransaction
         >[0][];
+        const rawSubs = (await subRes.json()) as Parameters<
+          typeof parseSubscription
+        >[0][];
+        const rawBudgets = (await budgetRes.json()) as Parameters<
+          typeof parseBudgetWithSpending
+        >[0][];
 
         if (cancelled) return;
 
@@ -123,6 +158,8 @@ export function FinancesClient() {
         setCategories(rawCategories);
         setStats(parseStats(rawStats));
         setTransactions(rawTxs.map(parseTransaction));
+        setSubscriptions(rawSubs.map(parseSubscription));
+        setBudgets(rawBudgets.map(parseBudgetWithSpending));
         setError(null);
       } catch (e) {
         if (!cancelled) {
@@ -221,6 +258,91 @@ export function FinancesClient() {
     triggerRefresh();
   };
 
+  const handleCreateSub = async (data: SubscriptionCreate) => {
+    const res = await fetch(`${API_BASE}/api/finances/subscriptions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error(`Erreur ${res.status}`);
+    triggerRefresh();
+  };
+
+  const handleEditSub = async (data: SubscriptionCreate) => {
+    if (!editingSub) return;
+    const res = await fetch(
+      `${API_BASE}/api/finances/subscriptions/${editingSub.id}`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      },
+    );
+    if (!res.ok) throw new Error(`Erreur ${res.status}`);
+    triggerRefresh();
+  };
+
+  const handleToggleSub = async (sub: Subscription) => {
+    const res = await fetch(
+      `${API_BASE}/api/finances/subscriptions/${sub.id}`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ is_active: !sub.is_active }),
+      },
+    );
+    if (!res.ok) throw new Error(`Erreur ${res.status}`);
+    triggerRefresh();
+  };
+
+  const handleDeleteSub = async (sub: Subscription) => {
+    const res = await fetch(
+      `${API_BASE}/api/finances/subscriptions/${sub.id}`,
+      { method: "DELETE" },
+    );
+    if (!res.ok && res.status !== 204) throw new Error(`Erreur ${res.status}`);
+    triggerRefresh();
+  };
+
+  const handleCreateBudget = async (data: BudgetCreate) => {
+    const res = await fetch(`${API_BASE}/api/finances/budgets`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+      const detail = await res.text();
+      throw new Error(`Erreur ${res.status} : ${detail}`);
+    }
+    triggerRefresh();
+  };
+
+  const handleEditBudget = async (data: BudgetCreate) => {
+    if (!editingBudget) return;
+    const res = await fetch(
+      `${API_BASE}/api/finances/budgets/${editingBudget.id}`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          monthly_limit: data.monthly_limit,
+          year: data.year,
+          month: data.month,
+        }),
+      },
+    );
+    if (!res.ok) throw new Error(`Erreur ${res.status}`);
+    triggerRefresh();
+  };
+
+  const handleDeleteBudget = async (budget: BudgetWithSpending) => {
+    const res = await fetch(`${API_BASE}/api/finances/budgets/${budget.id}`, {
+      method: "DELETE",
+    });
+    if (!res.ok && res.status !== 204) throw new Error(`Erreur ${res.status}`);
+    triggerRefresh();
+  };
+
   const openEditAccount = (a: Account) => {
     setEditingAccount(a);
     setAccountModalOpen(true);
@@ -241,7 +363,35 @@ export function FinancesClient() {
     setEditingTx(null);
   };
 
+  const openEditSub = (sub: Subscription) => {
+    setEditingSub(sub);
+    setSubModalOpen(true);
+  };
+
+  const closeSubModal = () => {
+    setSubModalOpen(false);
+    setEditingSub(null);
+  };
+
+  const openEditBudget = (b: BudgetWithSpending) => {
+    setEditingBudget(b);
+    setBudgetModalOpen(true);
+  };
+
+  const closeBudgetModal = () => {
+    setBudgetModalOpen(false);
+    setEditingBudget(null);
+  };
+
   const noActiveAccounts = accounts.filter((a) => a.is_active).length === 0;
+  const activeSubsCount = subscriptions.filter((s) => s.is_active).length;
+  const totalMonthly = subscriptions
+    .filter((s) => s.is_active)
+    .reduce((acc, s) => acc + s.monthly_cost, 0);
+  const overspentCount = budgets.filter((b) => b.is_overspent).length;
+  const recurringBudgetCategoryIds = budgets
+    .filter((b) => b.year === null && b.month === null)
+    .map((b) => b.category_id);
 
   return (
     <div className="space-y-6">
@@ -277,6 +427,28 @@ export function FinancesClient() {
           >
             <ArrowLeftRight className="h-4 w-4" />
             Virement
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setEditingSub(null);
+              setSubModalOpen(true);
+            }}
+            className="flex items-center gap-2 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-lg transition-colors"
+          >
+            <Plus className="h-4 w-4" />
+            Abonnement
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setEditingBudget(null);
+              setBudgetModalOpen(true);
+            }}
+            className="flex items-center gap-2 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-lg transition-colors"
+          >
+            <Plus className="h-4 w-4" />
+            Budget
           </button>
           <button
             type="button"
@@ -384,6 +556,50 @@ export function FinancesClient() {
         />
       </section>
 
+      <section>
+        <div className="flex items-center justify-between mb-4 gap-4 flex-wrap">
+          <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide">
+            Abonnements
+          </h2>
+          {subscriptions.length > 0 && (
+            <span className="text-xs text-slate-500 font-mono">
+              {activeSubsCount} actif{activeSubsCount !== 1 ? "s" : ""} ·{" "}
+              <span className="text-slate-300">
+                {formatCurrency(totalMonthly)}
+              </span>
+              /mois
+            </span>
+          )}
+        </div>
+        <SubscriptionsList
+          subscriptions={subscriptions}
+          accounts={accounts}
+          categories={categories}
+          onEdit={openEditSub}
+          onToggle={handleToggleSub}
+          onDelete={handleDeleteSub}
+        />
+      </section>
+
+      <section>
+        <div className="flex items-center justify-between mb-4 gap-4 flex-wrap">
+          <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide">
+            Budgets du mois
+          </h2>
+          {overspentCount > 0 && (
+            <span className="text-xs text-rose-400 font-medium">
+              ⚠️ {overspentCount} budget{overspentCount > 1 ? "s" : ""} dépassé
+              {overspentCount > 1 ? "s" : ""}
+            </span>
+          )}
+        </div>
+        <BudgetsList
+          budgets={budgets}
+          onEdit={openEditBudget}
+          onDelete={handleDeleteBudget}
+        />
+      </section>
+
       {accountModalOpen && (
         <AccountFormModal
           key={editingAccount?.id ?? "new-account"}
@@ -410,6 +626,28 @@ export function FinancesClient() {
           onClose={() => setTransferModalOpen(false)}
           onSubmit={handleTransfer}
           accounts={accounts.filter((a) => a.is_active)}
+        />
+      )}
+
+      {subModalOpen && (
+        <SubscriptionFormModal
+          key={editingSub?.id ?? "new-sub"}
+          onClose={closeSubModal}
+          onSubmit={editingSub ? handleEditSub : handleCreateSub}
+          accounts={accounts.filter((a) => a.is_active)}
+          categories={categories}
+          initialSub={editingSub ?? undefined}
+        />
+      )}
+
+      {budgetModalOpen && (
+        <BudgetFormModal
+          key={editingBudget?.id ?? "new-budget"}
+          onClose={closeBudgetModal}
+          onSubmit={editingBudget ? handleEditBudget : handleCreateBudget}
+          categories={categories}
+          initialBudget={editingBudget ?? undefined}
+          existingRecurringCategoryIds={recurringBudgetCategoryIds}
         />
       )}
     </div>

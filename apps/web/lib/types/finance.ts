@@ -78,6 +78,72 @@ export type TransferCreate = {
   notes?: string | null;
 };
 
+export type SubscriptionFrequency =
+  | "weekly"
+  | "monthly"
+  | "quarterly"
+  | "yearly";
+
+export type Subscription = {
+  id: number;
+  name: string;
+  amount: number;
+  frequency: SubscriptionFrequency;
+  started_at: string;
+  ended_at: string | null;
+  account_id: number | null;
+  category_id: number | null;
+  is_active: boolean;
+  icon: string | null;
+  color: string | null;
+  notes: string | null;
+  next_billing_date: string | null;
+  monthly_cost: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type SubscriptionCreate = {
+  name: string;
+  amount: number;
+  frequency: SubscriptionFrequency;
+  started_at: string;
+  ended_at?: string | null;
+  account_id?: number | null;
+  category_id?: number | null;
+  is_active?: boolean;
+  icon?: string | null;
+  color?: string | null;
+  notes?: string | null;
+};
+
+export type Budget = {
+  id: number;
+  category_id: number;
+  monthly_limit: number;
+  year: number | null;
+  month: number | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type BudgetWithSpending = Budget & {
+  category_name: string;
+  category_icon: string | null;
+  category_color: string | null;
+  spent: number;
+  remaining: number;
+  percentage_used: number;
+  is_overspent: boolean;
+};
+
+export type BudgetCreate = {
+  category_id: number;
+  monthly_limit: number;
+  year?: number | null;
+  month?: number | null;
+};
+
 export type AccountBalance = {
   account_id: number;
   account_name: string;
@@ -144,6 +210,16 @@ export const TRANSACTION_TYPE_LABELS: Record<TransactionType, string> = {
   transfer: "Virement",
 };
 
+export const SUBSCRIPTION_FREQUENCY_LABELS: Record<
+  SubscriptionFrequency,
+  string
+> = {
+  weekly: "Hebdomadaire",
+  monthly: "Mensuel",
+  quarterly: "Trimestriel",
+  yearly: "Annuel",
+};
+
 export function formatCurrency(amount: number, currency = "EUR"): string {
   return new Intl.NumberFormat("fr-FR", {
     style: "currency",
@@ -181,6 +257,47 @@ export function parseAccount(raw: RawAccount): Account {
 
 export function parseTransaction(raw: RawTransaction): Transaction {
   return { ...raw, amount: num(raw.amount) };
+}
+
+type RawSubscription = Omit<Subscription, "amount" | "monthly_cost"> & {
+  amount: number | string;
+  monthly_cost: number | string;
+};
+
+type RawBudget = Omit<Budget, "monthly_limit"> & {
+  monthly_limit: number | string;
+};
+
+type RawBudgetWithSpending = Omit<
+  BudgetWithSpending,
+  "monthly_limit" | "spent" | "remaining"
+> & {
+  monthly_limit: number | string;
+  spent: number | string;
+  remaining: number | string;
+};
+
+export function parseSubscription(raw: RawSubscription): Subscription {
+  return {
+    ...raw,
+    amount: num(raw.amount),
+    monthly_cost: num(raw.monthly_cost),
+  };
+}
+
+export function parseBudget(raw: RawBudget): Budget {
+  return { ...raw, monthly_limit: num(raw.monthly_limit) };
+}
+
+export function parseBudgetWithSpending(
+  raw: RawBudgetWithSpending,
+): BudgetWithSpending {
+  return {
+    ...raw,
+    monthly_limit: num(raw.monthly_limit),
+    spent: num(raw.spent),
+    remaining: num(raw.remaining),
+  };
 }
 
 type RawStats = {
