@@ -33,6 +33,7 @@ import { AccountFormModal } from "./account-form-modal";
 import { AccountsList } from "./accounts-list";
 import { BudgetFormModal } from "./budget-form-modal";
 import { BudgetsList } from "./budgets-list";
+import { FinancesCharts } from "./finances-charts";
 import { SubscriptionFormModal } from "./subscription-form-modal";
 import { SubscriptionsList } from "./subscriptions-list";
 import { TransactionFormModal } from "./transaction-form-modal";
@@ -519,6 +520,8 @@ export function FinancesClient() {
           {error}
         </div>
       )}
+
+      {stats && <FinancesCharts stats={stats} />}
 
       <section>
         <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide mb-4">

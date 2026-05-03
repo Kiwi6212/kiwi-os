@@ -13,6 +13,11 @@ import { KpiCard } from "@/components/kpi-card";
 import { BentoCard } from "@/components/bento-card";
 import { ContributionHeatmap } from "@/components/contribution-heatmap";
 import { WeatherCard } from "@/components/weather-card";
+import {
+  type FinanceStats,
+  formatCurrency,
+  parseStats,
+} from "@/lib/types/finance";
 
 type HealthResponse = {
   status: string;
@@ -144,6 +149,19 @@ async function getTimeStats(): Promise<TimeStatsResponse | null> {
   }
 }
 
+async function getFinanceStats(): Promise<FinanceStats | null> {
+  try {
+    const res = await fetch("http://localhost:8000/api/finances/stats", {
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    const raw = (await res.json()) as Parameters<typeof parseStats>[0];
+    return parseStats(raw);
+  } catch {
+    return null;
+  }
+}
+
 function formatHoursShort(seconds: number): string {
   if (seconds < 60) return `${seconds}s`;
   const h = Math.floor(seconds / 3600);
@@ -161,7 +179,7 @@ function getGreeting(): string {
 }
 
 export default async function HomePage() {
-  const [health, stats, calendar, appStats, taskStats, timeStats] =
+  const [health, stats, calendar, appStats, taskStats, timeStats, financeStats] =
     await Promise.all([
       getApiHealth(),
       getGithubStats(),
@@ -169,6 +187,7 @@ export default async function HomePage() {
       getApplicationStats(),
       getTaskStats(),
       getTimeStats(),
+      getFinanceStats(),
     ]);
   const greeting = getGreeting();
 
@@ -182,6 +201,9 @@ export default async function HomePage() {
     : "—";
   const todayTimeValue = timeStats
     ? formatHoursShort(timeStats.total_seconds_today)
+    : "—";
+  const balanceValue = financeStats
+    ? formatCurrency(financeStats.total_balance)
     : "—";
 
   return (
@@ -201,8 +223,7 @@ export default async function HomePage() {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               <KpiCard
                 label="Solde courant"
-                value="—"
-                unit="€"
+                value={balanceValue}
                 icon={<Wallet className="h-5 w-5" strokeWidth={2} />}
                 accent="kiwi"
                 delay={0.0}
