@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { AlertCircle, RefreshCw, Trash2 } from "lucide-react";
+import { AlertCircle, Check, Copy, FileJson, RefreshCw, Trash2 } from "lucide-react";
 import {
   LOG_LEVEL_COLORS,
   LOG_LEVEL_LABELS,
@@ -33,6 +33,7 @@ export function LogsTab() {
 
   const [filterLevel, setFilterLevel] = useState<LogLevel | "all">("all");
   const [filterModule, setFilterModule] = useState<string>("");
+  const [copied, setCopied] = useState(false);
 
   const triggerRefresh = useCallback(() => setRefreshKey((k) => k + 1), []);
 
@@ -72,6 +73,48 @@ export function LogsTab() {
       cancelled = true;
     };
   }, [filterLevel, filterModule, refreshKey]);
+
+  const handleCopyToClipboard = async () => {
+    const header = "Date\tNiveau\tModule\tMessage\tHTTP";
+    const rows = logs.map((log) => {
+      const date = new Date(log.timestamp).toLocaleString("fr-FR");
+      const http = log.http_method
+        ? `${log.http_method} ${log.http_path ?? ""} (${log.http_status ?? ""})`
+        : "";
+      return `${date}\t${log.level}\t${log.module}\t${log.message}\t${http}`;
+    });
+    const text = [header, ...rows].join("\n");
+
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      alert("Erreur de copie dans le clipboard");
+    }
+  };
+
+  const handleExportJSON = () => {
+    const exportData = {
+      exported_at: new Date().toISOString(),
+      count: logs.length,
+      filters: {
+        level: filterLevel === "all" ? null : filterLevel,
+        module: filterModule || null,
+      },
+      logs,
+    };
+
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `kiwi-os-logs-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   const handlePurgeOld = async () => {
     if (!confirm("Supprimer tous les logs de plus de 30 jours ?")) return;
@@ -180,6 +223,30 @@ export function LogsTab() {
         >
           <RefreshCw className="h-4 w-4" strokeWidth={2} />
           Rafraîchir
+        </button>
+
+        <button
+          type="button"
+          onClick={handleCopyToClipboard}
+          disabled={logs.length === 0}
+          className="inline-flex items-center gap-2 px-3 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {copied ? (
+            <Check className="h-4 w-4 text-emerald-600" strokeWidth={2} />
+          ) : (
+            <Copy className="h-4 w-4" strokeWidth={2} />
+          )}
+          {copied ? "Copié !" : "Copier"}
+        </button>
+
+        <button
+          type="button"
+          onClick={handleExportJSON}
+          disabled={logs.length === 0}
+          className="inline-flex items-center gap-2 px-3 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <FileJson className="h-4 w-4" strokeWidth={2} />
+          Exporter JSON
         </button>
 
         <button
