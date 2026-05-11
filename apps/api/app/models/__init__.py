@@ -10,6 +10,7 @@ from app.models.finance.transaction import (
     TransactionType,
 )
 from app.models.pomodoro_preference import PomodoroPreference
+from app.models.system_log import LogLevel, SystemLog
 from app.models.task import (
     Task,
     TaskCategory,
@@ -18,6 +19,7 @@ from app.models.task import (
     TaskSubtype,
 )
 from app.models.time_entry import TimeEntry, TimeEntryType
+from app.models.user_preference import Locale, UIDensity, UserPreference
 
 __all__ = [
     "Account",
@@ -29,9 +31,12 @@ __all__ = [
     "Category",
     "CategoryType",
     "ContractType",
+    "Locale",
+    "LogLevel",
     "PomodoroPreference",
     "Subscription",
     "SubscriptionFrequency",
+    "SystemLog",
     "Task",
     "TaskCategory",
     "TaskPriority",
@@ -42,4 +47,6 @@ __all__ = [
     "Transaction",
     "TransactionSource",
     "TransactionType",
+    "UIDensity",
+    "UserPreference",
 ]

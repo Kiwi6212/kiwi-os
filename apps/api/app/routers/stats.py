@@ -2,7 +2,7 @@ import logging
 from collections import defaultdict
 from datetime import UTC, date, datetime, timedelta
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -152,6 +152,7 @@ async def get_job_stats_extended(
 
 @router.get("/github", response_model=GithubStatsExtended)
 async def get_github_stats_extended(
+    request: Request,
     period: int = Query(30, ge=1, le=365),
 ) -> GithubStatsExtended:
     settings = get_settings()
@@ -160,6 +161,7 @@ async def get_github_stats_extended(
         if settings.github_token
         else None,
         username=settings.github_username,
+        session_factory=getattr(request.app.state, "db_sessionmaker", None),
     )
 
     today = date.today()

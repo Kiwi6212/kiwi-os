@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-def _make_adapter() -> GitHubAdapter:
+def _make_adapter(request: Request) -> GitHubAdapter:
     settings = get_settings()
     token = (
         settings.github_token.get_secret_value() if settings.github_token else None
@@ -25,13 +25,18 @@ def _make_adapter() -> GitHubAdapter:
         logger.warning(
             "GITHUB_TOKEN not set — using unauthenticated GitHub API (rate-limited)"
         )
-    return GitHubAdapter(token=token, username=settings.github_username)
+    session_factory = getattr(request.app.state, "db_sessionmaker", None)
+    return GitHubAdapter(
+        token=token,
+        username=settings.github_username,
+        session_factory=session_factory,
+    )
 
 
 @router.get("/stats", response_model=GitHubStats)
 async def github_stats(request: Request) -> GitHubStats:
     redis = request.app.state.redis
-    adapter = _make_adapter()
+    adapter = _make_adapter(request)
     try:
         return await get_github_stats(adapter, redis)
     except Exception as exc:
@@ -50,7 +55,7 @@ async def github_activity(
     limit: int = Query(default=5, ge=1, le=20),
 ) -> GitHubActivityFeed:
     redis = request.app.state.redis
-    adapter = _make_adapter()
+    adapter = _make_adapter(request)
     try:
         return await get_github_activity(adapter, redis, limit=limit)
     except Exception as exc:
@@ -66,7 +71,7 @@ async def github_activity(
 @router.get("/calendar", response_model=ContributionCalendar)
 async def github_calendar(request: Request) -> ContributionCalendar:
     redis = request.app.state.redis
-    adapter = _make_adapter()
+    adapter = _make_adapter(request)
     try:
         return await get_contribution_calendar(adapter, redis)
     except Exception as exc:
