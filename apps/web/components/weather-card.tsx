@@ -193,7 +193,7 @@ export function WeatherCard() {
     return (
       <div className="py-8 text-center">
         <Cloud
-          className="h-10 w-10 text-slate-600 mx-auto mb-3 animate-pulse"
+          className="h-10 w-10 text-slate-500 mx-auto mb-3 animate-pulse"
           strokeWidth={1.5}
         />
         <p className="text-sm text-slate-500">Chargement de la météo…</p>
@@ -205,10 +205,10 @@ export function WeatherCard() {
     return (
       <div className="py-8 text-center">
         <AlertCircle
-          className="h-10 w-10 text-slate-600 mx-auto mb-3"
+          className="h-10 w-10 text-slate-500 mx-auto mb-3"
           strokeWidth={1.5}
         />
-        <p className="text-sm text-slate-400 mb-1">Météo indisponible</p>
+        <p className="text-sm text-slate-500 mb-1">Météo indisponible</p>
         <p className="text-xs text-slate-500">{error ?? "Erreur inconnue"}</p>
       </div>
     );
@@ -217,20 +217,20 @@ export function WeatherCard() {
   return (
     <div className="space-y-4">
       <div className="flex items-start gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-500/15">
+        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-50">
           {renderWeatherIcon(
             weather.current.weather_code,
-            "h-6 w-6 text-blue-400",
+            "h-6 w-6 text-blue-600",
           )}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-baseline gap-1">
-            <span className="font-mono text-3xl font-semibold text-slate-100 tabular-nums">
+            <span className="font-mono text-3xl font-semibold text-slate-900 tabular-nums">
               {Math.round(weather.current.temperature)}
             </span>
             <span className="text-sm text-slate-500 font-mono">°C</span>
           </div>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500">
             {getWeatherLabel(weather.current.weather_code)}
           </p>
           <p className="text-xs text-slate-500 font-mono">
@@ -256,7 +256,7 @@ export function WeatherCard() {
                 key={h.time}
                 className={`flex flex-col items-center gap-1 px-1 py-1 ${
                   i < arr.length - 1
-                    ? "border-r border-slate-800/50"
+                    ? "border-r border-slate-100"
                     : ""
                 }`}
                 title={`${getWeatherLabel(h.weather_code)} · Pluie ${h.precipitation_probability}%`}
@@ -264,8 +264,8 @@ export function WeatherCard() {
                 <span className="text-xs text-slate-500 font-mono">
                   {formatHour(h.time)}
                 </span>
-                {renderWeatherIcon(h.weather_code, "h-4 w-4 text-slate-400")}
-                <span className="text-xs font-mono text-slate-300">
+                {renderWeatherIcon(h.weather_code, "h-4 w-4 text-slate-500")}
+                <span className="text-xs font-mono text-slate-700">
                   {Math.round(h.temperature)}°
                 </span>
               </div>
@@ -285,16 +285,16 @@ export function WeatherCard() {
               className="flex items-center justify-between text-sm"
               title={`${getWeatherLabel(d.weather_code)} · Pluie ${d.precipitation_probability}%`}
             >
-              <span className="text-slate-400 w-14 shrink-0">
+              <span className="text-slate-500 w-14 shrink-0">
                 {formatDayShort(d.date)}
               </span>
               {renderWeatherIcon(
                 d.weather_code,
-                "h-4 w-4 text-slate-400 shrink-0",
+                "h-4 w-4 text-slate-500 shrink-0",
               )}
               <div className="flex-1 mx-3">
                 {d.precipitation_probability > 0 && (
-                  <span className="text-xs text-blue-400 font-mono">
+                  <span className="text-xs text-blue-600 font-mono">
                     {d.precipitation_probability}%
                   </span>
                 )}
@@ -303,7 +303,7 @@ export function WeatherCard() {
                 <span className="text-slate-500">
                   {Math.round(d.temperature_min)}°
                 </span>
-                <span className="text-slate-200">
+                <span className="text-slate-900">
                   {Math.round(d.temperature_max)}°
                 </span>
               </div>
@@ -313,7 +313,7 @@ export function WeatherCard() {
       </div>
 
       {usingFallback && (
-        <div className="pt-2 border-t border-slate-800">
+        <div className="pt-2 border-t border-slate-200">
           <p className="text-xs text-slate-500 flex items-center gap-1">
             <MapPin className="h-3 w-3" strokeWidth={2} />
             Paris (géoloc refusée)

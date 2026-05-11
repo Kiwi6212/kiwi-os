@@ -210,10 +210,10 @@ export default async function HomePage() {
     <div className="p-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-100">
-            {greeting}, <span className="text-kiwi-500">Mathias</span>
+          <h1 className="text-3xl font-bold text-slate-900">
+            {greeting}, <span className="text-emerald-600">Mathias</span>
           </h1>
-          <p className="text-slate-400 mt-1">
+          <p className="text-slate-500 mt-1">
             Voici ce qui se passe aujourd&apos;hui sur ton cockpit.
           </p>
         </div>
@@ -264,10 +264,10 @@ export default async function HomePage() {
               <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center gap-2">
                   <GitCommit
-                    className="h-5 w-5 text-slate-400"
+                    className="h-5 w-5 text-slate-500"
                     strokeWidth={2}
                   />
-                  <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide">
+                  <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wide">
                     Contributions
                   </h2>
                 </div>
@@ -288,10 +288,10 @@ export default async function HomePage() {
                   GitHub calendar unreachable.
                 </p>
               )}
-              <div className="mt-4 pt-4 border-t border-slate-800">
+              <div className="mt-4 pt-4 border-t border-slate-200">
                 <Link
                   href="/portfolio"
-                  className="text-xs text-slate-500 hover:text-kiwi-400 inline-flex items-center gap-1 transition-colors"
+                  className="text-xs text-slate-500 hover:text-emerald-600 inline-flex items-center gap-1 transition-colors"
                 >
                   Voir le portfolio complet
                   <ExternalLink className="h-3 w-3" strokeWidth={2} />
@@ -303,8 +303,8 @@ export default async function HomePage() {
           <div className="col-span-12 md:col-span-4">
             <BentoCard delay={0.3}>
               <div className="flex items-center gap-2 mb-5">
-                <Cloud className="h-5 w-5 text-slate-400" strokeWidth={2} />
-                <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide">
+                <Cloud className="h-5 w-5 text-slate-500" strokeWidth={2} />
+                <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wide">
                   Météo
                 </h2>
               </div>
@@ -315,8 +315,8 @@ export default async function HomePage() {
           <div className="col-span-12">
             <BentoCard delay={0.35}>
               <div className="flex items-center gap-2 mb-5">
-                <Clock className="h-5 w-5 text-slate-400" strokeWidth={2} />
-                <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide">
+                <Clock className="h-5 w-5 text-slate-500" strokeWidth={2} />
+                <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wide">
                   API Status
                 </h2>
               </div>
@@ -336,8 +336,8 @@ export default async function HomePage() {
                   />
                 </div>
               ) : (
-                <div className="flex items-center gap-2 text-rose-400 text-sm">
-                  <span className="h-2 w-2 rounded-full bg-rose-500" />
+                <div className="flex items-center gap-2 text-rose-600 text-sm">
+                  <span className="h-2 w-2 rounded-full bg-rose-600" />
                   <span>Backend unreachable on localhost:8000</span>
                 </div>
               )}
@@ -359,15 +359,15 @@ function StatusBadge({
   ok?: boolean;
 }) {
   return (
-    <div className="flex items-center gap-3 rounded-lg bg-slate-800/30 px-4 py-3">
+    <div className="flex items-center gap-3 rounded-lg bg-slate-50 px-4 py-3">
       <span
-        className={`h-2 w-2 rounded-full ${ok ? "bg-kiwi-500" : "bg-slate-500"}`}
+        className={`h-2 w-2 rounded-full ${ok ? "bg-emerald-600" : "bg-slate-500"}`}
       />
       <div className="flex flex-col">
         <span className="text-xs text-slate-500 uppercase tracking-wide">
           {label}
         </span>
-        <span className="text-sm font-mono text-slate-200">{value}</span>
+        <span className="text-sm font-mono text-slate-900">{value}</span>
       </div>
     </div>
   );

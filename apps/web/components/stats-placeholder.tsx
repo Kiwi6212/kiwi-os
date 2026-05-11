@@ -28,18 +28,20 @@ export function StatsPlaceholder({
   details,
 }: Props) {
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/30 overflow-hidden">
-      <div className="flex items-center gap-3 p-6 border-b border-slate-800">
-        <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-slate-800/50">
-          <HeaderIcon className="h-5 w-5 text-slate-400" strokeWidth={1.5} />
+    <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm">
+      <div className="flex items-center gap-3 p-6 border-b border-slate-200 bg-slate-50">
+        <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-white border border-slate-200">
+          <HeaderIcon className="h-5 w-5 text-slate-500" strokeWidth={1.5} />
         </div>
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-slate-200">{title}</h3>
+          <h3 className="text-lg font-semibold text-slate-900 font-display">
+            {title}
+          </h3>
           <p className="text-xs text-slate-500 font-mono">
             Source : {source} · {sourceStatus}
           </p>
         </div>
-        <span className="text-xs px-2 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30">
+        <span className="text-xs px-2 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
           En attente
         </span>
       </div>
@@ -48,7 +50,11 @@ export function StatsPlaceholder({
         <PlaceholderSection title="KPIs prévus" items={kpis} cols={4} />
         <PlaceholderSection title="Graphes prévus" items={charts} cols={2} />
         {details && details.length > 0 && (
-          <PlaceholderSection title="Détails complémentaires" items={details} cols={2} />
+          <PlaceholderSection
+            title="Détails complémentaires"
+            items={details}
+            cols={2}
+          />
         )}
       </div>
     </div>
@@ -80,7 +86,7 @@ function PlaceholderSection({
           return (
             <div
               key={i}
-              className="rounded-xl border border-dashed border-slate-700 bg-slate-900/40 p-4"
+              className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-4"
             >
               <div className="flex items-start gap-2">
                 {Icon && (
@@ -90,8 +96,12 @@ function PlaceholderSection({
                   />
                 )}
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-slate-300">{item.label}</p>
-                  <p className="text-xs text-slate-500 mt-1">{item.description}</p>
+                  <p className="text-sm font-medium text-slate-700">
+                    {item.label}
+                  </p>
+                  <p className="text-xs text-slate-500 mt-1">
+                    {item.description}
+                  </p>
                 </div>
               </div>
             </div>

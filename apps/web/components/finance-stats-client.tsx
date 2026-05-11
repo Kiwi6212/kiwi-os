@@ -27,9 +27,9 @@ import {
 const API_BASE = "http://localhost:8000";
 
 const TOOLTIP_STYLE: React.CSSProperties = {
-  backgroundColor: "#0f172a",
-  border: "1px solid #334155",
-  borderRadius: "8px",
+  backgroundColor: "rgba(255, 255, 255, 0.95)",
+  border: "1px solid #e2e8f0",
+  borderRadius: "12px",
   fontSize: 12,
 };
 
@@ -129,7 +129,7 @@ export function FinanceStatsClient() {
   }
   if (error || !stats || !comparison) {
     return (
-      <div className="text-rose-400 text-sm py-8">
+      <div className="text-rose-600 text-sm py-8">
         {error ?? "Erreur de chargement."}
       </div>
     );
@@ -147,13 +147,13 @@ export function FinanceStatsClient() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4 flex-wrap">
-        <h3 className="text-sm font-medium text-slate-300">
+        <h3 className="text-sm font-medium text-slate-700">
           Comparaison{" "}
           {period === "month"
             ? "vs mois précédent"
             : "vs année précédente"}
         </h3>
-        <div className="flex gap-1 bg-slate-800 rounded-lg p-1">
+        <div className="flex gap-1 bg-slate-100 rounded-lg p-1">
           {(["month", "year"] as const).map((p) => (
             <button
               key={p}
@@ -161,8 +161,8 @@ export function FinanceStatsClient() {
               onClick={() => setPeriod(p)}
               className={`px-3 py-1 text-xs rounded transition-colors ${
                 period === p
-                  ? "bg-kiwi-500 text-white"
-                  : "text-slate-400 hover:text-slate-200"
+                  ? "bg-emerald-600 text-white"
+                  : "text-slate-500 hover:text-slate-900"
               }`}
             >
               {p === "month" ? "Mois" : "Année"}
@@ -199,8 +199,8 @@ export function FinanceStatsClient() {
         />
       </div>
 
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
-        <h3 className="text-sm font-medium text-slate-300 mb-4">
+      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
+        <h3 className="text-sm font-medium text-slate-700 mb-4">
           Évolution sur 12 mois
         </h3>
         {hasEvolution ? (
@@ -214,8 +214,8 @@ export function FinanceStatsClient() {
                   x2="0"
                   y2="1"
                 >
-                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.7} />
-                  <stop offset="95%" stopColor="#10b981" stopOpacity={0.1} />
+                  <stop offset="5%" stopColor="#059669" stopOpacity={0.7} />
+                  <stop offset="95%" stopColor="#059669" stopOpacity={0.1} />
                 </linearGradient>
                 <linearGradient
                   id="colExpense2"
@@ -224,11 +224,11 @@ export function FinanceStatsClient() {
                   x2="0"
                   y2="1"
                 >
-                  <stop offset="5%" stopColor="#ef4444" stopOpacity={0.7} />
-                  <stop offset="95%" stopColor="#ef4444" stopOpacity={0.1} />
+                  <stop offset="5%" stopColor="#dc2626" stopOpacity={0.7} />
+                  <stop offset="95%" stopColor="#dc2626" stopOpacity={0.1} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
               <XAxis
                 dataKey="label"
                 stroke="#94a3b8"
@@ -243,14 +243,14 @@ export function FinanceStatsClient() {
               <Area
                 type="monotone"
                 dataKey="Revenus"
-                stroke="#10b981"
+                stroke="#059669"
                 fill="url(#colIncome2)"
                 strokeWidth={2}
               />
               <Area
                 type="monotone"
                 dataKey="Dépenses"
-                stroke="#ef4444"
+                stroke="#dc2626"
                 fill="url(#colExpense2)"
                 strokeWidth={2}
               />
@@ -263,16 +263,16 @@ export function FinanceStatsClient() {
         )}
       </div>
 
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
+      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-medium text-slate-300">Solde courant</h3>
+          <h3 className="text-sm font-medium text-slate-700">Solde courant</h3>
           <Wallet className="h-4 w-4 text-slate-500" strokeWidth={1.5} />
         </div>
         <p
           className={`font-mono text-3xl font-semibold tabular-nums mb-4 ${
             stats.total_balance >= 0
-              ? "text-emerald-400"
-              : "text-rose-400"
+              ? "text-emerald-600"
+              : "text-rose-600"
           }`}
         >
           {formatCurrency(stats.total_balance)}
@@ -291,13 +291,13 @@ export function FinanceStatsClient() {
                       backgroundColor: a.account_color || "#94a3b8",
                     }}
                   />
-                  <span className="text-slate-300">{a.account_name}</span>
+                  <span className="text-slate-700">{a.account_name}</span>
                 </span>
                 <span
                   className={`font-mono tabular-nums ${
                     a.current_balance >= 0
-                      ? "text-slate-300"
-                      : "text-rose-400"
+                      ? "text-slate-700"
+                      : "text-rose-600"
                   }`}
                 >
                   {formatCurrency(a.current_balance)}
@@ -337,21 +337,21 @@ function ComparisonCard({
   if (delta !== null) {
     const positive = delta >= 0;
     if (invertedDelta) {
-      deltaColor = positive ? "text-rose-400" : "text-emerald-400";
+      deltaColor = positive ? "text-rose-600" : "text-emerald-600";
     } else {
-      deltaColor = positive ? "text-emerald-400" : "text-rose-400";
+      deltaColor = positive ? "text-emerald-600" : "text-rose-600";
     }
   }
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-5">
+    <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
       <div className="flex items-center gap-2 mb-2">
-        <Icon className="h-4 w-4 text-slate-400" strokeWidth={1.5} />
+        <Icon className="h-4 w-4 text-slate-500" strokeWidth={1.5} />
         <p className="text-xs uppercase tracking-wider text-slate-500">
           {label}
         </p>
       </div>
-      <p className="font-mono text-2xl font-semibold tabular-nums text-slate-200 mb-1">
+      <p className="font-mono text-2xl font-semibold tabular-nums text-slate-900 mb-1">
         {formatCurrency(current)}
       </p>
       <p className="text-xs text-slate-500">

@@ -25,18 +25,18 @@ const TYPE_CONFIG: Record<
   TimeEntryType,
   { label: string; color: string; icon: LucideIcon }
 > = {
-  pomodoro_focus: { label: "Focus", color: "text-kiwi-400", icon: Zap },
+  pomodoro_focus: { label: "Focus", color: "text-emerald-600", icon: Zap },
   pomodoro_short_break: {
     label: "Pause courte",
-    color: "text-blue-400",
+    color: "text-blue-600",
     icon: Coffee,
   },
   pomodoro_long_break: {
     label: "Pause longue",
-    color: "text-violet-400",
+    color: "text-violet-600",
     icon: Coffee,
   },
-  free_timer: { label: "Timer libre", color: "text-slate-300", icon: Timer },
+  free_timer: { label: "Timer libre", color: "text-slate-700", icon: Timer },
 };
 
 function formatDuration(seconds: number | null): string {
@@ -135,7 +135,7 @@ export function TimeEntriesHistory({ tasks, refreshKey, onChange }: Props) {
 
   if (entries.length === 0) {
     return (
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/30 p-8 text-center">
+      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-8 text-center">
         <p className="text-slate-500 text-sm">
           Aucune session enregistrée pour l&apos;instant.
         </p>
@@ -144,13 +144,13 @@ export function TimeEntriesHistory({ tasks, refreshKey, onChange }: Props) {
   }
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/30 overflow-hidden">
-      <div className="px-4 py-3 border-b border-slate-800 bg-slate-900/50">
-        <h3 className="text-sm font-medium text-slate-300">
+    <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+      <div className="px-4 py-3 border-b border-slate-200 bg-white shadow-sm">
+        <h3 className="text-sm font-medium text-slate-700">
           Historique des sessions
         </h3>
       </div>
-      <ul className="divide-y divide-slate-800/50">
+      <ul className="divide-y divide-slate-200">
         {entries.map((entry) => {
           const config = TYPE_CONFIG[entry.type];
           const Icon = config.icon;
@@ -162,7 +162,7 @@ export function TimeEntriesHistory({ tasks, refreshKey, onChange }: Props) {
           return (
             <li
               key={entry.id}
-              className="px-4 py-3 hover:bg-slate-800/20 transition-colors"
+              className="px-4 py-3 hover:bg-slate-50 transition-colors"
             >
               <div className="flex items-center gap-3">
                 <Icon
@@ -189,7 +189,7 @@ export function TimeEntriesHistory({ tasks, refreshKey, onChange }: Props) {
                           e.target.value ? parseInt(e.target.value, 10) : null,
                         )
                       }
-                      className="mt-1 text-xs bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-300"
+                      className="mt-1 text-xs bg-white border border-slate-300 rounded px-2 py-1 text-slate-700"
                       autoFocus
                       onBlur={() => setEditingId(null)}
                     >
@@ -201,19 +201,19 @@ export function TimeEntriesHistory({ tasks, refreshKey, onChange }: Props) {
                       ))}
                     </select>
                   ) : task ? (
-                    <p className="text-xs text-slate-400 truncate">
+                    <p className="text-xs text-slate-500 truncate">
                       {task.title}
                     </p>
                   ) : (
-                    <p className="text-xs text-slate-600 italic">
+                    <p className="text-xs text-slate-500 italic">
                       Pas de tâche associée
                     </p>
                   )}
                 </div>
 
                 <div className="flex items-center gap-3 shrink-0">
-                  <span className="text-sm font-mono text-slate-300 tabular-nums inline-flex items-center gap-1">
-                    <Clock className="h-3 w-3 text-slate-600" strokeWidth={2} />
+                  <span className="text-sm font-mono text-slate-700 tabular-nums inline-flex items-center gap-1">
+                    <Clock className="h-3 w-3 text-slate-500" strokeWidth={2} />
                     {formatDuration(entry.duration_seconds)}
                   </span>
 
@@ -221,7 +221,7 @@ export function TimeEntriesHistory({ tasks, refreshKey, onChange }: Props) {
                     <button
                       type="button"
                       onClick={() => setEditingId(entry.id)}
-                      className="text-slate-500 hover:text-slate-300 p-1 rounded hover:bg-slate-700/50"
+                      className="text-slate-500 hover:text-slate-700 p-1 rounded hover:bg-slate-200/50"
                       title="Réassigner à une tâche"
                     >
                       <Edit3 className="h-3 w-3" />
@@ -231,7 +231,7 @@ export function TimeEntriesHistory({ tasks, refreshKey, onChange }: Props) {
                   <button
                     type="button"
                     onClick={() => handleDelete(entry.id)}
-                    className="text-slate-500 hover:text-rose-400 p-1 rounded hover:bg-rose-500/10"
+                    className="text-slate-500 hover:text-rose-600 p-1 rounded hover:bg-rose-50"
                     title="Supprimer"
                   >
                     <Trash2 className="h-3 w-3" />

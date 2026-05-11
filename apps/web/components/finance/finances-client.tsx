@@ -398,8 +398,8 @@ export function FinancesClient() {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-3xl font-bold text-slate-100">Finances</h1>
-          <p className="text-slate-400 mt-1">
+          <h1 className="text-3xl font-bold text-slate-900">Finances</h1>
+          <p className="text-slate-500 mt-1">
             Vue d&apos;ensemble de tes comptes, transactions et virements.
           </p>
         </div>
@@ -410,7 +410,7 @@ export function FinancesClient() {
               setEditingAccount(null);
               setAccountModalOpen(true);
             }}
-            className="flex items-center gap-2 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-lg transition-colors"
+            className="flex items-center gap-2 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-900 text-sm font-medium rounded-lg transition-colors"
           >
             <Plus className="h-4 w-4" />
             Compte
@@ -419,7 +419,7 @@ export function FinancesClient() {
             type="button"
             onClick={() => setTransferModalOpen(true)}
             disabled={accounts.length < 2}
-            className="flex items-center gap-2 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-900 text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             title={
               accounts.length < 2
                 ? "Crée au moins 2 comptes pour faire un virement"
@@ -435,7 +435,7 @@ export function FinancesClient() {
               setEditingSub(null);
               setSubModalOpen(true);
             }}
-            className="flex items-center gap-2 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-lg transition-colors"
+            className="flex items-center gap-2 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-900 text-sm font-medium rounded-lg transition-colors"
           >
             <Plus className="h-4 w-4" />
             Abonnement
@@ -446,7 +446,7 @@ export function FinancesClient() {
               setEditingBudget(null);
               setBudgetModalOpen(true);
             }}
-            className="flex items-center gap-2 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-lg transition-colors"
+            className="flex items-center gap-2 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-900 text-sm font-medium rounded-lg transition-colors"
           >
             <Plus className="h-4 w-4" />
             Budget
@@ -455,7 +455,7 @@ export function FinancesClient() {
             type="button"
             disabled
             title="Bientôt disponible — en attente du retour des exports CSV LCL"
-            className="flex items-center gap-2 px-3 py-2 bg-slate-800/50 text-slate-500 text-sm font-medium rounded-lg cursor-not-allowed"
+            className="flex items-center gap-2 px-3 py-2 bg-slate-100 text-slate-500 text-sm font-medium rounded-lg cursor-not-allowed"
           >
             <Upload className="h-4 w-4" />
             Importer CSV
@@ -467,7 +467,7 @@ export function FinancesClient() {
               setTxModalOpen(true);
             }}
             disabled={noActiveAccounts}
-            className="flex items-center gap-2 px-4 py-2 bg-kiwi-500 hover:bg-kiwi-400 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             title={
               noActiveAccounts
                 ? "Crée d'abord un compte"
@@ -487,20 +487,20 @@ export function FinancesClient() {
             value={formatCurrency(stats.total_balance)}
             icon={Wallet}
             color={
-              stats.total_balance >= 0 ? "text-emerald-400" : "text-rose-400"
+              stats.total_balance >= 0 ? "text-emerald-600" : "text-rose-600"
             }
           />
           <KpiCard
             label="Dépenses ce mois"
             value={formatCurrency(stats.current_month_expense)}
             icon={TrendingDown}
-            color="text-rose-400"
+            color="text-rose-600"
           />
           <KpiCard
             label="Revenus ce mois"
             value={formatCurrency(stats.current_month_income)}
             icon={TrendingUp}
-            color="text-emerald-400"
+            color="text-emerald-600"
           />
           <KpiCard
             label={`Économies (${stats.current_month_savings_rate.toFixed(0)}%)`}
@@ -508,15 +508,15 @@ export function FinancesClient() {
             icon={Wallet}
             color={
               stats.current_month_savings >= 0
-                ? "text-kiwi-400"
-                : "text-rose-400"
+                ? "text-emerald-600"
+                : "text-rose-600"
             }
           />
         </div>
       )}
 
       {error && (
-        <div className="text-sm text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-lg p-3">
+        <div className="text-sm text-rose-700 bg-rose-50 border border-rose-200 rounded-lg p-3">
           {error}
         </div>
       )}
@@ -524,7 +524,7 @@ export function FinancesClient() {
       {stats && <FinancesCharts stats={stats} />}
 
       <section>
-        <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide mb-4">
+        <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-4">
           Comptes
         </h2>
         {loading ? (
@@ -542,7 +542,7 @@ export function FinancesClient() {
       </section>
 
       <section>
-        <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide mb-4">
+        <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-4">
           Transactions
         </h2>
         <TransactionsTable
@@ -561,13 +561,13 @@ export function FinancesClient() {
 
       <section>
         <div className="flex items-center justify-between mb-4 gap-4 flex-wrap">
-          <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide">
+          <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wide">
             Abonnements
           </h2>
           {subscriptions.length > 0 && (
             <span className="text-xs text-slate-500 font-mono">
               {activeSubsCount} actif{activeSubsCount !== 1 ? "s" : ""} ·{" "}
-              <span className="text-slate-300">
+              <span className="text-slate-700">
                 {formatCurrency(totalMonthly)}
               </span>
               /mois
@@ -586,11 +586,11 @@ export function FinancesClient() {
 
       <section>
         <div className="flex items-center justify-between mb-4 gap-4 flex-wrap">
-          <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide">
+          <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wide">
             Budgets du mois
           </h2>
           {overspentCount > 0 && (
-            <span className="text-xs text-rose-400 font-medium">
+            <span className="text-xs text-rose-600 font-medium">
               ⚠️ {overspentCount} budget{overspentCount > 1 ? "s" : ""} dépassé
               {overspentCount > 1 ? "s" : ""}
             </span>
@@ -669,7 +669,7 @@ function KpiCard({
   color: string;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-5">
+    <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
       <div className="flex items-center gap-2 mb-2">
         <Icon className={`h-4 w-4 ${color}`} strokeWidth={1.5} />
         <p className="text-xs uppercase tracking-wider text-slate-500">

@@ -37,8 +37,8 @@ export default async function JobSearchPage() {
     <div className="p-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-100">Job Search</h1>
-          <p className="text-slate-400 mt-1">
+          <h1 className="text-3xl font-bold text-slate-900">Job Search</h1>
+          <p className="text-slate-500 mt-1">
             Suivi de tes candidatures. Création via Claude in Chrome + MCP.
           </p>
         </div>
@@ -87,7 +87,7 @@ export default async function JobSearchPage() {
         {stats && stats.total > 0 && (
           <div className="mb-6">
             <BentoCard delay={0.2}>
-              <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide mb-4">
+              <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-4">
                 Répartition par statut
               </h2>
               <div className="space-y-2">
@@ -98,12 +98,12 @@ export default async function JobSearchPage() {
                       key={statusName}
                       className="flex items-center gap-3"
                     >
-                      <span className="text-sm text-slate-300 w-28 shrink-0">
+                      <span className="text-sm text-slate-700 w-28 shrink-0">
                         {statusName}
                       </span>
-                      <div className="flex-1 h-2 rounded-full bg-slate-800 overflow-hidden">
+                      <div className="flex-1 h-2 rounded-full bg-slate-100 overflow-hidden">
                         <div
-                          className="h-full bg-kiwi-500/70 rounded-full"
+                          className="h-full bg-emerald-600/70 rounded-full"
                           style={{ width: `${percentage}%` }}
                         />
                       </div>
@@ -125,7 +125,7 @@ export default async function JobSearchPage() {
         )}
 
         <BentoCard delay={0.25}>
-          <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide mb-4">
+          <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-4">
             Toutes les candidatures
           </h2>
           <ApplicationListClient />

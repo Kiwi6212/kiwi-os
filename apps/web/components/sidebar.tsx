@@ -22,14 +22,14 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-60 border-r border-slate-800 bg-slate-950/50 backdrop-blur-sm">
+    <aside className="glass-strong fixed left-0 top-0 h-screen w-60 border-r border-slate-200">
       <div className="flex h-full flex-col">
-        <div className="flex items-center gap-3 border-b border-slate-800 px-6 py-5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-kiwi-500/15">
+        <div className="flex items-center gap-3 border-b border-slate-200 px-6 py-5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50">
             <span className="text-xl">🥝</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-semibold text-slate-100">
+            <span className="text-sm font-bold text-slate-900 font-display">
               Kiwi OS
             </span>
             <span className="text-xs text-slate-500">v0.1.0</span>
@@ -45,34 +45,36 @@ export function Sidebar() {
                 href={href}
                 className={
                   active
-                    ? "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 bg-kiwi-500/15 text-kiwi-400"
-                    : "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200"
+                    ? "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 bg-emerald-50 text-emerald-700"
+                    : "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                 }
               >
+                {active && (
+                  <span className="absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-r-full bg-emerald-600" />
+                )}
                 <Icon
                   className={
                     active
-                      ? "h-5 w-5 text-kiwi-500"
-                      : "h-5 w-5 text-slate-500 group-hover:text-slate-300"
+                      ? "h-5 w-5 text-emerald-600"
+                      : "h-5 w-5 text-slate-500 group-hover:text-slate-700"
                   }
-                  strokeWidth={2}
+                  strokeWidth={1.5}
                 />
                 <span className="font-medium">{label}</span>
-                {active && (
-                  <span className="ml-auto h-1.5 w-1.5 rounded-full bg-kiwi-500" />
-                )}
               </Link>
             );
           })}
         </nav>
 
-        <div className="border-t border-slate-800 p-4">
-          <div className="flex items-center gap-3 rounded-lg bg-slate-800/30 px-3 py-2">
-            <div className="h-8 w-8 rounded-full bg-kiwi-500/20 flex items-center justify-center">
-              <span className="text-xs font-semibold text-kiwi-400">KC</span>
+        <div className="border-t border-slate-200 p-4">
+          <div className="flex items-center gap-3 rounded-lg bg-slate-50 px-3 py-2">
+            <div className="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center">
+              <span className="text-xs font-semibold text-emerald-700">
+                KC
+              </span>
             </div>
             <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-sm font-medium text-slate-200 truncate">
+              <span className="text-sm font-medium text-slate-900 truncate">
                 Mathias
               </span>
               <span className="text-xs text-slate-500 truncate">

@@ -34,9 +34,9 @@ export function BudgetsList({ budgets, onEdit, onDelete }: Props) {
 
   if (budgets.length === 0) {
     return (
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/30 p-12 text-center">
+      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-12 text-center">
         <p className="text-slate-500">Aucun budget défini.</p>
-        <p className="text-sm text-slate-600 mt-1">
+        <p className="text-sm text-slate-500 mt-1">
           Définis tes limites pour ne pas exploser tes dépenses.
         </p>
       </div>
@@ -49,19 +49,19 @@ export function BudgetsList({ budgets, onEdit, onDelete }: Props) {
   });
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/30 overflow-hidden">
-      <ul className="divide-y divide-slate-800/50">
+    <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+      <ul className="divide-y divide-slate-200">
         {sorted.map((b) => {
           const fillColor = barColor(b);
           const fillWidth = Math.min(100, b.percentage_used);
           const remainingColor = b.is_overspent
-            ? "text-rose-400"
+            ? "text-rose-600"
             : "text-slate-500";
 
           return (
             <li
               key={b.id}
-              className="px-4 py-4 hover:bg-slate-800/20 transition-colors"
+              className="px-4 py-4 hover:bg-slate-50 transition-colors"
             >
               <div className="flex items-start justify-between gap-4 mb-2">
                 <div className="min-w-0 flex-1">
@@ -69,7 +69,7 @@ export function BudgetsList({ budgets, onEdit, onDelete }: Props) {
                     <span className="text-base">
                       {b.category_icon ?? "📊"}
                     </span>
-                    <p className="text-sm font-medium text-slate-200 truncate">
+                    <p className="text-sm font-medium text-slate-900 truncate">
                       {b.category_name}
                     </p>
                     <span className="text-xs text-slate-500">
@@ -80,7 +80,7 @@ export function BudgetsList({ budgets, onEdit, onDelete }: Props) {
                 <div className="flex items-center gap-3 shrink-0">
                   <span
                     className={`text-sm font-mono tabular-nums ${
-                      b.is_overspent ? "text-rose-400" : "text-slate-300"
+                      b.is_overspent ? "text-rose-600" : "text-slate-700"
                     }`}
                   >
                     {b.percentage_used.toFixed(0)}%
@@ -89,7 +89,7 @@ export function BudgetsList({ budgets, onEdit, onDelete }: Props) {
                     type="button"
                     onClick={() => onEdit(b)}
                     title="Modifier"
-                    className="text-slate-500 hover:text-slate-300 hover:bg-slate-800 p-1.5 rounded transition-colors"
+                    className="text-slate-500 hover:text-slate-700 hover:bg-slate-100 p-1.5 rounded transition-colors"
                   >
                     <Edit className="h-4 w-4" />
                   </button>
@@ -107,14 +107,14 @@ export function BudgetsList({ budgets, onEdit, onDelete }: Props) {
                     }}
                     disabled={deletingId === b.id}
                     title="Supprimer"
-                    className="text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 p-1.5 rounded transition-colors disabled:opacity-50"
+                    className="text-slate-500 hover:text-rose-600 hover:bg-rose-50 p-1.5 rounded transition-colors disabled:opacity-50"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
               </div>
 
-              <div className="h-3 bg-slate-800 rounded-full overflow-hidden mb-2">
+              <div className="h-3 bg-slate-100 rounded-full overflow-hidden mb-2">
                 <div
                   className="h-full transition-all"
                   style={{
@@ -125,9 +125,9 @@ export function BudgetsList({ budgets, onEdit, onDelete }: Props) {
               </div>
 
               <div className="flex items-baseline justify-between gap-2 text-xs">
-                <span className="font-mono text-slate-400 tabular-nums">
+                <span className="font-mono text-slate-500 tabular-nums">
                   {formatCurrency(b.spent)}{" "}
-                  <span className="text-slate-600">/</span>{" "}
+                  <span className="text-slate-500">/</span>{" "}
                   {formatCurrency(b.monthly_limit)}
                 </span>
                 <span

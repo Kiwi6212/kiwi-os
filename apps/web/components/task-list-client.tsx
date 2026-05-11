@@ -143,25 +143,25 @@ export function TaskListClient() {
             label="Total"
             value={stats.total}
             icon={ListChecks}
-            color="text-slate-300"
+            color="text-slate-700"
           />
           <KpiCard
             label="En cours"
             value={stats.by_status.in_progress + stats.by_status.todo}
             icon={Calendar}
-            color="text-blue-400"
+            color="text-blue-600"
           />
           <KpiCard
             label="Faites cette semaine"
             value={stats.completed_this_week}
             icon={CheckCircle2}
-            color="text-emerald-400"
+            color="text-emerald-600"
           />
           <KpiCard
             label="En retard"
             value={stats.overdue}
             icon={AlertTriangle}
-            color={stats.overdue > 0 ? "text-rose-400" : "text-slate-500"}
+            color={stats.overdue > 0 ? "text-rose-600" : "text-slate-500"}
           />
         </div>
       )}
@@ -173,7 +173,7 @@ export function TaskListClient() {
             onChange={(e) =>
               setFilterCategory(e.target.value as TaskCategory | "all")
             }
-            className="text-sm bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-300 focus:outline-none focus:border-kiwi-500"
+            className="text-sm bg-white border border-slate-300 rounded-lg px-3 py-2 text-slate-700 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
           >
             <option value="all">Toutes catégories</option>
             {Object.entries(CATEGORY_LABELS).map(([k, v]) => (
@@ -187,7 +187,7 @@ export function TaskListClient() {
             onChange={(e) =>
               setFilterStatus(e.target.value as TaskStatus | "all")
             }
-            className="text-sm bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-300 focus:outline-none focus:border-kiwi-500"
+            className="text-sm bg-white border border-slate-300 rounded-lg px-3 py-2 text-slate-700 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
           >
             <option value="all">Tous statuts</option>
             {Object.entries(STATUS_LABELS).map(([k, v]) => (
@@ -206,7 +206,7 @@ export function TaskListClient() {
             setEditingTask(null);
             setIsModalOpen(true);
           }}
-          className="flex items-center gap-2 px-4 py-2 bg-kiwi-500 hover:bg-kiwi-400 text-white text-sm font-medium rounded-lg transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors"
         >
           <Plus className="h-4 w-4" />
           Nouvelle tâche
@@ -218,7 +218,7 @@ export function TaskListClient() {
           Chargement des tâches...
         </div>
       ) : error ? (
-        <div className="text-rose-400 text-sm py-8 text-center bg-rose-500/10 border border-rose-500/20 rounded-2xl">
+        <div className="text-rose-600 text-sm py-8 text-center bg-rose-50 border border-rose-200 rounded-2xl">
           {error}
         </div>
       ) : (
@@ -261,7 +261,7 @@ function KpiCard({
   color: string;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-5">
+    <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
       <div className="flex items-center gap-2 mb-2">
         <Icon className={`h-4 w-4 ${color}`} strokeWidth={1.5} />
         <p className="text-xs uppercase tracking-wider text-slate-500">

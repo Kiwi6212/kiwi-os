@@ -100,16 +100,16 @@ export function ApplicationFormModal({ isOpen, onClose, onSubmit }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-slate-900 rounded-2xl border border-slate-800 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-6 border-b border-slate-800 sticky top-0 bg-slate-900">
-          <h2 className="text-lg font-semibold text-slate-100">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white backdrop-blur-sm p-4">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between p-6 border-b border-slate-200 sticky top-0 bg-white">
+          <h2 className="text-lg font-semibold text-slate-900">
             Nouvelle candidature
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="text-slate-500 hover:text-slate-300 p-1"
+            className="text-slate-500 hover:text-slate-700 p-1"
             disabled={submitting}
             aria-label="Fermer"
           >
@@ -128,7 +128,7 @@ export function ApplicationFormModal({ isOpen, onClose, onSubmit }: Props) {
                 required
                 value={formData.company}
                 onChange={(e) => handleChange("company", e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-kiwi-500"
+                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 placeholder="ex: Anthropic"
               />
             </div>
@@ -141,7 +141,7 @@ export function ApplicationFormModal({ isOpen, onClose, onSubmit }: Props) {
                 required
                 value={formData.position}
                 onChange={(e) => handleChange("position", e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-kiwi-500"
+                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 placeholder="ex: Software Engineer Intern"
               />
             </div>
@@ -156,7 +156,7 @@ export function ApplicationFormModal({ isOpen, onClose, onSubmit }: Props) {
                 type="url"
                 value={formData.url ?? ""}
                 onChange={(e) => handleChange("url", e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-kiwi-500"
+                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 placeholder="https://..."
               />
             </div>
@@ -168,7 +168,7 @@ export function ApplicationFormModal({ isOpen, onClose, onSubmit }: Props) {
                 type="text"
                 value={formData.location ?? ""}
                 onChange={(e) => handleChange("location", e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-kiwi-500"
+                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 placeholder="ex: Paris / Remote"
               />
             </div>
@@ -184,7 +184,7 @@ export function ApplicationFormModal({ isOpen, onClose, onSubmit }: Props) {
                 onChange={(e) =>
                   handleChange("contract_type", e.target.value || undefined)
                 }
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-kiwi-500"
+                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               >
                 <option value="">—</option>
                 {CONTRACT_TYPES.map((t) => (
@@ -201,7 +201,7 @@ export function ApplicationFormModal({ isOpen, onClose, onSubmit }: Props) {
               <select
                 value={formData.status}
                 onChange={(e) => handleChange("status", e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-kiwi-500"
+                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               >
                 {STATUSES.map((s) => (
                   <option key={s} value={s}>
@@ -227,7 +227,7 @@ export function ApplicationFormModal({ isOpen, onClose, onSubmit }: Props) {
                     e.target.value ? parseInt(e.target.value, 10) : undefined,
                   )
                 }
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-kiwi-500"
+                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               />
             </div>
             <div>
@@ -244,7 +244,7 @@ export function ApplicationFormModal({ isOpen, onClose, onSubmit }: Props) {
                     e.target.value ? parseInt(e.target.value, 10) : undefined,
                   )
                 }
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-kiwi-500"
+                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               />
             </div>
           </div>
@@ -260,7 +260,7 @@ export function ApplicationFormModal({ isOpen, onClose, onSubmit }: Props) {
                 onChange={(e) =>
                   handleChange("date_applied", e.target.value || undefined)
                 }
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-kiwi-500"
+                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               />
             </div>
             <div>
@@ -273,7 +273,7 @@ export function ApplicationFormModal({ isOpen, onClose, onSubmit }: Props) {
                 onChange={(e) =>
                   handleChange("follow_up_date", e.target.value || undefined)
                 }
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-kiwi-500"
+                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               />
             </div>
             <div>
@@ -286,7 +286,7 @@ export function ApplicationFormModal({ isOpen, onClose, onSubmit }: Props) {
                 onChange={(e) =>
                   handleChange("last_contact", e.target.value || undefined)
                 }
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-kiwi-500"
+                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               />
             </div>
           </div>
@@ -299,7 +299,7 @@ export function ApplicationFormModal({ isOpen, onClose, onSubmit }: Props) {
               rows={3}
               value={formData.notes ?? ""}
               onChange={(e) => handleChange("notes", e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-kiwi-500 resize-none"
+              className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 resize-none"
               placeholder="Contexte, contact, retours d'entretien..."
             />
           </div>
@@ -310,9 +310,9 @@ export function ApplicationFormModal({ isOpen, onClose, onSubmit }: Props) {
                 type="checkbox"
                 checked={formData.cv_sent}
                 onChange={(e) => handleChange("cv_sent", e.target.checked)}
-                className="rounded border-slate-700 bg-slate-800 text-kiwi-500 focus:ring-kiwi-500"
+                className="rounded border-slate-200 bg-slate-50 text-emerald-600 focus:ring-emerald-500"
               />
-              <span className="text-sm text-slate-300">CV envoyé</span>
+              <span className="text-sm text-slate-700">CV envoyé</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
@@ -321,9 +321,9 @@ export function ApplicationFormModal({ isOpen, onClose, onSubmit }: Props) {
                 onChange={(e) =>
                   handleChange("follow_up_done", e.target.checked)
                 }
-                className="rounded border-slate-700 bg-slate-800 text-kiwi-500 focus:ring-kiwi-500"
+                className="rounded border-slate-200 bg-slate-50 text-emerald-600 focus:ring-emerald-500"
               />
-              <span className="text-sm text-slate-300">Relance faite</span>
+              <span className="text-sm text-slate-700">Relance faite</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
@@ -332,31 +332,31 @@ export function ApplicationFormModal({ isOpen, onClose, onSubmit }: Props) {
                 onChange={(e) =>
                   handleChange("is_favorite", e.target.checked)
                 }
-                className="rounded border-slate-700 bg-slate-800 text-amber-400 focus:ring-amber-400"
+                className="rounded border-slate-200 bg-slate-50 text-amber-600 focus:ring-amber-400"
               />
-              <span className="text-sm text-slate-300">Favori</span>
+              <span className="text-sm text-slate-700">Favori</span>
             </label>
           </div>
 
           {error && (
-            <div className="text-sm text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-lg p-3">
+            <div className="text-sm text-rose-700 bg-rose-50 border border-rose-200 rounded-lg p-3">
               {error}
             </div>
           )}
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
             <button
               type="button"
               onClick={onClose}
               disabled={submitting}
-              className="px-4 py-2 text-sm text-slate-400 hover:text-slate-200 transition-colors disabled:opacity-50"
+              className="px-4 py-2 text-sm text-slate-500 hover:text-slate-900 transition-colors disabled:opacity-50"
             >
               Annuler
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 text-sm bg-kiwi-500 hover:bg-kiwi-400 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
+              className="px-4 py-2 text-sm bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
             >
               {submitting ? "Création..." : "Créer la candidature"}
             </button>

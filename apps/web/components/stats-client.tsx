@@ -105,10 +105,10 @@ const INSIGHT_ICONS: Record<InsightType, typeof AlertCircle> = {
 };
 
 const INSIGHT_COLORS: Record<InsightType, string> = {
-  warning: "text-amber-400 bg-amber-500/10 border-amber-500/30",
-  success: "text-kiwi-400 bg-kiwi-500/10 border-kiwi-500/30",
-  tip: "text-violet-400 bg-violet-500/10 border-violet-500/30",
-  info: "text-cyan-400 bg-cyan-500/10 border-cyan-500/30",
+  warning: "text-amber-600 bg-amber-50 border-amber-200",
+  success: "text-emerald-600 bg-emerald-50 border-emerald-300",
+  tip: "text-violet-600 bg-violet-50 border-violet-300",
+  info: "text-cyan-600 bg-cyan-50 border-cyan-300",
 };
 
 function formatShortDate(iso: string): string {
@@ -151,7 +151,7 @@ function DeltaIndicator({ deltaPct }: { deltaPct: number }) {
   return (
     <span
       className={`inline-flex items-center gap-1 text-xs font-mono ${
-        isUp ? "text-kiwi-400" : "text-rose-400"
+        isUp ? "text-emerald-600" : "text-rose-600"
       }`}
     >
       <Icon className="h-3 w-3" strokeWidth={2} />
@@ -171,12 +171,12 @@ function KpiBox({
   unit: string;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-5 transition-all hover:-translate-y-0.5 hover:border-slate-700">
+    <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5 transition-all hover:-translate-y-0.5 hover:border-slate-300">
       <p className="text-xs uppercase tracking-wider text-slate-500 mb-2">
         {label}
       </p>
       <div className="flex items-baseline gap-1 mb-2">
-        <span className="font-mono text-3xl font-semibold text-slate-100 tabular-nums">
+        <span className="font-mono text-3xl font-semibold text-slate-900 tabular-nums">
           {metric.current.toLocaleString("fr-FR")}
         </span>
         {unit && (
@@ -184,7 +184,7 @@ function KpiBox({
         )}
       </div>
       <DeltaIndicator deltaPct={metric.delta_pct} />
-      <p className="text-xs text-slate-600 mt-1 font-mono">
+      <p className="text-xs text-slate-500 mt-1 font-mono">
         Avant&nbsp;: {metric.previous.toLocaleString("fr-FR")}
         {unit}
       </p>
@@ -202,8 +202,8 @@ function ChartCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
-      <h3 className="text-sm text-slate-300 mb-3">{title}</h3>
+    <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
+      <h3 className="text-sm text-slate-700 mb-3">{title}</h3>
       {empty ? (
         <div className="h-60 flex items-center justify-center text-sm text-slate-500">
           Aucune donnée sur la période
@@ -216,11 +216,11 @@ function ChartCard({
 }
 
 const TOOLTIP_STYLE: React.CSSProperties = {
-  background: "#0F172A",
-  border: "1px solid #1E293B",
+  background: "rgba(255, 255, 255, 0.95)",
+  border: "1px solid #e2e8f0",
   borderRadius: 12,
   fontSize: 12,
-  color: "#E2E8F0",
+  color: "#0f172a",
 };
 
 export function StatsClient() {
@@ -275,7 +275,7 @@ export function StatsClient() {
 
   if (!jobStats || !insights) {
     return (
-      <div className="text-rose-400 text-sm py-8">
+      <div className="text-rose-600 text-sm py-8">
         {error ?? "Erreur de chargement des statistiques."}
       </div>
     );
@@ -296,19 +296,19 @@ export function StatsClient() {
               onClick={() => setPeriod(p.value)}
               className={`px-4 py-2 text-sm rounded-lg transition-colors ${
                 period === p.value
-                  ? "bg-kiwi-500 text-white"
-                  : "bg-slate-800/50 text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+                  ? "bg-emerald-600 text-white"
+                  : "bg-slate-100 text-slate-500 hover:bg-slate-100 hover:text-slate-900"
               }`}
             >
               {p.label}
             </button>
           ))}
         </div>
-        {error && <span className="text-xs text-amber-400">{error}</span>}
+        {error && <span className="text-xs text-amber-600">{error}</span>}
       </div>
 
       <section>
-        <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide mb-4">
+        <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-4">
           KPIs comparatifs (vs période précédente)
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -318,7 +318,7 @@ export function StatsClient() {
           {hasGithub ? (
             <KpiBox label="Commits" metric={githubStats.commits_count} unit="" />
           ) : (
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-5 flex items-center justify-center text-xs text-slate-500">
+            <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5 flex items-center justify-center text-xs text-slate-500">
               GitHub indisponible
             </div>
           )}
@@ -326,7 +326,7 @@ export function StatsClient() {
       </section>
 
       <section>
-        <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide mb-4">
+        <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-4">
           Évolution temporelle
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -336,7 +336,7 @@ export function StatsClient() {
                 data={appsSeries}
                 margin={{ top: 8, right: 8, bottom: 0, left: -16 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                 <XAxis
                   dataKey="date"
                   stroke="#475569"
@@ -376,7 +376,7 @@ export function StatsClient() {
                 data={ghSeries}
                 margin={{ top: 8, right: 8, bottom: 0, left: -16 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                 <XAxis
                   dataKey="date"
                   stroke="#475569"
@@ -391,8 +391,8 @@ export function StatsClient() {
                 <Area
                   type="monotone"
                   dataKey="commits"
-                  stroke="#10B981"
-                  fill="#10B981"
+                  stroke="#059669"
+                  fill="#059669"
                   fillOpacity={0.3}
                 />
               </AreaChart>
@@ -402,7 +402,7 @@ export function StatsClient() {
       </section>
 
       <section>
-        <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide mb-4">
+        <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-4">
           Distribution &amp; patterns
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -415,11 +415,11 @@ export function StatsClient() {
                 data={jobStats.by_weekday}
                 margin={{ top: 8, right: 8, bottom: 0, left: -16 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                 <XAxis dataKey="weekday" stroke="#475569" fontSize={11} />
                 <YAxis stroke="#475569" fontSize={11} allowDecimals={false} />
-                <Tooltip contentStyle={TOOLTIP_STYLE} cursor={{ fill: "#1E293B33" }} />
-                <Bar dataKey="count" fill="#60A5FA" radius={[4, 4, 0, 0]} />
+                <Tooltip contentStyle={TOOLTIP_STYLE} cursor={{ fill: "#f1f5f9" }} />
+                <Bar dataKey="count" fill="#2563eb" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </ChartCard>
@@ -464,7 +464,7 @@ export function StatsClient() {
                 layout="vertical"
                 margin={{ top: 8, right: 8, bottom: 0, left: 12 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                 <XAxis
                   type="number"
                   stroke="#475569"
@@ -478,8 +478,8 @@ export function StatsClient() {
                   fontSize={11}
                   width={100}
                 />
-                <Tooltip contentStyle={TOOLTIP_STYLE} cursor={{ fill: "#1E293B33" }} />
-                <Bar dataKey="count" fill="#10B981" radius={[0, 4, 4, 0]} />
+                <Tooltip contentStyle={TOOLTIP_STYLE} cursor={{ fill: "#f1f5f9" }} />
+                <Bar dataKey="count" fill="#059669" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </ChartCard>
@@ -487,7 +487,7 @@ export function StatsClient() {
       </section>
 
       <section>
-        <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide mb-4">
+        <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-4">
           Insights &amp; recommandations
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -513,14 +513,14 @@ export function StatsClient() {
       </section>
 
       <section>
-        <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide mb-4">
+        <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-4">
           Finances
         </h2>
         <FinanceStatsClient />
       </section>
 
       <section>
-        <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide mb-4">
+        <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-4">
           Productivité
         </h2>
         <ProductivityStatsClient />

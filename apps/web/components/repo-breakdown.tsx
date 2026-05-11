@@ -50,11 +50,11 @@ export function RepoBreakdown({
                       strokeWidth={2}
                     />
                   )}
-                  <span className="text-slate-300 group-hover:text-kiwi-400 transition-colors truncate">
+                  <span className="text-slate-700 group-hover:text-emerald-600 transition-colors truncate">
                     {repo.name}
                   </span>
                   <ExternalLink
-                    className="h-3 w-3 text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+                    className="h-3 w-3 text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
                     strokeWidth={2}
                   />
                 </div>
@@ -62,9 +62,9 @@ export function RepoBreakdown({
                   {repo.commit_count}
                 </span>
               </div>
-              <div className="h-1.5 rounded-full bg-slate-800 overflow-hidden">
+              <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden">
                 <div
-                  className="h-full bg-kiwi-500/70 rounded-full transition-all"
+                  className="h-full bg-emerald-600/70 rounded-full transition-all"
                   style={{ width: `${percentage}%` }}
                 />
               </div>

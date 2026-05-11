@@ -1,46 +1,126 @@
 @import "tailwindcss";
 
 @theme {
-  /* Kiwi Green — accent principal, max 20% de la page */
-  --color-kiwi-50: #ECFDF5;
-  --color-kiwi-100: #D1FAE5;
-  --color-kiwi-200: #A7F3D0;
-  --color-kiwi-300: #6EE7B7;
-  --color-kiwi-400: #34D399;
-  --color-kiwi-500: #10B981;
-  --color-kiwi-600: #059669;
-  --color-kiwi-700: #047857;
-  --color-kiwi-800: #065F46;
-  --color-kiwi-900: #064E3B;
+  /* Backgrounds */
+  --color-bg-base: #fafafa;
+  --color-bg-elevated: #ffffff;
+  --color-bg-subtle: #f4f4f5;
 
-  /* Surfaces dark-first */
-  --color-bluish-black: #0A0F1F;
+  /* Accent emerald (ajusté pour fond clair) */
+  --color-accent: #059669;
+  --color-accent-hover: #047857;
+  --color-accent-soft: #d1fae5;
+  --color-accent-bg: #ecfdf5;
 
-  /* Couleurs sémantiques contextuelles */
-  --color-ctx-cyan: #06B6D4;
-  --color-ctx-violet: #8B5CF6;
-  --color-ctx-amber: #F59E0B;
-  --color-ctx-rose: #F43F5E;
-  --color-ctx-blue: #3B82F6;
+  /* Sémantique */
+  --color-success: #059669;
+  --color-success-soft: #d1fae5;
+  --color-danger: #dc2626;
+  --color-danger-soft: #fee2e2;
+  --color-warning: #d97706;
+  --color-warning-soft: #fef3c7;
+  --color-info: #2563eb;
+  --color-info-soft: #dbeafe;
 
-  /* Fonts (Geist via next/font) */
-  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), monospace;
+  /* Texte */
+  --color-fg-primary: #0f172a;
+  --color-fg-secondary: #475569;
+  --color-fg-muted: #94a3b8;
+  --color-fg-inverse: #ffffff;
 
-  /* Radius standard Kiwi OS */
-  --radius-2xl: 1rem;
+  /* Bordures */
+  --color-border-subtle: #e2e8f0;
+  --color-border-medium: #cbd5e1;
+  --color-border-strong: #94a3b8;
+
+  /* Typo — référence les variables next/font (cf. layout.tsx) */
+  --font-display: var(--font-geist-sans), "Inter", system-ui, sans-serif;
+  --font-sans: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), "JetBrains Mono", monospace;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm:
+    0 2px 4px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
+  --shadow-md:
+    0 4px 8px rgba(15, 23, 42, 0.06), 0 2px 4px rgba(15, 23, 42, 0.04);
+  --shadow-lg:
+    0 8px 16px rgba(15, 23, 42, 0.08), 0 4px 8px rgba(15, 23, 42, 0.04);
+
+  /* Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
 }
 
-/* Dark-first background */
+/* Variables glass — utilisées via classes utilitaires custom .glass-* */
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-bg-strong: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.8);
+  --glass-shadow: 0 8px 32px rgba(15, 23, 42, 0.04);
+}
+
 body {
-  background-color: var(--color-bluish-black);
-  color: #E2E8F0;
+  background: var(--color-bg-base);
+  color: var(--color-fg-primary);
   font-family: var(--font-sans);
+  background-image:
+    radial-gradient(
+      at 10% 10%,
+      rgba(16, 185, 129, 0.08) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      at 90% 20%,
+      rgba(59, 130, 246, 0.06) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      at 50% 80%,
+      rgba(168, 85, 247, 0.05) 0%,
+      transparent 50%
+    );
+  background-attachment: fixed;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-strong {
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
 }
 
 @keyframes pulse-once {
-  0%, 100% { opacity: 0; }
-  20%, 50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0;
+  }
+  20%,
+  50% {
+    opacity: 1;
+  }
 }
 
 .animate-pulse-once {

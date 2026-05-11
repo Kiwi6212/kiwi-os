@@ -20,11 +20,11 @@ interface ContributionHeatmapProps {
 }
 
 const LEVEL_CLASSES: Record<ContributionLevel, string> = {
-  NONE: "bg-slate-800",
-  FIRST_QUARTILE: "bg-green-900",
-  SECOND_QUARTILE: "bg-green-700",
-  THIRD_QUARTILE: "bg-green-500",
-  FOURTH_QUARTILE: "bg-green-400",
+  NONE: "bg-slate-100",
+  FIRST_QUARTILE: "bg-emerald-200",
+  SECOND_QUARTILE: "bg-emerald-400",
+  THIRD_QUARTILE: "bg-emerald-500",
+  FOURTH_QUARTILE: "bg-emerald-700",
 };
 
 const MONTHS = [
@@ -73,8 +73,8 @@ export function ContributionHeatmap({
     <div className="w-full">
       {!compact && (
         <div className="mb-4">
-          <p className="text-sm text-slate-400">
-            <span className="font-mono text-slate-100 font-semibold">
+          <p className="text-sm text-slate-600">
+            <span className="font-mono text-slate-900 font-semibold">
               {totalContributions}
             </span>{" "}
             contributions cette année
@@ -85,7 +85,7 @@ export function ContributionHeatmap({
       <div className="overflow-x-auto">
         <div className="inline-block min-w-full">
           {!compact && (
-            <div className="flex ml-6 mb-1 text-xs text-slate-500">
+            <div className="flex ml-6 mb-1 text-xs text-slate-600">
               {monthLabels.map((m, i) => (
                 <div
                   key={`${m.month}-${i}`}
@@ -104,7 +104,7 @@ export function ContributionHeatmap({
 
           <div className="flex gap-1">
             {!compact && (
-              <div className="flex flex-col gap-1 mr-1 text-xs text-slate-500 justify-between pt-0.5">
+              <div className="flex flex-col gap-1 mr-1 text-xs text-slate-600 justify-between pt-0.5">
                 {DAYS.map((d, i) => (
                   <div key={i} className="h-2.5 leading-none">
                     {d}
@@ -120,7 +120,7 @@ export function ContributionHeatmap({
                     <div
                       key={`${wi}-${di}`}
                       title={`${day.count} contribution${day.count !== 1 ? "s" : ""} le ${formatDateFR(day.date)}`}
-                      className={`h-2.5 w-2.5 rounded-sm ${LEVEL_CLASSES[day.level]} hover:ring-2 hover:ring-kiwi-500/50 transition-all cursor-pointer`}
+                      className={`h-2.5 w-2.5 rounded-sm ${LEVEL_CLASSES[day.level]} hover:ring-2 hover:ring-emerald-500/50 transition-all cursor-pointer`}
                     />
                   ))}
                 </div>
@@ -129,7 +129,7 @@ export function ContributionHeatmap({
           </div>
 
           {!compact && (
-            <div className="flex items-center justify-end gap-2 mt-3 text-xs text-slate-500">
+            <div className="flex items-center justify-end gap-2 mt-3 text-xs text-slate-600">
               <span>Moins</span>
               <div className={`h-2.5 w-2.5 rounded-sm ${LEVEL_CLASSES.NONE}`} />
               <div

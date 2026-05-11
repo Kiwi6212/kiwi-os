@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { Sidebar } from "@/components/sidebar";
 import "./globals.css";
 
@@ -13,6 +13,11 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: "Kiwi OS — Personal Cockpit",
   description:
@@ -20,7 +25,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#10B981",
+  themeColor: "#059669",
 };
 
 export default function RootLayout({
@@ -29,10 +34,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className="dark">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html
+      lang="fr"
+      className={`${geistSans.variable} ${geistMono.variable} ${inter.variable}`}
+    >
+      <body className="antialiased">
         <div className="flex min-h-screen">
           <Sidebar />
           <main className="flex-1 ml-60">{children}</main>
