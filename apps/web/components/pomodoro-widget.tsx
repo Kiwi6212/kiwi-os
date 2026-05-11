@@ -26,31 +26,31 @@ const PHASE_COLORS: Record<
   { bg: string; text: string; ring: string; bar: string; label: string }
 > = {
   idle: {
-    bg: "bg-slate-900/50",
-    text: "text-slate-300",
-    ring: "ring-slate-700",
-    bar: "bg-slate-700",
+    bg: "bg-slate-50",
+    text: "text-slate-600",
+    ring: "ring-slate-200",
+    bar: "bg-slate-300",
     label: "Prêt à démarrer",
   },
   focus: {
-    bg: "bg-kiwi-500/10",
-    text: "text-kiwi-400",
-    ring: "ring-kiwi-500/40",
-    bar: "bg-kiwi-500",
+    bg: "bg-emerald-50",
+    text: "text-emerald-700",
+    ring: "ring-emerald-300",
+    bar: "bg-emerald-600",
     label: "Focus",
   },
   short_break: {
-    bg: "bg-blue-500/10",
-    text: "text-blue-400",
-    ring: "ring-blue-500/40",
-    bar: "bg-blue-500",
+    bg: "bg-blue-50",
+    text: "text-blue-700",
+    ring: "ring-blue-300",
+    bar: "bg-blue-600",
     label: "Pause courte",
   },
   long_break: {
-    bg: "bg-violet-500/10",
-    text: "text-violet-400",
-    ring: "ring-violet-500/40",
-    bar: "bg-violet-500",
+    bg: "bg-violet-50",
+    text: "text-violet-700",
+    ring: "ring-violet-300",
+    bar: "bg-violet-600",
     label: "Pause longue",
   },
 };
@@ -145,15 +145,15 @@ export function PomodoroWidget({ tasks, onSessionEnd }: Props) {
   return (
     <>
       {pulseActive && (
-        <div className="fixed inset-0 z-40 pointer-events-none animate-pulse-once bg-kiwi-500/20" />
+        <div className="fixed inset-0 z-40 pointer-events-none animate-pulse-once bg-emerald-100" />
       )}
 
       <div
-        className={`rounded-2xl border-2 border-slate-800 ${colors.bg} ring-1 ${colors.ring} p-6 transition-colors duration-500`}
+        className={`glass-card rounded-2xl ${colors.bg} ring-1 ${colors.ring} p-6 transition-colors duration-500`}
       >
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-slate-800/50">
+            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-slate-100">
               <Timer
                 className={`h-5 w-5 ${colors.text}`}
                 strokeWidth={1.5}
@@ -170,7 +170,7 @@ export function PomodoroWidget({ tasks, onSessionEnd }: Props) {
           <button
             type="button"
             onClick={() => setShowSettings(true)}
-            className="text-slate-500 hover:text-slate-300 p-2 rounded-lg hover:bg-slate-800/50"
+            className="text-slate-500 hover:text-slate-700 p-2 rounded-lg hover:bg-slate-100"
             title="Paramètres"
           >
             <Settings className="h-4 w-4" />
@@ -188,7 +188,7 @@ export function PomodoroWidget({ tasks, onSessionEnd }: Props) {
               : formatTime(pomodoro.remainingSeconds)}
           </p>
 
-          <div className="mt-4 h-1 bg-slate-800 rounded-full overflow-hidden">
+          <div className="mt-4 h-1 bg-slate-100 rounded-full overflow-hidden">
             <div
               className={`h-full transition-all duration-1000 ${colors.bar}`}
               style={{ width: `${progress}%` }}
@@ -208,7 +208,7 @@ export function PomodoroWidget({ tasks, onSessionEnd }: Props) {
               )
             }
             disabled={pomodoro.phase !== "idle"}
-            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-kiwi-500 disabled:opacity-60"
+            className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 disabled:opacity-60"
           >
             <option value="">Pas de tâche (temps libre)</option>
             {tasks
@@ -222,7 +222,7 @@ export function PomodoroWidget({ tasks, onSessionEnd }: Props) {
           {activeTask && pomodoro.phase !== "idle" && (
             <p className="text-xs text-slate-500 mt-1">
               Tracking sur :{" "}
-              <span className="text-slate-300">{activeTask.title}</span>
+              <span className="text-slate-700">{activeTask.title}</span>
             </p>
           )}
         </div>
@@ -233,7 +233,7 @@ export function PomodoroWidget({ tasks, onSessionEnd }: Props) {
               type="button"
               onClick={() => pomodoro.startFocus()}
               disabled={!pomodoro.preferences}
-              className="flex items-center gap-2 px-6 py-3 bg-kiwi-500 hover:bg-kiwi-400 text-white font-medium rounded-xl transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-xl transition-colors disabled:opacity-50"
             >
               <Play className="h-5 w-5" />
               Démarrer focus
@@ -244,7 +244,7 @@ export function PomodoroWidget({ tasks, onSessionEnd }: Props) {
                 <button
                   type="button"
                   onClick={pomodoro.pause}
-                  className="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg"
+                  className="flex items-center gap-2 px-4 py-2 bg-slate-200 hover:bg-slate-600 text-slate-900 rounded-lg"
                 >
                   <Pause className="h-4 w-4" />
                   Pause
@@ -253,7 +253,7 @@ export function PomodoroWidget({ tasks, onSessionEnd }: Props) {
                 <button
                   type="button"
                   onClick={pomodoro.resume}
-                  className="flex items-center gap-2 px-4 py-2 bg-kiwi-500 hover:bg-kiwi-400 text-white rounded-lg"
+                  className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg"
                 >
                   <Play className="h-4 w-4" />
                   Reprendre
@@ -262,7 +262,7 @@ export function PomodoroWidget({ tasks, onSessionEnd }: Props) {
               <button
                 type="button"
                 onClick={pomodoro.skipToNext}
-                className="flex items-center gap-2 px-3 py-2 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-slate-800"
+                className="flex items-center gap-2 px-3 py-2 text-slate-500 hover:text-slate-900 rounded-lg hover:bg-slate-100"
                 title="Passer à la phase suivante"
               >
                 <SkipForward className="h-4 w-4" />
@@ -270,7 +270,7 @@ export function PomodoroWidget({ tasks, onSessionEnd }: Props) {
               <button
                 type="button"
                 onClick={pomodoro.stop}
-                className="flex items-center gap-2 px-4 py-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-lg"
+                className="flex items-center gap-2 px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-300 rounded-lg"
               >
                 <Square className="h-4 w-4" />
                 Stop
@@ -279,10 +279,10 @@ export function PomodoroWidget({ tasks, onSessionEnd }: Props) {
           )}
         </div>
 
-        <div className="mt-6 pt-4 border-t border-slate-800 text-center">
+        <div className="mt-6 pt-4 border-t border-slate-200 text-center">
           <p className="text-xs text-slate-500">
             Temps aujourd&apos;hui :{" "}
-            <span className="text-slate-300 font-mono">
+            <span className="text-slate-700 font-mono">
               {formatDuration(todaySeconds)}
             </span>
           </p>

@@ -35,14 +35,14 @@ const STATUS_OPTIONS = [
 ];
 
 const STATUS_COLORS: Record<string, string> = {
-  New: "bg-slate-500/15 text-slate-300",
-  Applied: "bg-blue-500/15 text-blue-400",
-  "Followed up": "bg-cyan-500/15 text-cyan-400",
-  Interview: "bg-violet-500/15 text-violet-400",
-  Accepted: "bg-kiwi-500/15 text-kiwi-400",
-  Rejected: "bg-rose-500/15 text-rose-400",
-  "No response": "bg-slate-600/15 text-slate-500",
-  Dismissed: "bg-slate-700/15 text-slate-600",
+  New: "bg-slate-100 text-slate-700",
+  Applied: "bg-blue-50 text-blue-700",
+  "Followed up": "bg-cyan-50 text-cyan-700",
+  Interview: "bg-violet-50 text-violet-700",
+  Accepted: "bg-emerald-50 text-emerald-700",
+  Rejected: "bg-rose-50 text-rose-700",
+  "No response": "bg-slate-100 text-slate-500",
+  Dismissed: "bg-slate-100 text-slate-500",
 };
 
 function formatDate(iso: string | null): string {
@@ -72,10 +72,10 @@ export function ApplicationTable({
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
       <table className="w-full text-sm">
-        <thead>
-          <tr className="text-xs uppercase tracking-wider text-slate-500 border-b border-slate-800">
+        <thead className="bg-slate-50">
+          <tr className="text-xs uppercase tracking-wider text-slate-500 border-b border-slate-200">
             <th className="text-left py-3 px-2 w-8"></th>
             <th className="text-left py-3 px-2">Entreprise</th>
             <th className="text-left py-3 px-2">Poste</th>
@@ -89,7 +89,7 @@ export function ApplicationTable({
           {applications.map((app) => (
             <tr
               key={app.id}
-              className="border-b border-slate-800/50 hover:bg-slate-800/20"
+              className="border-b border-slate-100 hover:bg-slate-50 last:border-b-0"
             >
               <td className="py-3 px-2">
                 <button
@@ -97,7 +97,7 @@ export function ApplicationTable({
                   onClick={() =>
                     onUpdate(app.id, { is_favorite: !app.is_favorite })
                   }
-                  className="text-slate-500 hover:text-amber-400"
+                  className="text-slate-500 hover:text-amber-500"
                   aria-label={
                     app.is_favorite
                       ? "Retirer des favoris"
@@ -106,14 +106,14 @@ export function ApplicationTable({
                 >
                   <Star
                     className={`h-4 w-4 ${
-                      app.is_favorite ? "fill-amber-400 text-amber-400" : ""
+                      app.is_favorite ? "fill-amber-500 text-amber-500" : ""
                     }`}
                     strokeWidth={2}
                   />
                 </button>
               </td>
               <td className="py-3 px-2">
-                <div className="font-medium text-slate-200">{app.company}</div>
+                <div className="font-medium text-slate-900">{app.company}</div>
                 {app.location && (
                   <div className="text-xs text-slate-500 flex items-center gap-1">
                     <MapPin className="h-3 w-3" strokeWidth={2} />
@@ -122,13 +122,13 @@ export function ApplicationTable({
                 )}
               </td>
               <td className="py-3 px-2">
-                <div className="text-slate-300">{app.position}</div>
+                <div className="text-slate-700">{app.position}</div>
                 {app.url && (
                   <a
                     href={app.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs text-slate-500 hover:text-kiwi-400 inline-flex items-center gap-1"
+                    className="text-xs text-slate-500 hover:text-emerald-600 inline-flex items-center gap-1"
                   >
                     Voir l&apos;offre{" "}
                     <ExternalLink className="h-3 w-3" strokeWidth={2} />
@@ -141,25 +141,25 @@ export function ApplicationTable({
                   onChange={(e) =>
                     onUpdate(app.id, { status: e.target.value })
                   }
-                  className={`text-xs px-2 py-1 rounded border-0 cursor-pointer font-medium ${
-                    STATUS_COLORS[app.status] ?? "bg-slate-700"
+                  className={`text-xs px-2 py-1 rounded-md border border-slate-200 cursor-pointer font-medium ${
+                    STATUS_COLORS[app.status] ?? "bg-slate-100 text-slate-700"
                   }`}
                 >
                   {STATUS_OPTIONS.map((s) => (
                     <option
                       key={s}
                       value={s}
-                      className="bg-slate-800 text-slate-200"
+                      className="bg-white text-slate-900"
                     >
                       {s}
                     </option>
                   ))}
                 </select>
               </td>
-              <td className="py-3 px-2 text-slate-400 font-mono text-xs">
+              <td className="py-3 px-2 text-slate-500 font-mono text-xs">
                 {formatDate(app.date_applied)}
               </td>
-              <td className="py-3 px-2 text-slate-400 font-mono text-xs">
+              <td className="py-3 px-2 text-slate-500 font-mono text-xs">
                 {formatDate(app.follow_up_date)}
               </td>
               <td className="py-3 px-2 text-right">
@@ -174,7 +174,7 @@ export function ApplicationTable({
                       onDelete(app.id);
                     }
                   }}
-                  className="text-slate-500 hover:text-rose-400 p-1"
+                  className="text-slate-500 hover:text-rose-600 p-1"
                   aria-label="Supprimer la candidature"
                 >
                   <Trash2 className="h-4 w-4" strokeWidth={2} />

@@ -32,9 +32,9 @@ export function SubscriptionsList({
 
   if (subscriptions.length === 0) {
     return (
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/30 p-12 text-center">
+      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-12 text-center">
         <p className="text-slate-500">Aucun abonnement pour le moment.</p>
-        <p className="text-sm text-slate-600 mt-1">
+        <p className="text-sm text-slate-500 mt-1">
           Ajoute Spotify, Netflix, Free, etc.
         </p>
       </div>
@@ -58,7 +58,7 @@ export function SubscriptionsList({
         return (
           <div
             key={sub.id}
-            className={`relative rounded-2xl border border-slate-800 bg-slate-900/50 overflow-hidden transition-all hover:-translate-y-0.5 hover:border-slate-700 ${
+            className={`relative rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden transition-all hover:-translate-y-0.5 hover:border-slate-300 ${
               inactive ? "opacity-50" : ""
             }`}
           >
@@ -71,11 +71,11 @@ export function SubscriptionsList({
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2 mb-0.5">
                     <span className="text-lg">{displayIcon}</span>
-                    <p className="text-sm font-medium text-slate-200 truncate">
+                    <p className="text-sm font-medium text-slate-900 truncate">
                       {sub.name}
                     </p>
                     {inactive && (
-                      <span className="text-[10px] uppercase tracking-wider text-slate-500 px-1.5 py-0.5 rounded bg-slate-800">
+                      <span className="text-[10px] uppercase tracking-wider text-slate-500 px-1.5 py-0.5 rounded bg-slate-100">
                         Inactif
                       </span>
                     )}
@@ -90,7 +90,7 @@ export function SubscriptionsList({
                     type="button"
                     onClick={() => onEdit(sub)}
                     title="Modifier"
-                    className="text-slate-500 hover:text-slate-300 hover:bg-slate-800 p-1.5 rounded transition-colors"
+                    className="text-slate-500 hover:text-slate-700 hover:bg-slate-100 p-1.5 rounded transition-colors"
                   >
                     <Edit className="h-4 w-4" />
                   </button>
@@ -100,8 +100,8 @@ export function SubscriptionsList({
                     title={inactive ? "Activer" : "Désactiver"}
                     className={`p-1.5 rounded transition-colors ${
                       inactive
-                        ? "text-slate-500 hover:text-emerald-400 hover:bg-emerald-500/10"
-                        : "text-slate-500 hover:text-amber-400 hover:bg-amber-500/10"
+                        ? "text-slate-500 hover:text-emerald-600 hover:bg-emerald-50"
+                        : "text-slate-500 hover:text-amber-600 hover:bg-amber-50"
                     }`}
                   >
                     <Power className="h-4 w-4" />
@@ -119,7 +119,7 @@ export function SubscriptionsList({
                     }}
                     disabled={deletingId === sub.id}
                     title="Supprimer"
-                    className="text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 p-1.5 rounded transition-colors disabled:opacity-50"
+                    className="text-slate-500 hover:text-rose-600 hover:bg-rose-50 p-1.5 rounded transition-colors disabled:opacity-50"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -127,7 +127,7 @@ export function SubscriptionsList({
               </div>
 
               <div className="flex items-baseline gap-2 mb-1">
-                <p className="font-mono text-2xl font-semibold tabular-nums text-slate-100">
+                <p className="font-mono text-2xl font-semibold tabular-nums text-slate-900">
                   {formatCurrency(sub.amount)}
                 </p>
                 <span className="text-xs text-slate-500">
@@ -149,7 +149,7 @@ export function SubscriptionsList({
               {sub.next_billing_date && sub.is_active && (
                 <p className="text-xs text-slate-500 mt-2">
                   Prochaine échéance :{" "}
-                  <span className="text-slate-300 font-mono">
+                  <span className="text-slate-700 font-mono">
                     {formatDate(sub.next_billing_date)}
                   </span>
                 </p>

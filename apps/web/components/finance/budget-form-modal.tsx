@@ -120,16 +120,16 @@ export function BudgetFormModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-slate-900 rounded-2xl border border-slate-800 w-full max-w-md">
-        <div className="flex items-center justify-between p-6 border-b border-slate-800">
-          <h2 className="text-lg font-semibold text-slate-100">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white backdrop-blur-sm p-4">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-xl w-full max-w-md">
+        <div className="flex items-center justify-between p-6 border-b border-slate-200">
+          <h2 className="text-lg font-semibold text-slate-900">
             {isEdit ? "Modifier le budget" : "Nouveau budget"}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="text-slate-500 hover:text-slate-300 p-1"
+            className="text-slate-500 hover:text-slate-700 p-1"
           >
             <X className="h-5 w-5" />
           </button>
@@ -147,7 +147,7 @@ export function BudgetFormModal({
                 handleChange("category_id", parseInt(e.target.value, 10))
               }
               disabled={isEdit}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 disabled:opacity-60"
+              className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 disabled:opacity-60"
             >
               <option value="">Sélectionner...</option>
               {availableCategories.map((c) => (
@@ -160,7 +160,7 @@ export function BudgetFormModal({
             {!isEdit &&
               formData.isRecurring &&
               availableCategories.length === 0 && (
-                <p className="text-xs text-amber-400 mt-1">
+                <p className="text-xs text-amber-600 mt-1">
                   Toutes les catégories ont déjà un budget récurrent. Crée un
                   budget spécifique au mois.
                 </p>
@@ -183,7 +183,7 @@ export function BudgetFormModal({
                   parseFloat(e.target.value) || 0,
                 )
               }
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 font-mono"
+              className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 font-mono"
             />
           </div>
 
@@ -201,8 +201,8 @@ export function BudgetFormModal({
                 disabled={isEdit}
                 className={`px-4 py-2 text-sm font-medium rounded-lg border transition-colors disabled:opacity-60 ${
                   formData.isRecurring === opt.value
-                    ? "bg-kiwi-500/20 border-kiwi-500/50 text-kiwi-300"
-                    : "bg-slate-800 border-slate-700 text-slate-400 hover:text-slate-200"
+                    ? "bg-emerald-100 border-emerald-400 text-kiwi-300"
+                    : "bg-slate-100 border-slate-300 text-slate-500 hover:text-slate-900"
                 }`}
               >
                 {opt.label}
@@ -221,7 +221,7 @@ export function BudgetFormModal({
                   onChange={(e) =>
                     handleChange("month", parseInt(e.target.value, 10))
                   }
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                  className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900"
                 >
                   {MONTHS_FR.map((label, i) => (
                     <option key={i + 1} value={i + 1}>
@@ -242,31 +242,31 @@ export function BudgetFormModal({
                   onChange={(e) =>
                     handleChange("year", parseInt(e.target.value, 10) || 0)
                   }
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 font-mono"
+                  className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 font-mono"
                 />
               </div>
             </div>
           )}
 
           {error && (
-            <div className="text-sm text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-lg p-3">
+            <div className="text-sm text-rose-700 bg-rose-50 border border-rose-200 rounded-lg p-3">
               {error}
             </div>
           )}
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
             <button
               type="button"
               onClick={onClose}
               disabled={submitting}
-              className="px-4 py-2 text-sm text-slate-400 hover:text-slate-200 disabled:opacity-50"
+              className="px-4 py-2 text-sm text-slate-500 hover:text-slate-900 disabled:opacity-50"
             >
               Annuler
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 text-sm bg-kiwi-500 hover:bg-kiwi-400 text-white font-medium rounded-lg disabled:opacity-50"
+              className="px-4 py-2 text-sm bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg disabled:opacity-50"
             >
               {submitting ? "..." : isEdit ? "Enregistrer" : "Créer"}
             </button>

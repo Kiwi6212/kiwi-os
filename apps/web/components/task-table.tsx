@@ -21,15 +21,15 @@ interface Props {
 
 const PRIORITY_COLORS: Record<TaskPriority, string> = {
   low: "text-slate-500",
-  medium: "text-blue-400",
-  high: "text-amber-400",
-  urgent: "text-rose-400",
+  medium: "text-blue-600",
+  high: "text-amber-600",
+  urgent: "text-rose-600",
 };
 
 const STATUS_COLORS: Record<TaskStatus, string> = {
-  todo: "bg-slate-700 text-slate-300",
-  in_progress: "bg-blue-500/20 text-blue-300",
-  done: "bg-emerald-500/20 text-emerald-300",
+  todo: "bg-slate-100 text-slate-700",
+  in_progress: "bg-blue-50 text-blue-700",
+  done: "bg-emerald-50 text-emerald-700",
 };
 
 function formatDeadline(deadline: string | null) {
@@ -42,18 +42,22 @@ function formatDeadline(deadline: string | null) {
   if (diffMs < 0) {
     return {
       label: `En retard de ${Math.abs(diffDays)}j`,
-      color: "text-rose-400",
+      color: "text-rose-600",
       icon: AlertCircle,
     };
   }
   if (diffDays === 0) {
-    return { label: "Aujourd'hui", color: "text-amber-400", icon: Calendar };
+    return { label: "Aujourd'hui", color: "text-amber-600", icon: Calendar };
   }
   if (diffDays === 1) {
-    return { label: "Demain", color: "text-amber-300", icon: Calendar };
+    return { label: "Demain", color: "text-amber-600", icon: Calendar };
   }
   if (diffDays <= 7) {
-    return { label: `Dans ${diffDays}j`, color: "text-slate-400", icon: Calendar };
+    return {
+      label: `Dans ${diffDays}j`,
+      color: "text-slate-600",
+      icon: Calendar,
+    };
   }
   return {
     label: d.toLocaleDateString("fr-FR", { day: "numeric", month: "short" }),
@@ -67,9 +71,9 @@ export function TaskTable({ tasks, onUpdate, onDelete, onEdit }: Props) {
 
   if (tasks.length === 0) {
     return (
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/30 p-12 text-center">
-        <p className="text-slate-500">Aucune tâche pour le moment.</p>
-        <p className="text-sm text-slate-600 mt-1">
+      <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm">
+        <p className="text-slate-600">Aucune tâche pour le moment.</p>
+        <p className="text-sm text-slate-500 mt-1">
           Crée ta première tâche pour démarrer.
         </p>
       </div>
@@ -77,10 +81,10 @@ export function TaskTable({ tasks, onUpdate, onDelete, onEdit }: Props) {
   }
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/30 overflow-hidden">
+    <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-slate-800 bg-slate-900/50">
+          <tr className="border-b border-slate-200 bg-slate-50">
             <th className="text-left text-xs uppercase tracking-wider text-slate-500 px-4 py-3 font-medium">
               Titre
             </th>
@@ -107,7 +111,7 @@ export function TaskTable({ tasks, onUpdate, onDelete, onEdit }: Props) {
             return (
               <tr
                 key={task.id}
-                className={`border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors ${
+                className={`border-b border-slate-100 hover:bg-slate-50 transition-colors last:border-b-0 ${
                   task.status === "done" ? "opacity-60" : ""
                 }`}
               >
@@ -117,7 +121,7 @@ export function TaskTable({ tasks, onUpdate, onDelete, onEdit }: Props) {
                       className={`text-sm font-medium ${
                         task.status === "done"
                           ? "line-through text-slate-500"
-                          : "text-slate-200"
+                          : "text-slate-900"
                       } truncate`}
                     >
                       {task.title}
@@ -131,7 +135,7 @@ export function TaskTable({ tasks, onUpdate, onDelete, onEdit }: Props) {
                 </td>
                 <td className="px-4 py-3">
                   <div className="text-xs">
-                    <p className="text-slate-300">
+                    <p className="text-slate-700">
                       {CATEGORY_LABELS[task.category]}
                     </p>
                     <p className="text-slate-500">
@@ -147,7 +151,7 @@ export function TaskTable({ tasks, onUpdate, onDelete, onEdit }: Props) {
                         status: e.target.value as TaskStatus,
                       })
                     }
-                    className={`text-xs rounded-full px-2.5 py-1 border-0 cursor-pointer ${STATUS_COLORS[task.status]}`}
+                    className={`text-xs rounded-full px-2.5 py-1 border border-slate-200 cursor-pointer ${STATUS_COLORS[task.status]}`}
                   >
                     {Object.entries(STATUS_LABELS).map(([k, v]) => (
                       <option key={k} value={k}>
@@ -172,7 +176,7 @@ export function TaskTable({ tasks, onUpdate, onDelete, onEdit }: Props) {
                       {deadlineInfo.label}
                     </span>
                   ) : (
-                    <span className="text-xs text-slate-600">—</span>
+                    <span className="text-xs text-slate-500">—</span>
                   )}
                 </td>
                 <td className="px-4 py-3">
@@ -182,7 +186,7 @@ export function TaskTable({ tasks, onUpdate, onDelete, onEdit }: Props) {
                         type="button"
                         onClick={() => onUpdate(task.id, { status: "done" })}
                         title="Marquer terminé"
-                        className="text-emerald-500 hover:text-emerald-400 hover:bg-emerald-500/10 p-1.5 rounded transition-colors"
+                        className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 p-1.5 rounded transition-colors"
                       >
                         <Check className="h-4 w-4" />
                       </button>
@@ -191,7 +195,7 @@ export function TaskTable({ tasks, onUpdate, onDelete, onEdit }: Props) {
                       type="button"
                       onClick={() => onEdit(task)}
                       title="Modifier"
-                      className="text-slate-500 hover:text-slate-300 hover:bg-slate-700 p-1.5 rounded transition-colors"
+                      className="text-slate-500 hover:text-slate-900 hover:bg-slate-100 p-1.5 rounded transition-colors"
                     >
                       <Edit className="h-4 w-4" />
                     </button>
@@ -209,7 +213,7 @@ export function TaskTable({ tasks, onUpdate, onDelete, onEdit }: Props) {
                       }}
                       disabled={deletingId === task.id}
                       title="Supprimer"
-                      className="text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 p-1.5 rounded transition-colors disabled:opacity-50"
+                      className="text-slate-500 hover:text-rose-600 hover:bg-rose-50 p-1.5 rounded transition-colors disabled:opacity-50"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>

@@ -99,16 +99,16 @@ export function SubscriptionFormModal({
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-slate-900 rounded-2xl border border-slate-800 w-full max-w-lg max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-6 border-b border-slate-800 sticky top-0 bg-slate-900">
-          <h2 className="text-lg font-semibold text-slate-100">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white backdrop-blur-sm p-4">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between p-6 border-b border-slate-200 sticky top-0 bg-white">
+          <h2 className="text-lg font-semibold text-slate-900">
             {isEdit ? "Modifier l'abonnement" : "Nouvel abonnement"}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="text-slate-500 hover:text-slate-300 p-1"
+            className="text-slate-500 hover:text-slate-700 p-1"
           >
             <X className="h-5 w-5" />
           </button>
@@ -124,7 +124,7 @@ export function SubscriptionFormModal({
               required
               value={formData.name}
               onChange={(e) => handleChange("name", e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-kiwi-500"
+              className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               placeholder="ex: Spotify"
             />
           </div>
@@ -143,7 +143,7 @@ export function SubscriptionFormModal({
                 onChange={(e) =>
                   handleChange("amount", parseFloat(e.target.value) || 0)
                 }
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 font-mono"
+                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 font-mono"
               />
             </div>
             <div>
@@ -158,7 +158,7 @@ export function SubscriptionFormModal({
                     e.target.value as SubscriptionFrequency,
                   )
                 }
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900"
               >
                 {Object.entries(SUBSCRIPTION_FREQUENCY_LABELS).map(([k, v]) => (
                   <option key={k} value={k}>
@@ -179,7 +179,7 @@ export function SubscriptionFormModal({
                 required
                 value={formData.started_at}
                 onChange={(e) => handleChange("started_at", e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900"
               />
             </div>
             <div>
@@ -192,7 +192,7 @@ export function SubscriptionFormModal({
                 onChange={(e) =>
                   handleChange("ended_at", e.target.value || null)
                 }
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900"
               />
             </div>
           </div>
@@ -210,7 +210,7 @@ export function SubscriptionFormModal({
                     e.target.value ? parseInt(e.target.value, 10) : null,
                   )
                 }
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900"
               >
                 <option value="">Aucun</option>
                 {accounts.map((a) => (
@@ -232,7 +232,7 @@ export function SubscriptionFormModal({
                     e.target.value ? parseInt(e.target.value, 10) : null,
                   )
                 }
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900"
               >
                 <option value="">Sans catégorie</option>
                 {filteredCategories.map((c) => (
@@ -255,7 +255,7 @@ export function SubscriptionFormModal({
                 maxLength={10}
                 value={formData.icon ?? ""}
                 onChange={(e) => handleChange("icon", e.target.value)}
-                className="w-16 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 text-center"
+                className="w-16 bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 text-center"
                 placeholder="🎵"
               />
             </div>
@@ -288,9 +288,9 @@ export function SubscriptionFormModal({
               id="sub_active"
               checked={formData.is_active ?? true}
               onChange={(e) => handleChange("is_active", e.target.checked)}
-              className="rounded border-slate-700 bg-slate-800"
+              className="rounded border-slate-200 bg-slate-50"
             />
-            <label htmlFor="sub_active" className="text-sm text-slate-300">
+            <label htmlFor="sub_active" className="text-sm text-slate-700">
               Abonnement actif
             </label>
           </div>
@@ -303,29 +303,29 @@ export function SubscriptionFormModal({
               rows={2}
               value={formData.notes ?? ""}
               onChange={(e) => handleChange("notes", e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 resize-none"
+              className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 resize-none"
             />
           </div>
 
           {error && (
-            <div className="text-sm text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-lg p-3">
+            <div className="text-sm text-rose-700 bg-rose-50 border border-rose-200 rounded-lg p-3">
               {error}
             </div>
           )}
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
             <button
               type="button"
               onClick={onClose}
               disabled={submitting}
-              className="px-4 py-2 text-sm text-slate-400 hover:text-slate-200 disabled:opacity-50"
+              className="px-4 py-2 text-sm text-slate-500 hover:text-slate-900 disabled:opacity-50"
             >
               Annuler
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 text-sm bg-kiwi-500 hover:bg-kiwi-400 text-white font-medium rounded-lg disabled:opacity-50"
+              className="px-4 py-2 text-sm bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg disabled:opacity-50"
             >
               {submitting ? "..." : isEdit ? "Enregistrer" : "Créer"}
             </button>

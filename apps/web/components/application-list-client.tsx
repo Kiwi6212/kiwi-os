@@ -116,7 +116,7 @@ export function ApplicationListClient() {
   }
 
   if (error) {
-    return <div className="text-sm text-rose-400 py-4">{error}</div>;
+    return <div className="text-sm text-rose-600 py-4">{error}</div>;
   }
 
   return (
@@ -128,7 +128,7 @@ export function ApplicationListClient() {
         <button
           type="button"
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-kiwi-500 hover:bg-kiwi-400 text-white text-sm font-medium rounded-lg transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors"
         >
           <Plus className="h-4 w-4" strokeWidth={2} />
           Nouvelle candidature

@@ -32,7 +32,7 @@ interface Props {
   stats: DetailedStats;
 }
 
-const KIWI_COLOR = "#10b981";
+const KIWI_COLOR = "#059669";
 
 export function JobSearchDetailedStats({ stats }: Props) {
   const hasSalaryData = stats.by_salary_range.some((r) => r.count > 0);
@@ -41,21 +41,21 @@ export function JobSearchDetailedStats({ stats }: Props) {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-sm font-semibold text-slate-100 uppercase tracking-wide">
+      <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wide">
         Stats détaillées
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
           <div className="flex items-center gap-2 mb-4">
-            <Clock className="h-4 w-4 text-slate-400" strokeWidth={2} />
-            <h3 className="text-sm font-medium text-slate-300">
+            <Clock className="h-4 w-4 text-slate-500" strokeWidth={2} />
+            <h3 className="text-sm font-medium text-slate-700">
               Temps moyen de réponse
             </h3>
           </div>
           {stats.avg_response_time_days !== null ? (
             <>
-              <p className="text-3xl font-mono font-semibold text-slate-100 tabular-nums">
+              <p className="text-3xl font-mono font-semibold text-slate-900 tabular-nums">
                 {stats.avg_response_time_days.toFixed(1)}{" "}
                 <span className="text-sm text-slate-500">jours</span>
               </p>
@@ -73,10 +73,10 @@ export function JobSearchDetailedStats({ stats }: Props) {
           )}
         </div>
 
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
           <div className="flex items-center gap-2 mb-4">
-            <Building2 className="h-4 w-4 text-slate-400" strokeWidth={2} />
-            <h3 className="text-sm font-medium text-slate-300">
+            <Building2 className="h-4 w-4 text-slate-500" strokeWidth={2} />
+            <h3 className="text-sm font-medium text-slate-700">
               Top 5 entreprises
             </h3>
           </div>
@@ -87,10 +87,10 @@ export function JobSearchDetailedStats({ stats }: Props) {
                   key={`${c.company}-${i}`}
                   className="flex items-center justify-between"
                 >
-                  <span className="text-sm text-slate-300 truncate">
+                  <span className="text-sm text-slate-700 truncate">
                     {c.company}
                   </span>
-                  <span className="text-sm font-mono text-slate-400 tabular-nums">
+                  <span className="text-sm font-mono text-slate-500 tabular-nums">
                     {c.count}
                   </span>
                 </li>
@@ -102,8 +102,8 @@ export function JobSearchDetailedStats({ stats }: Props) {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
-        <h3 className="text-sm font-medium text-slate-300 mb-4">
+      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
+        <h3 className="text-sm font-medium text-slate-700 mb-4">
           Distribution par fourchette salariale
         </h3>
         {hasSalaryData ? (
@@ -112,26 +112,26 @@ export function JobSearchDetailedStats({ stats }: Props) {
               data={stats.by_salary_range}
               margin={{ top: 8, right: 8, bottom: 0, left: -16 }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
               <XAxis
                 dataKey="range"
-                stroke="#94A3B8"
+                stroke="#94a3b8"
                 tick={{ fontSize: 12 }}
               />
               <YAxis
-                stroke="#94A3B8"
+                stroke="#94a3b8"
                 tick={{ fontSize: 12 }}
                 allowDecimals={false}
               />
               <Tooltip
                 contentStyle={{
-                  background: "#0F172A",
-                  border: "1px solid #1E293B",
+                  background: "rgba(255, 255, 255, 0.95)",
+                  border: "1px solid #e2e8f0",
                   borderRadius: 12,
                   fontSize: 12,
-                  color: "#E2E8F0",
+                  color: "#0f172a",
                 }}
-                cursor={{ fill: "#1E293B33" }}
+                cursor={{ fill: "#f1f5f9" }}
               />
               <Bar dataKey="count" fill={KIWI_COLOR} radius={[8, 8, 0, 0]} />
             </BarChart>
@@ -143,10 +143,10 @@ export function JobSearchDetailedStats({ stats }: Props) {
         )}
       </div>
 
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
+      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
         <div className="flex items-center gap-2 mb-4">
-          <CalendarClock className="h-4 w-4 text-slate-400" strokeWidth={2} />
-          <h3 className="text-sm font-medium text-slate-300">
+          <CalendarClock className="h-4 w-4 text-slate-500" strokeWidth={2} />
+          <h3 className="text-sm font-medium text-slate-700">
             Relances prévues
           </h3>
         </div>
@@ -160,13 +160,13 @@ export function JobSearchDetailedStats({ stats }: Props) {
                 { day: "numeric", month: "short" },
               );
               const rowClass = isLate
-                ? "bg-rose-500/10 border border-rose-500/30"
-                : "bg-slate-800/50";
+                ? "bg-rose-50 border border-rose-300"
+                : "bg-slate-100";
               const badgeClass = isLate
-                ? "bg-rose-500/20 text-rose-300"
+                ? "bg-rose-100 text-rose-600"
                 : isToday
-                  ? "bg-amber-500/20 text-amber-300"
-                  : "bg-slate-700 text-slate-300";
+                  ? "bg-amber-100 text-amber-700"
+                  : "bg-slate-200 text-slate-700";
               const badgeText = isLate
                 ? `${Math.abs(f.days_until)}j en retard`
                 : isToday
@@ -178,7 +178,7 @@ export function JobSearchDetailedStats({ stats }: Props) {
                   className={`flex items-center justify-between py-2 px-3 rounded-lg ${rowClass}`}
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-slate-200 truncate">
+                    <p className="text-sm font-medium text-slate-900 truncate">
                       {f.company}
                     </p>
                     <p className="text-xs text-slate-500 truncate">
@@ -186,7 +186,7 @@ export function JobSearchDetailedStats({ stats }: Props) {
                     </p>
                   </div>
                   <div className="flex items-center gap-3 shrink-0">
-                    <span className="text-xs font-mono text-slate-400">
+                    <span className="text-xs font-mono text-slate-500">
                       {dateStr}
                     </span>
                     <span

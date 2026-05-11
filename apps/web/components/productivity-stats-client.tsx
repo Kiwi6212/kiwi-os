@@ -26,9 +26,9 @@ import type { TimeStats } from "@/lib/types/pomodoro";
 const API_BASE = "http://localhost:8000";
 
 const TOOLTIP_STYLE: React.CSSProperties = {
-  backgroundColor: "#0f172a",
-  border: "1px solid #334155",
-  borderRadius: "8px",
+  backgroundColor: "rgba(255, 255, 255, 0.95)",
+  border: "1px solid #e2e8f0",
+  borderRadius: "12px",
   fontSize: 12,
 };
 
@@ -79,7 +79,7 @@ export function ProductivityStatsClient() {
   }
   if (error || !taskStats || !timeStats) {
     return (
-      <div className="text-rose-400 text-sm py-8">
+      <div className="text-rose-600 text-sm py-8">
         {error ?? "Erreur de chargement."}
       </div>
     );
@@ -111,37 +111,37 @@ export function ProductivityStatsClient() {
           label="Tâches actives"
           value={taskStats.by_status.todo + taskStats.by_status.in_progress}
           icon={ListChecks}
-          color="text-blue-400"
+          color="text-blue-600"
         />
         <KpiCard
           label="Faites cette semaine"
           value={taskStats.completed_this_week}
           icon={CheckCircle2}
-          color="text-emerald-400"
+          color="text-emerald-600"
         />
         <KpiCard
           label="Temps aujourd'hui"
           value={formatHours(timeStats.total_seconds_today)}
           icon={Clock}
-          color="text-kiwi-400"
+          color="text-emerald-600"
         />
         <KpiCard
           label="En retard"
           value={taskStats.overdue}
           icon={AlertTriangle}
-          color={taskStats.overdue > 0 ? "text-rose-400" : "text-slate-500"}
+          color={taskStats.overdue > 0 ? "text-rose-600" : "text-slate-500"}
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
-          <h3 className="text-sm font-medium text-slate-300 mb-4">
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
+          <h3 className="text-sm font-medium text-slate-700 mb-4">
             Temps tracké (7 derniers jours, en minutes)
           </h3>
           {hasDailyData ? (
             <ResponsiveContainer width="100%" height={240}>
               <AreaChart data={dailyData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                 <XAxis
                   dataKey="date"
                   stroke="#94a3b8"
@@ -150,15 +150,15 @@ export function ProductivityStatsClient() {
                 <YAxis stroke="#94a3b8" tick={{ fontSize: 12 }} />
                 <Tooltip
                   contentStyle={TOOLTIP_STYLE}
-                  labelStyle={{ color: "#cbd5e1" }}
+                  labelStyle={{ color: "#0f172a" }}
                 />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
                 <Area
                   type="monotone"
                   dataKey="Focus"
                   stackId="1"
-                  stroke="#10b981"
-                  fill="#10b981"
+                  stroke="#059669"
+                  fill="#059669"
                   fillOpacity={0.6}
                 />
                 <Area
@@ -166,15 +166,15 @@ export function ProductivityStatsClient() {
                   dataKey="Timer libre"
                   stackId="1"
                   stroke="#94a3b8"
-                  fill="#94a3b8"
+                  fill="#6b7280"
                   fillOpacity={0.6}
                 />
                 <Area
                   type="monotone"
                   dataKey="Pause"
                   stackId="1"
-                  stroke="#3b82f6"
-                  fill="#3b82f6"
+                  stroke="#2563eb"
+                  fill="#2563eb"
                   fillOpacity={0.4}
                 />
               </AreaChart>
@@ -186,14 +186,14 @@ export function ProductivityStatsClient() {
           )}
         </div>
 
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
-          <h3 className="text-sm font-medium text-slate-300 mb-4">
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
+          <h3 className="text-sm font-medium text-slate-700 mb-4">
             Top 5 tâches cette semaine (en minutes)
           </h3>
           {topTasksData.length > 0 ? (
             <ResponsiveContainer width="100%" height={240}>
               <BarChart data={topTasksData} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                 <XAxis type="number" stroke="#94a3b8" tick={{ fontSize: 12 }} />
                 <YAxis
                   type="category"
@@ -204,9 +204,9 @@ export function ProductivityStatsClient() {
                 />
                 <Tooltip
                   contentStyle={TOOLTIP_STYLE}
-                  labelStyle={{ color: "#cbd5e1" }}
+                  labelStyle={{ color: "#0f172a" }}
                 />
-                <Bar dataKey="minutes" fill="#10b981" radius={[0, 8, 8, 0]} />
+                <Bar dataKey="minutes" fill="#059669" radius={[0, 8, 8, 0]} />
               </BarChart>
             </ResponsiveContainer>
           ) : (
@@ -217,8 +217,8 @@ export function ProductivityStatsClient() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
-        <h3 className="text-sm font-medium text-slate-300 mb-4">
+      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
+        <h3 className="text-sm font-medium text-slate-700 mb-4">
           Répartition des tâches par catégorie
         </h3>
         <div className="grid grid-cols-2 gap-4">
@@ -226,14 +226,14 @@ export function ProductivityStatsClient() {
             label="École"
             count={taskStats.by_category.school}
             total={taskStats.total}
-            textColor="text-blue-400"
+            textColor="text-blue-600"
             barColor="bg-blue-400"
           />
           <CategoryStat
             label="Perso"
             count={taskStats.by_category.personal}
             total={taskStats.total}
-            textColor="text-violet-400"
+            textColor="text-violet-600"
             barColor="bg-violet-400"
           />
         </div>
@@ -254,7 +254,7 @@ function KpiCard({
   color: string;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-5">
+    <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
       <div className="flex items-center gap-2 mb-2">
         <Icon className={`h-4 w-4 ${color}`} strokeWidth={1.5} />
         <p className="text-xs uppercase tracking-wider text-slate-500">
@@ -285,12 +285,12 @@ function CategoryStat({
   return (
     <div>
       <div className="flex items-baseline justify-between mb-1">
-        <span className="text-sm text-slate-300">{label}</span>
+        <span className="text-sm text-slate-700">{label}</span>
         <span className={`text-sm font-mono ${textColor}`}>
           {count} ({pct}%)
         </span>
       </div>
-      <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+      <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
         <div className={`h-full ${barColor}`} style={{ width: `${pct}%` }} />
       </div>
     </div>

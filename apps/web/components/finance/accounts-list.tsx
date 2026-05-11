@@ -24,9 +24,9 @@ export function AccountsList({
 }: Props) {
   if (accounts.length === 0) {
     return (
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/30 p-12 text-center">
+      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-12 text-center">
         <p className="text-slate-500">Aucun compte pour le moment.</p>
-        <p className="text-sm text-slate-600 mt-1">
+        <p className="text-sm text-slate-500 mt-1">
           Crée ton premier compte pour commencer.
         </p>
       </div>
@@ -41,13 +41,13 @@ export function AccountsList({
         const bal = balanceById.get(account.id);
         const currentBalance = bal?.current_balance ?? account.initial_balance;
         const balanceColor =
-          currentBalance >= 0 ? "text-emerald-400" : "text-rose-400";
+          currentBalance >= 0 ? "text-emerald-600" : "text-rose-600";
         const inactive = !account.is_active;
 
         return (
           <div
             key={account.id}
-            className={`relative rounded-2xl border border-slate-800 bg-slate-900/50 overflow-hidden transition-all hover:-translate-y-0.5 hover:border-slate-700 ${
+            className={`relative rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden transition-all hover:-translate-y-0.5 hover:border-slate-300 ${
               inactive ? "opacity-50" : ""
             }`}
           >
@@ -62,7 +62,7 @@ export function AccountsList({
                     <span className="text-lg">
                       {ACCOUNT_TYPE_ICONS[account.type]}
                     </span>
-                    <p className="text-sm font-medium text-slate-200 truncate">
+                    <p className="text-sm font-medium text-slate-900 truncate">
                       {account.name}
                     </p>
                   </div>
@@ -76,7 +76,7 @@ export function AccountsList({
                     type="button"
                     onClick={() => onEdit(account)}
                     title="Modifier"
-                    className="text-slate-500 hover:text-slate-300 hover:bg-slate-800 p-1.5 rounded transition-colors"
+                    className="text-slate-500 hover:text-slate-700 hover:bg-slate-100 p-1.5 rounded transition-colors"
                   >
                     <Edit className="h-4 w-4" />
                   </button>
@@ -86,8 +86,8 @@ export function AccountsList({
                     title={inactive ? "Activer" : "Désactiver"}
                     className={`p-1.5 rounded transition-colors ${
                       inactive
-                        ? "text-slate-500 hover:text-emerald-400 hover:bg-emerald-500/10"
-                        : "text-slate-500 hover:text-amber-400 hover:bg-amber-500/10"
+                        ? "text-slate-500 hover:text-emerald-600 hover:bg-emerald-50"
+                        : "text-slate-500 hover:text-amber-600 hover:bg-amber-50"
                     }`}
                   >
                     <Power className="h-4 w-4" />

@@ -19,7 +19,7 @@ export function BentoCard({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay, ease: "easeOut" }}
-      className={`rounded-2xl border border-slate-800 bg-slate-900/50 p-6 ${className}`}
+      className={`glass-card rounded-2xl p-6 ${className}`}
     >
       {children}
     </motion.div>

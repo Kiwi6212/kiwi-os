@@ -79,16 +79,16 @@ export function AccountFormModal({ onClose, onSubmit, initialAccount }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-slate-900 rounded-2xl border border-slate-800 w-full max-w-md">
-        <div className="flex items-center justify-between p-6 border-b border-slate-800">
-          <h2 className="text-lg font-semibold text-slate-100">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white backdrop-blur-sm p-4">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-xl w-full max-w-md">
+        <div className="flex items-center justify-between p-6 border-b border-slate-200">
+          <h2 className="text-lg font-semibold text-slate-900">
             {isEdit ? "Modifier le compte" : "Nouveau compte"}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="text-slate-500 hover:text-slate-300 p-1"
+            className="text-slate-500 hover:text-slate-700 p-1"
           >
             <X className="h-5 w-5" />
           </button>
@@ -104,7 +104,7 @@ export function AccountFormModal({ onClose, onSubmit, initialAccount }: Props) {
               required
               value={formData.name}
               onChange={(e) => handleChange("name", e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-kiwi-500"
+              className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               placeholder="ex: LCL Compte courant"
             />
           </div>
@@ -116,7 +116,7 @@ export function AccountFormModal({ onClose, onSubmit, initialAccount }: Props) {
             <select
               value={formData.type}
               onChange={(e) => handleChange("type", e.target.value as AccountType)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+              className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900"
             >
               {Object.entries(ACCOUNT_TYPE_LABELS).map(([k, v]) => (
                 <option key={k} value={k}>
@@ -135,7 +135,7 @@ export function AccountFormModal({ onClose, onSubmit, initialAccount }: Props) {
                 type="text"
                 value={formData.institution ?? ""}
                 onChange={(e) => handleChange("institution", e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200"
+                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900"
                 placeholder="LCL, BNP, etc."
               />
             </div>
@@ -153,7 +153,7 @@ export function AccountFormModal({ onClose, onSubmit, initialAccount }: Props) {
                     parseFloat(e.target.value) || 0,
                   )
                 }
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 font-mono"
+                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 font-mono"
               />
             </div>
           </div>
@@ -186,32 +186,32 @@ export function AccountFormModal({ onClose, onSubmit, initialAccount }: Props) {
               id="is_active"
               checked={formData.is_active}
               onChange={(e) => handleChange("is_active", e.target.checked)}
-              className="rounded border-slate-700 bg-slate-800"
+              className="rounded border-slate-200 bg-slate-50"
             />
-            <label htmlFor="is_active" className="text-sm text-slate-300">
+            <label htmlFor="is_active" className="text-sm text-slate-700">
               Compte actif
             </label>
           </div>
 
           {error && (
-            <div className="text-sm text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-lg p-3">
+            <div className="text-sm text-rose-700 bg-rose-50 border border-rose-200 rounded-lg p-3">
               {error}
             </div>
           )}
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
             <button
               type="button"
               onClick={onClose}
               disabled={submitting}
-              className="px-4 py-2 text-sm text-slate-400 hover:text-slate-200 disabled:opacity-50"
+              className="px-4 py-2 text-sm text-slate-500 hover:text-slate-900 disabled:opacity-50"
             >
               Annuler
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 text-sm bg-kiwi-500 hover:bg-kiwi-400 text-white font-medium rounded-lg disabled:opacity-50"
+              className="px-4 py-2 text-sm bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg disabled:opacity-50"
             >
               {submitting ? "..." : isEdit ? "Enregistrer" : "Créer"}
             </button>

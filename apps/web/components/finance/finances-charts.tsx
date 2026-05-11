@@ -35,9 +35,9 @@ const CATEGORY_DEFAULT_COLORS = [
 ];
 
 const TOOLTIP_STYLE: React.CSSProperties = {
-  backgroundColor: "#0f172a",
-  border: "1px solid #334155",
-  borderRadius: "8px",
+  backgroundColor: "rgba(255, 255, 255, 0.95)",
+  border: "1px solid #e2e8f0",
+  borderRadius: "12px",
   fontSize: 12,
 };
 
@@ -71,8 +71,8 @@ export function FinancesCharts({ stats }: Props) {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
-        <h3 className="text-sm font-medium text-slate-300 mb-4">
+      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
+        <h3 className="text-sm font-medium text-slate-700 mb-4">
           Évolution sur 12 mois
         </h3>
         {hasEvolutionData ? (
@@ -80,15 +80,15 @@ export function FinancesCharts({ stats }: Props) {
             <AreaChart data={evolutionData}>
               <defs>
                 <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.7} />
-                  <stop offset="95%" stopColor="#10b981" stopOpacity={0.1} />
+                  <stop offset="5%" stopColor="#059669" stopOpacity={0.7} />
+                  <stop offset="95%" stopColor="#059669" stopOpacity={0.1} />
                 </linearGradient>
                 <linearGradient id="colorExpense" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#ef4444" stopOpacity={0.7} />
-                  <stop offset="95%" stopColor="#ef4444" stopOpacity={0.1} />
+                  <stop offset="5%" stopColor="#dc2626" stopOpacity={0.7} />
+                  <stop offset="95%" stopColor="#dc2626" stopOpacity={0.1} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
               <XAxis
                 dataKey="label"
                 stroke="#94a3b8"
@@ -97,21 +97,21 @@ export function FinancesCharts({ stats }: Props) {
               <YAxis stroke="#94a3b8" tick={{ fontSize: 11 }} />
               <Tooltip
                 contentStyle={TOOLTIP_STYLE}
-                labelStyle={{ color: "#cbd5e1" }}
+                labelStyle={{ color: "#0f172a" }}
                 formatter={(v) => formatCurrency(Number(v ?? 0))}
               />
               <Legend wrapperStyle={{ fontSize: 12 }} />
               <Area
                 type="monotone"
                 dataKey="Revenus"
-                stroke="#10b981"
+                stroke="#059669"
                 fill="url(#colorIncome)"
                 strokeWidth={2}
               />
               <Area
                 type="monotone"
                 dataKey="Dépenses"
-                stroke="#ef4444"
+                stroke="#dc2626"
                 fill="url(#colorExpense)"
                 strokeWidth={2}
               />
@@ -125,8 +125,8 @@ export function FinancesCharts({ stats }: Props) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
-          <h3 className="text-sm font-medium text-slate-300 mb-4">
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
+          <h3 className="text-sm font-medium text-slate-700 mb-4">
             Répartition des dépenses ce mois
           </h3>
           {categoryData.length > 0 ? (
@@ -171,7 +171,7 @@ export function FinancesCharts({ stats }: Props) {
                       className="w-3 h-3 rounded-sm shrink-0"
                       style={{ backgroundColor: c.color }}
                     />
-                    <span className="text-slate-300 flex-1 truncate">
+                    <span className="text-slate-700 flex-1 truncate">
                       {c.icon ? `${c.icon} ` : ""}
                       {c.name}
                     </span>
@@ -189,14 +189,14 @@ export function FinancesCharts({ stats }: Props) {
           )}
         </div>
 
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
-          <h3 className="text-sm font-medium text-slate-300 mb-4">
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
+          <h3 className="text-sm font-medium text-slate-700 mb-4">
             Top 5 marchands ce mois
           </h3>
           {merchantData.length > 0 ? (
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={merchantData} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                 <XAxis
                   type="number"
                   stroke="#94a3b8"
@@ -215,7 +215,7 @@ export function FinancesCharts({ stats }: Props) {
                 />
                 <Bar
                   dataKey="amount"
-                  fill="#3b82f6"
+                  fill="#2563eb"
                   radius={[0, 8, 8, 0]}
                 />
               </BarChart>

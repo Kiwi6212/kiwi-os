@@ -18,12 +18,12 @@ interface KpiCardProps {
 }
 
 const ACCENT_CLASSES: Record<NonNullable<KpiCardProps["accent"]>, string> = {
-  kiwi: "bg-kiwi-500/15 text-kiwi-400",
-  cyan: "bg-cyan-500/15 text-cyan-400",
-  violet: "bg-violet-500/15 text-violet-400",
-  amber: "bg-amber-500/15 text-amber-400",
-  rose: "bg-rose-500/15 text-rose-400",
-  blue: "bg-blue-500/15 text-blue-400",
+  kiwi: "bg-emerald-50 text-emerald-600",
+  cyan: "bg-cyan-50 text-cyan-600",
+  violet: "bg-violet-50 text-violet-600",
+  amber: "bg-amber-50 text-amber-600",
+  rose: "bg-rose-50 text-rose-600",
+  blue: "bg-blue-50 text-blue-600",
 };
 
 export function KpiCard({
@@ -40,10 +40,10 @@ export function KpiCard({
     trend === "up" ? TrendingUp : trend === "down" ? TrendingDown : Minus;
   const trendColor =
     trend === "up"
-      ? "text-kiwi-400"
+      ? "text-emerald-600"
       : trend === "down"
-        ? "text-rose-400"
-        : "text-slate-400";
+        ? "text-rose-600"
+        : "text-slate-500";
 
   return (
     <motion.div
@@ -51,7 +51,7 @@ export function KpiCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay, ease: "easeOut" }}
       whileHover={{ y: -2 }}
-      className="rounded-2xl border border-slate-800 bg-slate-900/50 p-5 transition-shadow duration-200 hover:shadow-lg hover:shadow-slate-950/50"
+      className="glass-card rounded-2xl p-5 transition-shadow duration-200 hover:shadow-md"
     >
       <div className="flex items-start justify-between mb-4">
         <div
@@ -70,7 +70,7 @@ export function KpiCard({
       </div>
       <div className="space-y-1">
         <div className="flex items-baseline gap-1">
-          <span className="font-mono text-3xl font-semibold text-slate-100 tabular-nums">
+          <span className="font-mono text-3xl font-semibold text-slate-900 tabular-nums">
             {value}
           </span>
           {unit && (
