@@ -1,8 +1,19 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Zap, Wallet, Target, Code2, BarChart3 } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  BarChart3,
+  Code2,
+  Home,
+  Settings as SettingsIcon,
+  Target,
+  Wallet,
+  Zap,
+} from "lucide-react";
+import type { UserPreference } from "@/lib/types/settings";
 
 const NAV_ITEMS = [
   { href: "/", label: "Accueil", icon: Home },
@@ -13,13 +24,45 @@ const NAV_ITEMS = [
   { href: "/stats", label: "Stats", icon: BarChart3 },
 ];
 
+const API_BASE = "http://localhost:8000";
+const FALLBACK_NAME = "Mathias";
+
+function initials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
 export function Sidebar() {
   const pathname = usePathname();
+  const [preferences, setPreferences] = useState<UserPreference | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`${API_BASE}/api/settings/preferences`);
+        if (!res.ok) return;
+        const data = (await res.json()) as UserPreference;
+        if (!cancelled) setPreferences(data);
+      } catch {
+        // silent — fall back to defaults
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [pathname]);
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
     return pathname.startsWith(href);
   };
+
+  const displayName = preferences?.display_name?.trim() || FALLBACK_NAME;
+  const avatarUrl = preferences?.avatar_url ?? null;
+  const profileActive = pathname.startsWith("/settings");
 
   return (
     <aside className="glass-strong fixed left-0 top-0 h-screen w-60 border-r border-slate-200">
@@ -67,21 +110,43 @@ export function Sidebar() {
         </nav>
 
         <div className="border-t border-slate-200 p-4">
-          <div className="flex items-center gap-3 rounded-lg bg-slate-50 px-3 py-2">
-            <div className="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center">
-              <span className="text-xs font-semibold text-emerald-700">
-                KC
-              </span>
+          <Link
+            href="/settings"
+            className={`group flex items-center gap-3 rounded-lg px-3 py-2 transition-colors ${
+              profileActive
+                ? "bg-emerald-50"
+                : "bg-slate-50 hover:bg-slate-100"
+            }`}
+          >
+            <div className="relative h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center overflow-hidden shrink-0">
+              {avatarUrl ? (
+                <Image
+                  src={avatarUrl}
+                  alt={displayName}
+                  fill
+                  sizes="32px"
+                  className="object-cover"
+                  unoptimized
+                />
+              ) : (
+                <span className="text-xs font-semibold text-emerald-700">
+                  {initials(displayName)}
+                </span>
+              )}
             </div>
             <div className="flex flex-col flex-1 min-w-0">
               <span className="text-sm font-medium text-slate-900 truncate">
-                Mathias
+                {displayName}
               </span>
               <span className="text-xs text-slate-500 truncate">
-                Personal cockpit
+                Paramètres
               </span>
             </div>
-          </div>
+            <SettingsIcon
+              className="h-4 w-4 text-slate-400 group-hover:text-slate-700 shrink-0"
+              strokeWidth={1.5}
+            />
+          </Link>
         </div>
       </div>
     </aside>
