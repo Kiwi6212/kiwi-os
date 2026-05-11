@@ -14,6 +14,7 @@ from app.routers import (
     health,
     pomodoro,
     settings as settings_router,
+    settings_data,
     stats,
     tasks,
     time_entries,
@@ -64,6 +65,11 @@ def create_app() -> FastAPI:
     app.include_router(health.router, tags=["health"])
     app.include_router(
         settings_router.router, prefix="/api/settings", tags=["settings"]
+    )
+    app.include_router(
+        settings_data.router,
+        prefix="/api/settings/data",
+        tags=["settings-data"],
     )
     app.include_router(github.router, prefix="/api/github", tags=["github"])
     app.include_router(weather.router, prefix="/api/weather", tags=["weather"])
