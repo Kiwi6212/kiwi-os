@@ -8,6 +8,7 @@ import {
   type LogLevel,
   type SystemLog,
 } from "@/lib/types/settings";
+import { LogStatsCards } from "@/components/log-stats-cards";
 
 const API_BASE = "http://localhost:8000";
 
@@ -144,33 +145,7 @@ export function LogsTab() {
         </p>
       </div>
 
-      {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-          {stats.by_level.map((lvl) => {
-            const colors = LOG_LEVEL_COLORS[lvl.level];
-            return (
-              <div
-                key={lvl.level}
-                className={`${colors.bg} rounded-xl p-3 border border-slate-200`}
-              >
-                <p
-                  className={`text-xs uppercase tracking-wider font-semibold ${colors.text}`}
-                >
-                  {LOG_LEVEL_LABELS[lvl.level]}
-                </p>
-                <p
-                  className={`text-2xl font-bold font-mono ${colors.text} mt-1 tabular-nums`}
-                >
-                  {lvl.count_24h}
-                </p>
-                <p className="text-xs text-slate-500">
-                  24h · {lvl.count_7d} en 7j
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      )}
+      {stats && <LogStatsCards refreshKey={refreshKey} />}
 
       {stats?.most_recent_error && (
         <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 flex items-center gap-3">
