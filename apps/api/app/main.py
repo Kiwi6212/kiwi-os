@@ -1,33 +1,49 @@
-from collections.abc import AsyncIterator
-from contextlib import asynccontextmanager
+# Configure file logging FIRST so bootstrap errors below get captured.
+from app.core.file_logging import configure_file_logging
 
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+configure_file_logging()
 
-from app.core.config import get_settings
-from app.core.database import create_engine, create_session_factory
-from app.core.redis import create_redis_client
-from app.middleware.log_errors import ErrorLogMiddleware
-from app.routers import (
-    applications,
-    github,
-    health,
-    pomodoro,
-    settings as settings_router,
-    settings_data,
-    stats,
-    tasks,
-    time_entries,
-    weather,
-)
-from app.routers.finance import (
-    accounts,
-    budgets,
-    categories,
-    subscriptions,
-    transactions,
-)
-from app.routers.finance import stats as finance_stats
+import logging  # noqa: E402
+
+try:
+    from collections.abc import AsyncIterator  # noqa: E402
+    from contextlib import asynccontextmanager  # noqa: E402
+
+    from fastapi import FastAPI  # noqa: E402
+    from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
+
+    from app.core.config import get_settings  # noqa: E402
+    from app.core.database import create_engine, create_session_factory  # noqa: E402
+    from app.core.redis import create_redis_client  # noqa: E402
+    from app.middleware.log_errors import ErrorLogMiddleware  # noqa: E402
+    from app.routers import (  # noqa: E402
+        applications,
+        github,
+        health,
+        pomodoro,
+        settings as settings_router,
+        settings_data,
+        stats,
+        tasks,
+        time_entries,
+        weather,
+    )
+    from app.routers.finance import (  # noqa: E402
+        accounts,
+        budgets,
+        categories,
+        subscriptions,
+        transactions,
+    )
+    from app.routers.finance import stats as finance_stats  # noqa: E402
+except Exception as exc:  # pragma: no cover — exercised only on bootstrap failure
+    logging.getLogger("bootstrap").critical(
+        "Failed to import application modules: %s: %s",
+        type(exc).__name__,
+        exc,
+        exc_info=True,
+    )
+    raise
 
 
 @asynccontextmanager
