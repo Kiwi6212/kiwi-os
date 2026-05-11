@@ -22,20 +22,8 @@ const TABS: Tab[] = [
   { id: "account", label: "Compte", icon: User },
   { id: "preferences", label: "Préférences", icon: Sliders },
   { id: "integrations", label: "Intégrations", icon: Plug },
-  {
-    id: "data",
-    label: "Données",
-    icon: Database,
-    disabled: true,
-    badge: "Bientôt",
-  },
-  {
-    id: "logs",
-    label: "Logs",
-    icon: FileText,
-    disabled: true,
-    badge: "Bientôt",
-  },
+  { id: "data", label: "Données", icon: Database },
+  { id: "logs", label: "Logs", icon: FileText },
 ];
 
 interface Props {

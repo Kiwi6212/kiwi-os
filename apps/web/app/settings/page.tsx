@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { AccountTab } from "@/components/settings/account-tab";
+import { DataTab } from "@/components/settings/data-tab";
 import { IntegrationsTab } from "@/components/settings/integrations-tab";
+import { LogsTab } from "@/components/settings/logs-tab";
 import { PreferencesTab } from "@/components/settings/preferences-tab";
 import { SettingsLayout } from "@/components/settings/settings-layout";
 import type { UserPreference } from "@/lib/types/settings";
@@ -88,6 +90,12 @@ export default function SettingsPage() {
               }
               if (activeTab === "integrations") {
                 return <IntegrationsTab />;
+              }
+              if (activeTab === "data") {
+                return <DataTab />;
+              }
+              if (activeTab === "logs") {
+                return <LogsTab />;
               }
               return null;
             }}
