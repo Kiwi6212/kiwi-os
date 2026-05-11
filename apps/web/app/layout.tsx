@@ -21,7 +21,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Kiwi OS — Personal Cockpit",
   description:
-    "Your personal life dashboard — work, finances, job search, portfolio.",
+    "Your personal life dashboard — work, finances, job search, dev activity.",
 };
 
 export const viewport: Viewport = {

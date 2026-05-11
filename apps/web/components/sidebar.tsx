@@ -5,8 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
+  Activity,
   BarChart3,
-  Code2,
   Home,
   Settings as SettingsIcon,
   Target,
@@ -20,7 +20,7 @@ const NAV_ITEMS = [
   { href: "/productivity", label: "Productivité", icon: Zap },
   { href: "/finances", label: "Finances", icon: Wallet },
   { href: "/job-search", label: "Job Search", icon: Target },
-  { href: "/portfolio", label: "Portfolio", icon: Code2 },
+  { href: "/dev-activity", label: "Dev Activity", icon: Activity },
   { href: "/stats", label: "Stats", icon: BarChart3 },
 ];
 
