@@ -11,3 +11,7 @@ dist/
 build/
 .env
 !.env.example
+
+# Runtime logs (file-based fallback for the DB logger)
+logs/
+*.log
