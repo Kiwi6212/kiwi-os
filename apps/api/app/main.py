@@ -7,11 +7,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import get_settings
 from app.core.database import create_engine, create_session_factory
 from app.core.redis import create_redis_client
+from app.middleware.log_errors import ErrorLogMiddleware
 from app.routers import (
     applications,
     github,
     health,
     pomodoro,
+    settings as settings_router,
     stats,
     tasks,
     time_entries,
@@ -58,7 +60,11 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    app.add_middleware(ErrorLogMiddleware)
     app.include_router(health.router, tags=["health"])
+    app.include_router(
+        settings_router.router, prefix="/api/settings", tags=["settings"]
+    )
     app.include_router(github.router, prefix="/api/github", tags=["github"])
     app.include_router(weather.router, prefix="/api/weather", tags=["weather"])
     app.include_router(

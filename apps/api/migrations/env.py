@@ -12,8 +12,10 @@ from app.models.base import Base
 from app.models import (  # noqa: F401 — register models for autogenerate
     application,
     pomodoro_preference,
+    system_log,
     task,
     time_entry,
+    user_preference,
 )
 from app.models.finance import (  # noqa: F401 — finance subpackage
     account,

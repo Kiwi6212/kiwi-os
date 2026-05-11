@@ -18,7 +18,9 @@ async def get_weather_forecast(
     lon: float = Query(..., ge=-180.0, le=180.0, description="Longitude"),
 ) -> WeatherData:
     redis = request.app.state.redis
-    adapter = WeatherAdapter()
+    adapter = WeatherAdapter(
+        session_factory=getattr(request.app.state, "db_sessionmaker", None)
+    )
     try:
         return await get_weather(adapter, redis, lat, lon)
     except Exception as exc:
