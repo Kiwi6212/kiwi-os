@@ -173,7 +173,7 @@ export function PreferencesTab({ preferences, onUpdate }: Props) {
             className={`${INPUT_CLASS} font-mono`}
           />
           <p className="text-xs text-slate-500 mt-2">
-            Utilisé pour la heatmap et la liste des repos sur /portfolio
+            Utilisé pour la heatmap et la liste des repos sur /dev-activity
           </p>
         </div>
       </div>

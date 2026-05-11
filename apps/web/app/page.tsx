@@ -290,10 +290,10 @@ export default async function HomePage() {
               )}
               <div className="mt-4 pt-4 border-t border-slate-200">
                 <Link
-                  href="/portfolio"
+                  href="/dev-activity"
                   className="text-xs text-slate-500 hover:text-emerald-600 inline-flex items-center gap-1 transition-colors"
                 >
-                  Voir le portfolio complet
+                  Voir toute mon activité dev
                   <ExternalLink className="h-3 w-3" strokeWidth={2} />
                 </Link>
               </div>

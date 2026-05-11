@@ -100,17 +100,16 @@ function formatDateShort(iso: string): string {
   });
 }
 
-export default async function PortfolioPage() {
+export default async function DevActivityPage() {
   const [calendar, activity] = await Promise.all([getCalendar(), getActivity()]);
 
   return (
     <div className="p-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900">Portfolio</h1>
+          <h1 className="text-3xl font-bold text-slate-900">Dev Activity</h1>
           <p className="text-slate-500 mt-1">
-            Side projects, commits, réalisations. Sync automatique depuis
-            GitHub.
+            Tes contributions et projets GitHub. Sync automatique.
           </p>
         </div>
 
