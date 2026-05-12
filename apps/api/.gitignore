@@ -15,3 +15,6 @@ build/
 # Runtime logs (file-based fallback for the DB logger)
 logs/
 *.log
+
+# User-uploaded files (portfolio photos, CV, project screenshots)
+uploads/

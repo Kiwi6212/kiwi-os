@@ -1,7 +1,15 @@
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+# Default uploads directory: apps/api/uploads/
+# In production, override with the UPLOADS_DIR env var (e.g.
+# /var/www/kiwi-os/uploads). Resolved here so other modules can import
+# the constants without re-deriving the path.
+_DEFAULT_UPLOADS_DIR = Path(__file__).resolve().parents[2] / "uploads"
 
 
 class Settings(BaseSettings):
@@ -29,7 +37,15 @@ class Settings(BaseSettings):
     github_username: str = Field(default="Kiwi6212")
     github_cache_ttl_seconds: int = Field(default=900)
 
+    uploads_dir: Path = Field(default=_DEFAULT_UPLOADS_DIR)
+
 
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
+
+
+# Convenience constants for upload paths. Call get_settings() to ensure
+# env-based overrides are honored, then derive the portfolio sub-tree.
+UPLOADS_DIR: Path = get_settings().uploads_dir
+PORTFOLIO_UPLOADS: Path = UPLOADS_DIR / "portfolio"

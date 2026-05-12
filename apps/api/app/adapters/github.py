@@ -183,5 +183,31 @@ class GitHubAdapter:
         await self._log_call("/graphql", response.status_code, ok=True)
         return user
 
+    async def fetch_user_repos(self, limit: int = 50) -> list[dict[str, Any]]:
+        """List the user's repos via the REST API (recently updated first)."""
+        try:
+            response = await self._client.get(
+                f"/users/{self.username}/repos",
+                params={
+                    "per_page": min(limit, 100),
+                    "sort": "updated",
+                    "type": "owner",
+                },
+            )
+            response.raise_for_status()
+        except httpx.HTTPStatusError as exc:
+            await self._log_call(
+                f"/users/{self.username}/repos",
+                exc.response.status_code,
+                ok=False,
+            )
+            raise
+        await self._log_call(
+            f"/users/{self.username}/repos", response.status_code, ok=True
+        )
+        body = response.json()
+        repos = body if isinstance(body, list) else []
+        return repos[:limit]
+
     async def aclose(self) -> None:
         await self._client.aclose()
