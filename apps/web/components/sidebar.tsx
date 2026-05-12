@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import {
   Activity,
   BarChart3,
+  Briefcase,
   Home,
   Settings as SettingsIcon,
   Target,
@@ -21,6 +22,7 @@ const NAV_ITEMS = [
   { href: "/finances", label: "Finances", icon: Wallet },
   { href: "/job-search", label: "Job Search", icon: Target },
   { href: "/dev-activity", label: "Dev Activity", icon: Activity },
+  { href: "/portfolio", label: "Portfolio", icon: Briefcase },
   { href: "/stats", label: "Stats", icon: BarChart3 },
 ];
 
