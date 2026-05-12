@@ -24,6 +24,8 @@ from app.models.finance import (  # noqa: F401 — finance subpackage
     subscription,
     transaction,
 )
+from app.models.portfolio import bio as portfolio_bio  # noqa: F401
+from app.models.portfolio import project as portfolio_project  # noqa: F401
 
 config = context.config
 

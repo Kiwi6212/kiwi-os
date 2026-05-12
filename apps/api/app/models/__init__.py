@@ -10,6 +10,7 @@ from app.models.finance.transaction import (
     TransactionType,
 )
 from app.models.pomodoro_preference import PomodoroPreference
+from app.models.portfolio import PortfolioBio, PortfolioProject
 from app.models.system_log import LogLevel, SystemLog
 from app.models.task import (
     Task,
@@ -34,6 +35,8 @@ __all__ = [
     "Locale",
     "LogLevel",
     "PomodoroPreference",
+    "PortfolioBio",
+    "PortfolioProject",
     "Subscription",
     "SubscriptionFrequency",
     "SystemLog",

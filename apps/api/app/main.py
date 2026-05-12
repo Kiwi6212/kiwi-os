@@ -11,8 +11,9 @@ try:
 
     from fastapi import FastAPI  # noqa: E402
     from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
+    from fastapi.staticfiles import StaticFiles  # noqa: E402
 
-    from app.core.config import get_settings  # noqa: E402
+    from app.core.config import UPLOADS_DIR, get_settings  # noqa: E402
     from app.core.database import create_engine, create_session_factory  # noqa: E402
     from app.core.redis import create_redis_client  # noqa: E402
     from app.middleware.log_errors import ErrorLogMiddleware  # noqa: E402
@@ -21,6 +22,7 @@ try:
         github,
         health,
         pomodoro,
+        portfolio,
         settings as settings_router,
         settings_data,
         stats,
@@ -126,6 +128,12 @@ def create_app() -> FastAPI:
         prefix="/api/finances/stats",
         tags=["finance-stats"],
     )
+    app.include_router(
+        portfolio.router, prefix="/api/portfolio", tags=["portfolio"]
+    )
+
+    UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
+    app.mount("/uploads", StaticFiles(directory=UPLOADS_DIR), name="uploads")
     return app
 
 
