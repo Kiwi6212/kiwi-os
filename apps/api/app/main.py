@@ -21,6 +21,9 @@ try:
     from slowapi.errors import RateLimitExceeded  # noqa: E402
 
     from app.core.rate_limit import limiter  # noqa: E402
+    from fastapi import Depends as _Depends  # noqa: E402
+
+    from app.core.auth_deps import get_current_user  # noqa: E402
     from app.routers import (  # noqa: E402
         applications,
         auth as auth_router,
@@ -28,6 +31,7 @@ try:
         health,
         pomodoro,
         portfolio,
+        portfolio_public,
         rss,
         settings as settings_router,
         settings_data,
@@ -157,59 +161,122 @@ def create_app() -> FastAPI:
         RateLimitExceeded, _rate_limit_exceeded_handler
     )
 
+    # ---- Public routers (no JWT required) ----
     app.include_router(auth_router.router, prefix="/api/auth", tags=["auth"])
     app.include_router(health.router, tags=["health"])
+    # Anonymous portfolio read — must be mounted BEFORE the protected
+    # /api/portfolio router so /api/portfolio/public resolves here.
     app.include_router(
-        settings_router.router, prefix="/api/settings", tags=["settings"]
+        portfolio_public.router,
+        prefix="/api/portfolio",
+        tags=["portfolio-public"],
+    )
+
+    # ---- Protected routers (router-level Depends(get_current_user)) ----
+    protected = [_Depends(get_current_user)]
+
+    app.include_router(
+        settings_router.router,
+        prefix="/api/settings",
+        tags=["settings"],
+        dependencies=protected,
     )
     app.include_router(
         settings_data.router,
         prefix="/api/settings/data",
         tags=["settings-data"],
+        dependencies=protected,
     )
-    app.include_router(github.router, prefix="/api/github", tags=["github"])
-    app.include_router(weather.router, prefix="/api/weather", tags=["weather"])
     app.include_router(
-        applications.router, prefix="/api/applications", tags=["applications"]
+        github.router,
+        prefix="/api/github",
+        tags=["github"],
+        dependencies=protected,
     )
-    app.include_router(stats.router, prefix="/api/stats", tags=["stats"])
-    app.include_router(tasks.router, prefix="/api/tasks", tags=["tasks"])
-    app.include_router(time_entries.router, prefix="/api/time", tags=["time"])
-    app.include_router(pomodoro.router, prefix="/api/pomodoro", tags=["pomodoro"])
+    app.include_router(
+        weather.router,
+        prefix="/api/weather",
+        tags=["weather"],
+        dependencies=protected,
+    )
+    app.include_router(
+        applications.router,
+        prefix="/api/applications",
+        tags=["applications"],
+        dependencies=protected,
+    )
+    app.include_router(
+        stats.router,
+        prefix="/api/stats",
+        tags=["stats"],
+        dependencies=protected,
+    )
+    app.include_router(
+        tasks.router,
+        prefix="/api/tasks",
+        tags=["tasks"],
+        dependencies=protected,
+    )
+    app.include_router(
+        time_entries.router,
+        prefix="/api/time",
+        tags=["time"],
+        dependencies=protected,
+    )
+    app.include_router(
+        pomodoro.router,
+        prefix="/api/pomodoro",
+        tags=["pomodoro"],
+        dependencies=protected,
+    )
     app.include_router(
         accounts.router,
         prefix="/api/finances/accounts",
         tags=["finance-accounts"],
+        dependencies=protected,
     )
     app.include_router(
         categories.router,
         prefix="/api/finances/categories",
         tags=["finance-categories"],
+        dependencies=protected,
     )
     app.include_router(
         transactions.router,
         prefix="/api/finances/transactions",
         tags=["finance-transactions"],
+        dependencies=protected,
     )
     app.include_router(
         subscriptions.router,
         prefix="/api/finances/subscriptions",
         tags=["finance-subscriptions"],
+        dependencies=protected,
     )
     app.include_router(
         budgets.router,
         prefix="/api/finances/budgets",
         tags=["finance-budgets"],
+        dependencies=protected,
     )
     app.include_router(
         finance_stats.router,
         prefix="/api/finances/stats",
         tags=["finance-stats"],
+        dependencies=protected,
     )
     app.include_router(
-        portfolio.router, prefix="/api/portfolio", tags=["portfolio"]
+        portfolio.router,
+        prefix="/api/portfolio",
+        tags=["portfolio"],
+        dependencies=protected,
     )
-    app.include_router(rss.router, prefix="/api/rss", tags=["rss"])
+    app.include_router(
+        rss.router,
+        prefix="/api/rss",
+        tags=["rss"],
+        dependencies=protected,
+    )
 
     UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
     app.mount("/uploads", StaticFiles(directory=UPLOADS_DIR), name="uploads")

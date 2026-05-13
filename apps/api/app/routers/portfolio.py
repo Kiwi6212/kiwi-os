@@ -6,11 +6,8 @@ sync'd from GitHub repos. The /public endpoint returns nothing if
 that makes the portfolio visible to the world.
 """
 
-from __future__ import annotations
-
 import datetime as dt
 import re
-from typing import Any
 
 from fastapi import (
     APIRouter,
@@ -30,13 +27,11 @@ from app.core.database import get_db
 from app.models.portfolio import PortfolioBio, PortfolioProject
 from app.schemas.portfolio.bio import (
     PortfolioBioOut,
-    PortfolioBioPublic,
     PortfolioBioUpdate,
 )
 from app.schemas.portfolio.project import (
     PortfolioProjectCreate,
     PortfolioProjectOut,
-    PortfolioProjectPublic,
     PortfolioProjectUpdate,
 )
 from app.services.upload_service import save_cv, save_photo, save_screenshot
@@ -325,43 +320,3 @@ async def sync_from_github(
 
     await db.commit()
     return {"created": created, "updated": updated, "total_repos": len(repos)}
-
-
-# ---------- PUBLIC ----------
-
-
-@router.get("/public")
-async def get_public_portfolio(db: AsyncSession = Depends(get_db)) -> dict[str, Any]:
-    """Anonymous read endpoint. Hidden behind `bio.public_enabled`."""
-    bio_q = await db.execute(
-        select(PortfolioBio).where(PortfolioBio.id == BIO_ID)
-    )
-    bio = bio_q.scalar_one_or_none()
-
-    if bio is None or not bio.public_enabled:
-        return {
-            "public_enabled": False,
-            "bio": None,
-            "projects": [],
-            "message": "Ce portfolio n'est pas public.",
-        }
-
-    projects_q = await db.execute(
-        select(PortfolioProject)
-        .where(PortfolioProject.is_visible.is_(True))
-        .order_by(
-            PortfolioProject.is_featured.desc(),
-            PortfolioProject.display_order.desc(),
-            PortfolioProject.created_at.desc(),
-        )
-    )
-    projects = list(projects_q.scalars().all())
-
-    return {
-        "public_enabled": True,
-        "bio": PortfolioBioPublic.model_validate(bio).model_dump(),
-        "projects": [
-            PortfolioProjectPublic.model_validate(p).model_dump(by_alias=True)
-            for p in projects
-        ],
-    }

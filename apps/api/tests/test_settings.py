@@ -21,7 +21,9 @@ async def test_integration_status_github_without_token(
     monkeypatch.delenv("GITHUB_TOKEN", raising=False)
     get_settings.cache_clear()  # reload from env
     try:
+        from tests._auth_helper import install_fake_auth_override
         app = create_app()
+        install_fake_auth_override(app)
         # Skip lifespan so we don't need a running Postgres/Redis.
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -37,7 +39,9 @@ async def test_integration_status_github_without_token(
 
 @pytest.mark.asyncio
 async def test_integration_status_weather_always_healthy() -> None:
+    from tests._auth_helper import install_fake_auth_override
     app = create_app()
+    install_fake_auth_override(app)
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         response = await client.get("/api/settings/integrations/weather/status")
@@ -49,7 +53,9 @@ async def test_integration_status_weather_always_healthy() -> None:
 
 @pytest.mark.asyncio
 async def test_integration_status_unknown_returns_404() -> None:
+    from tests._auth_helper import install_fake_auth_override
     app = create_app()
+    install_fake_auth_override(app)
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         response = await client.get(
@@ -107,7 +113,9 @@ async def test_404_triggers_error_log_middleware_in_pipeline(
         "app.middleware.log_errors.log_event", fake_log_event
     )
 
+    from tests._auth_helper import install_fake_auth_override
     app = create_app()
+    install_fake_auth_override(app)
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         response = await client.get("/api/this-does-not-exist")
