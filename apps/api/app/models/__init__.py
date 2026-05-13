@@ -11,6 +11,7 @@ from app.models.finance.transaction import (
 )
 from app.models.pomodoro_preference import PomodoroPreference
 from app.models.portfolio import PortfolioBio, PortfolioProject
+from app.models.rss import RSSFeed, RSSItem
 from app.models.system_log import LogLevel, SystemLog
 from app.models.task import (
     Task,
@@ -37,6 +38,8 @@ __all__ = [
     "PomodoroPreference",
     "PortfolioBio",
     "PortfolioProject",
+    "RSSFeed",
+    "RSSItem",
     "Subscription",
     "SubscriptionFrequency",
     "SystemLog",

@@ -26,6 +26,8 @@ from app.models.finance import (  # noqa: F401 — finance subpackage
 )
 from app.models.portfolio import bio as portfolio_bio  # noqa: F401
 from app.models.portfolio import project as portfolio_project  # noqa: F401
+from app.models.rss import feed as rss_feed  # noqa: F401
+from app.models.rss import item as rss_item  # noqa: F401
 
 config = context.config
 
