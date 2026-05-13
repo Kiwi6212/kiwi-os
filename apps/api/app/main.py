@@ -23,6 +23,7 @@ try:
         health,
         pomodoro,
         portfolio,
+        rss,
         settings as settings_router,
         settings_data,
         stats,
@@ -30,6 +31,7 @@ try:
         time_entries,
         weather,
     )
+    from app.services import rss_service  # noqa: E402
     from app.routers.finance import (  # noqa: E402
         accounts,
         budgets,
@@ -48,8 +50,52 @@ except Exception as exc:  # pragma: no cover — exercised only on bootstrap fai
     raise
 
 
+_RSS_SYNC_THRESHOLD = __import__("datetime").timedelta(minutes=30)
+
+
+async def _rss_startup_sync(
+    session_factory,
+) -> None:
+    """Trigger sync_all_feeds at boot if every feed is stale (>30 min).
+
+    Run as a fire-and-forget background task so a slow network never
+    delays uvicorn startup. Failures are swallowed (logged via stdlib).
+    """
+    import datetime as dt
+
+    from sqlalchemy import select as _select
+
+    from app.models.rss import RSSFeed as _RSSFeed
+
+    try:
+        async with session_factory() as session:
+            last_q = await session.execute(
+                _select(_RSSFeed.last_synced_at)
+                .where(_RSSFeed.is_active.is_(True))
+                .order_by(_RSSFeed.last_synced_at.desc().nulls_last())
+                .limit(1)
+            )
+            last_sync = last_q.scalar_one_or_none()
+
+            now = dt.datetime.now(dt.UTC)
+            if last_sync is None or (now - last_sync) > _RSS_SYNC_THRESHOLD:
+                logging.getLogger("rss").info(
+                    "Startup RSS sync triggered (last=%s)", last_sync
+                )
+                await rss_service.sync_all_feeds(session)
+            else:
+                logging.getLogger("rss").info(
+                    "Startup RSS sync skipped (last=%s, threshold=30min)",
+                    last_sync,
+                )
+    except Exception:
+        logging.getLogger("rss").exception("Startup RSS sync failed")
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    import asyncio
+
     engine = create_engine()
     session_factory = create_session_factory(engine)
     redis_client = create_redis_client()
@@ -57,6 +103,10 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.db_engine = engine
     app.state.db_sessionmaker = session_factory
     app.state.redis = redis_client
+
+    # Kick off RSS sync without blocking startup. The task lives as long
+    # as the event loop; it's only one short-lived coroutine.
+    asyncio.create_task(_rss_startup_sync(session_factory))
 
     try:
         yield
@@ -131,6 +181,7 @@ def create_app() -> FastAPI:
     app.include_router(
         portfolio.router, prefix="/api/portfolio", tags=["portfolio"]
     )
+    app.include_router(rss.router, prefix="/api/rss", tags=["rss"])
 
     UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
     app.mount("/uploads", StaticFiles(directory=UPLOADS_DIR), name="uploads")
