@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { ExternalLink, RefreshCw } from "lucide-react";
+import { authFetch } from "@/lib/auth-fetch";
 
 import { BioTab } from "@/components/portfolio/bio-tab";
 import {
@@ -36,8 +37,8 @@ export default function PortfolioEditorPage() {
       setError(null);
       try {
         const [bioRes, projectsRes] = await Promise.all([
-          fetch(`${API_BASE}/api/portfolio/bio`),
-          fetch(`${API_BASE}/api/portfolio/projects`),
+          authFetch(`/api/portfolio/bio`),
+          authFetch(`/api/portfolio/projects`),
         ]);
         if (!bioRes.ok || !projectsRes.ok) {
           throw new Error("Erreur de chargement");

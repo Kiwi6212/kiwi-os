@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { AppFrame } from "@/components/app-frame";
+import { AuthHooksBridge } from "@/components/auth-hooks-bridge";
+import { AuthProvider } from "@/lib/auth-context";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -39,7 +41,11 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${inter.variable}`}
     >
       <body className="antialiased">
-        <AppFrame>{children}</AppFrame>
+        <AuthProvider>
+          <AuthHooksBridge>
+            <AppFrame>{children}</AppFrame>
+          </AuthHooksBridge>
+        </AuthProvider>
       </body>
     </html>
   );

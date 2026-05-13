@@ -6,6 +6,7 @@ import type {
   PomodoroPreference,
   PomodoroPreferenceUpdate,
 } from "@/lib/types/pomodoro";
+import { authFetch } from "@/lib/auth-fetch";
 
 const API_BASE = "http://localhost:8000";
 
@@ -44,7 +45,7 @@ export function PomodoroPreferencesModal({
         long_break_seconds: longBreakMinutes * 60,
         cycles_before_long_break: cycles,
       };
-      const res = await fetch(`${API_BASE}/api/pomodoro/preferences`, {
+      const res = await authFetch(`/api/pomodoro/preferences`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(update),

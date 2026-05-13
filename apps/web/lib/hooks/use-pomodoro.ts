@@ -7,6 +7,7 @@ import type {
   TimeEntry,
   TimeEntryType,
 } from "@/lib/types/pomodoro";
+import { authFetch } from "@/lib/auth-fetch";
 
 const API_BASE = "http://localhost:8000";
 
@@ -88,7 +89,7 @@ export function usePomodoro(): UsePomodoroReturn {
       if (activeTaskId !== null && type === "pomodoro_focus") {
         body.task_id = activeTaskId;
       }
-      const res = await fetch(`${API_BASE}/api/time/entries`, {
+      const res = await authFetch(`/api/time/entries`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
@@ -105,7 +106,7 @@ export function usePomodoro(): UsePomodoroReturn {
 
     if (activeEntry) {
       try {
-        await fetch(`${API_BASE}/api/time/entries/${activeEntry.id}/stop`, {
+        await authFetch(`/api/time/entries/${activeEntry.id}/stop`, {
           method: "PATCH",
         });
       } catch (e) {
@@ -155,7 +156,7 @@ export function usePomodoro(): UsePomodoroReturn {
     let cancelled = false;
     void (async () => {
       try {
-        const res = await fetch(`${API_BASE}/api/pomodoro/preferences`);
+        const res = await authFetch(`/api/pomodoro/preferences`);
         if (!res.ok) return;
         const data = (await res.json()) as PomodoroPreference;
         if (!cancelled) setPreferences(data);
@@ -218,7 +219,7 @@ export function usePomodoro(): UsePomodoroReturn {
     setIsRunning(false);
     if (activeEntry) {
       try {
-        await fetch(`${API_BASE}/api/time/entries/${activeEntry.id}/stop`, {
+        await authFetch(`/api/time/entries/${activeEntry.id}/stop`, {
           method: "PATCH",
         });
       } catch (e) {
@@ -244,7 +245,7 @@ export function usePomodoro(): UsePomodoroReturn {
 
   const refreshPreferences = useCallback(async () => {
     try {
-      const res = await fetch(`${API_BASE}/api/pomodoro/preferences`);
+      const res = await authFetch(`/api/pomodoro/preferences`);
       if (!res.ok) return;
       const data = (await res.json()) as PomodoroPreference;
       setPreferences(data);

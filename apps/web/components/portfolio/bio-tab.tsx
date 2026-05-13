@@ -10,6 +10,7 @@ import {
   Trash2,
   User as UserIcon,
 } from "lucide-react";
+import { authFetch } from "@/lib/auth-fetch";
 
 import { API_BASE, asUploadUrl } from "@/lib/api";
 import type {
@@ -70,7 +71,7 @@ export function BioTab({ bio, onUpdate }: Props) {
     setSaved(false);
     setError(null);
     try {
-      const res = await fetch(`${API_BASE}/api/portfolio/bio`, {
+      const res = await authFetch(`/api/portfolio/bio`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -108,7 +109,7 @@ export function BioTab({ bio, onUpdate }: Props) {
       const fd = new FormData();
       fd.append("file", file);
       const path = kind === "photo" ? "photo" : "cv";
-      const res = await fetch(`${API_BASE}/api/portfolio/bio/${path}`, {
+      const res = await authFetch(`/api/portfolio/bio/${path}`, {
         method: "POST",
         body: fd,
       });

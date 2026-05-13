@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import type { TaskStats } from "@/lib/types/task";
 import type { TimeStats } from "@/lib/types/pomodoro";
+import { authFetch } from "@/lib/auth-fetch";
 
 const API_BASE = "http://localhost:8000";
 
@@ -51,8 +52,8 @@ export function ProductivityStatsClient() {
     void (async () => {
       try {
         const [tRes, tsRes] = await Promise.all([
-          fetch(`${API_BASE}/api/tasks/stats`),
-          fetch(`${API_BASE}/api/time/stats`),
+          authFetch(`/api/tasks/stats`),
+          authFetch(`/api/time/stats`),
         ]);
         if (!tRes.ok || !tsRes.ok) throw new Error("Erreur de chargement");
         const t = (await tRes.json()) as TaskStats;

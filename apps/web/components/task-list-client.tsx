@@ -21,6 +21,7 @@ import {
   CATEGORY_LABELS,
   STATUS_LABELS,
 } from "@/lib/types/task";
+import { authFetch } from "@/lib/auth-fetch";
 
 const API_BASE = "http://localhost:8000";
 
@@ -53,7 +54,7 @@ export function TaskListClient() {
 
         const [tasksRes, statsRes] = await Promise.all([
           fetch(url),
-          fetch(`${API_BASE}/api/tasks/stats`),
+          authFetch(`/api/tasks/stats`),
         ]);
 
         if (cancelled) return;
@@ -88,7 +89,7 @@ export function TaskListClient() {
   const triggerRefresh = () => setRefreshKey((k) => k + 1);
 
   const handleCreate = async (data: TaskFormData) => {
-    const res = await fetch(`${API_BASE}/api/tasks`, {
+    const res = await authFetch(`/api/tasks`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -98,7 +99,7 @@ export function TaskListClient() {
   };
 
   const handleUpdate = async (id: number, updates: Partial<Task>) => {
-    const res = await fetch(`${API_BASE}/api/tasks/${id}`, {
+    const res = await authFetch(`/api/tasks/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updates),
@@ -113,7 +114,7 @@ export function TaskListClient() {
   };
 
   const handleDelete = async (id: number) => {
-    const res = await fetch(`${API_BASE}/api/tasks/${id}`, {
+    const res = await authFetch(`/api/tasks/${id}`, {
       method: "DELETE",
     });
     if (!res.ok && res.status !== 204) throw new Error(`Erreur ${res.status}`);

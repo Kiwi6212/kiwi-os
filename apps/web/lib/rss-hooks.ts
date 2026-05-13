@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { authFetch } from "@/lib/auth-fetch";
 
 import { API_BASE } from "@/lib/api";
 import type { RSSFeed, RSSItem, RSSItemFilter } from "@/lib/rss-types";
@@ -16,7 +17,7 @@ export function useFeeds() {
 
   const refetch = useCallback(async () => {
     try {
-      const res = await fetch(`${API_BASE}/api/rss/feeds`);
+      const res = await authFetch(`/api/rss/feeds`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = (await res.json()) as RSSFeed[];
       setFeeds(data);
@@ -132,7 +133,7 @@ export async function patchItem(
   id: number,
   patch: { is_read?: boolean; is_favorited?: boolean },
 ): Promise<RSSItem> {
-  const res = await fetch(`${API_BASE}/api/rss/items/${id}`, {
+  const res = await authFetch(`/api/rss/items/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(patch),
@@ -146,7 +147,7 @@ export async function syncAllFeeds(): Promise<{
   feeds_synced: number;
   feeds_failed?: number;
 }> {
-  const res = await fetch(`${API_BASE}/api/rss/sync-all`, { method: "POST" });
+  const res = await authFetch(`/api/rss/sync-all`, { method: "POST" });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }

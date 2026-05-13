@@ -9,6 +9,7 @@ import {
   type SystemLog,
 } from "@/lib/types/settings";
 import { LogStatsCards } from "@/components/log-stats-cards";
+import { authFetch } from "@/lib/auth-fetch";
 
 const API_BASE = "http://localhost:8000";
 
@@ -50,8 +51,8 @@ export function LogsTab() {
         params.set("limit", "100");
 
         const [logsRes, statsRes] = await Promise.all([
-          fetch(`${API_BASE}/api/settings/logs?${params}`),
-          fetch(`${API_BASE}/api/settings/logs/stats`),
+          authFetch(`/api/settings/logs?${params}`),
+          authFetch(`/api/settings/logs/stats`),
         ]);
         if (!logsRes.ok || !statsRes.ok) {
           throw new Error("Erreur de chargement");
@@ -119,7 +120,7 @@ export function LogsTab() {
 
   const handlePurgeOld = async () => {
     if (!confirm("Supprimer tous les logs de plus de 30 jours ?")) return;
-    await fetch(`${API_BASE}/api/settings/logs?older_than_days=30`, {
+    await authFetch(`/api/settings/logs?older_than_days=30`, {
       method: "DELETE",
     });
     triggerRefresh();
@@ -128,7 +129,7 @@ export function LogsTab() {
   const handlePurgeAll = async () => {
     if (!confirm("Supprimer TOUS les logs ? Cette action est irréversible."))
       return;
-    await fetch(`${API_BASE}/api/settings/logs`, { method: "DELETE" });
+    await authFetch(`/api/settings/logs`, { method: "DELETE" });
     triggerRefresh();
   };
 
