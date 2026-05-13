@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { authFetch } from "@/lib/auth-fetch";
@@ -70,7 +70,7 @@ export function useItems({ feedId, category, filter }: UseItemsParams) {
     setLoading(true);
     offsetRef.current = 0;
     try {
-      const res = await fetch(buildUrl(0));
+      const res = await authFetch(buildUrl(0));
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = (await res.json()) as RSSItem[];
       setItems(data);
@@ -88,14 +88,14 @@ export function useItems({ feedId, category, filter }: UseItemsParams) {
     if (loadingMore || !hasMore) return;
     setLoadingMore(true);
     try {
-      const res = await fetch(buildUrl(offsetRef.current));
+      const res = await authFetch(buildUrl(offsetRef.current));
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = (await res.json()) as RSSItem[];
       setItems((prev) => [...prev, ...data]);
       setHasMore(data.length === PAGE_SIZE);
       offsetRef.current += data.length;
     } catch (e) {
-      // Silent — caller can re-trigger via refetch.
+      // Silent â€” caller can re-trigger via refetch.
       console.error("loadMore failed:", e);
     } finally {
       setLoadingMore(false);
