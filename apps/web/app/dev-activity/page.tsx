@@ -1,7 +1,12 @@
-import { GitCommit, Lock, Globe } from "lucide-react";
+"use client";
+
+import { useEffect, useState } from "react";
+import { GitCommit, Globe, Lock } from "lucide-react";
+
 import { BentoCard } from "@/components/bento-card";
 import { ContributionHeatmap } from "@/components/contribution-heatmap";
 import { RepoBreakdown } from "@/components/repo-breakdown";
+import { authFetch } from "@/lib/auth-fetch";
 
 type ContributionLevel =
   | "NONE"
@@ -55,26 +60,11 @@ type GitHubActivityFeed = {
   fetched_at: string;
 };
 
-async function getCalendar(): Promise<ContributionCalendarData | null> {
+async function tryFetch<T>(path: string): Promise<T | null> {
   try {
-    const res = await fetch("http://localhost:8000/api/github/calendar", {
-      cache: "no-store",
-    });
+    const res = await authFetch(path, { cache: "no-store" });
     if (!res.ok) return null;
-    return (await res.json()) as ContributionCalendarData;
-  } catch {
-    return null;
-  }
-}
-
-async function getActivity(): Promise<GitHubActivityFeed | null> {
-  try {
-    const res = await fetch(
-      "http://localhost:8000/api/github/activity?limit=10",
-      { cache: "no-store" },
-    );
-    if (!res.ok) return null;
-    return (await res.json()) as GitHubActivityFeed;
+    return (await res.json()) as T;
   } catch {
     return null;
   }
@@ -100,8 +90,33 @@ function formatDateShort(iso: string): string {
   });
 }
 
-export default async function DevActivityPage() {
-  const [calendar, activity] = await Promise.all([getCalendar(), getActivity()]);
+export default function DevActivityPage() {
+  const [calendar, setCalendar] = useState<ContributionCalendarData | null>(
+    null,
+  );
+  const [activity, setActivity] = useState<GitHubActivityFeed | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const [cal, act] = await Promise.all([
+          tryFetch<ContributionCalendarData>("/api/github/calendar"),
+          tryFetch<GitHubActivityFeed>("/api/github/activity?limit=10"),
+        ]);
+        if (!cancelled) {
+          setCalendar(cal);
+          setActivity(act);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <div className="p-8">
@@ -113,7 +128,11 @@ export default async function DevActivityPage() {
           </p>
         </div>
 
-        {!calendar ? (
+        {loading ? (
+          <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-8 animate-pulse">
+            <p className="text-sm text-slate-400">Chargement…</p>
+          </div>
+        ) : !calendar ? (
           <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-8">
             <p className="text-sm text-slate-500">
               GitHub unreachable. Vérifie que le backend tourne sur :8000.

@@ -26,8 +26,11 @@ async def _stub_db() -> AsyncIterator[None]:
 
 
 def _make_app_with_stub_db():
+    from tests._auth_helper import install_fake_auth_override
+
     app = create_app()
     app.dependency_overrides[get_db] = _stub_db
+    install_fake_auth_override(app)
     return app
 
 

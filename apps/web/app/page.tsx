@@ -1,18 +1,23 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import {
-  Wallet,
-  Target,
-  Zap,
-  Code2,
-  GitCommit,
-  Cloud,
   Clock,
+  Cloud,
+  Code2,
   ExternalLink,
+  GitCommit,
+  Target,
+  Wallet,
+  Zap,
 } from "lucide-react";
 import Link from "next/link";
-import { KpiCard } from "@/components/kpi-card";
+
 import { BentoCard } from "@/components/bento-card";
 import { ContributionHeatmap } from "@/components/contribution-heatmap";
+import { KpiCard } from "@/components/kpi-card";
 import { WeatherCard } from "@/components/weather-card";
+import { authFetch } from "@/lib/auth-fetch";
 import {
   type FinanceStats,
   formatCurrency,
@@ -53,42 +58,6 @@ type ContributionCalendarData = {
   fetched_at: string;
 };
 
-async function getApiHealth(): Promise<HealthResponse | null> {
-  try {
-    const res = await fetch("http://localhost:8000/health", {
-      cache: "no-store",
-    });
-    if (!res.ok) return null;
-    return (await res.json()) as HealthResponse;
-  } catch {
-    return null;
-  }
-}
-
-async function getGithubStats(): Promise<GitHubStats | null> {
-  try {
-    const res = await fetch("http://localhost:8000/api/github/stats", {
-      cache: "no-store",
-    });
-    if (!res.ok) return null;
-    return (await res.json()) as GitHubStats;
-  } catch {
-    return null;
-  }
-}
-
-async function getGithubCalendar(): Promise<ContributionCalendarData | null> {
-  try {
-    const res = await fetch("http://localhost:8000/api/github/calendar", {
-      cache: "no-store",
-    });
-    if (!res.ok) return null;
-    return (await res.json()) as ContributionCalendarData;
-  } catch {
-    return null;
-  }
-}
-
 type ApplicationStats = {
   total: number;
   by_status: Record<string, number>;
@@ -97,18 +66,6 @@ type ApplicationStats = {
   interview_rate: number;
   favorites_count: number;
 };
-
-async function getApplicationStats(): Promise<ApplicationStats | null> {
-  try {
-    const res = await fetch("http://localhost:8000/api/applications/stats", {
-      cache: "no-store",
-    });
-    if (!res.ok) return null;
-    return (await res.json()) as ApplicationStats;
-  } catch {
-    return null;
-  }
-}
 
 type TaskStatsResponse = {
   total: number;
@@ -125,38 +82,21 @@ type TimeStatsResponse = {
   by_task_this_week: unknown[];
 };
 
-async function getTaskStats(): Promise<TaskStatsResponse | null> {
-  try {
-    const res = await fetch("http://localhost:8000/api/tasks/stats", {
-      cache: "no-store",
-    });
-    if (!res.ok) return null;
-    return (await res.json()) as TaskStatsResponse;
-  } catch {
-    return null;
-  }
-}
+type DashboardData = {
+  health: HealthResponse | null;
+  stats: GitHubStats | null;
+  calendar: ContributionCalendarData | null;
+  appStats: ApplicationStats | null;
+  taskStats: TaskStatsResponse | null;
+  timeStats: TimeStatsResponse | null;
+  financeStats: FinanceStats | null;
+};
 
-async function getTimeStats(): Promise<TimeStatsResponse | null> {
+async function tryFetch<T>(path: string): Promise<T | null> {
   try {
-    const res = await fetch("http://localhost:8000/api/time/stats", {
-      cache: "no-store",
-    });
+    const res = await authFetch(path, { cache: "no-store" });
     if (!res.ok) return null;
-    return (await res.json()) as TimeStatsResponse;
-  } catch {
-    return null;
-  }
-}
-
-async function getFinanceStats(): Promise<FinanceStats | null> {
-  try {
-    const res = await fetch("http://localhost:8000/api/finances/stats", {
-      cache: "no-store",
-    });
-    if (!res.ok) return null;
-    const raw = (await res.json()) as Parameters<typeof parseStats>[0];
-    return parseStats(raw);
+    return (await res.json()) as T;
   } catch {
     return null;
   }
@@ -178,21 +118,81 @@ function getGreeting(): string {
   return "Bonsoir";
 }
 
-export default async function HomePage() {
-  const [health, stats, calendar, appStats, taskStats, timeStats, financeStats] =
-    await Promise.all([
-      getApiHealth(),
-      getGithubStats(),
-      getGithubCalendar(),
-      getApplicationStats(),
-      getTaskStats(),
-      getTimeStats(),
-      getFinanceStats(),
-    ]);
+export default function HomePage() {
+  const [data, setData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const [
+          health,
+          stats,
+          calendar,
+          appStats,
+          taskStats,
+          timeStats,
+          financeStatsRaw,
+        ] = await Promise.all([
+          tryFetch<HealthResponse>("/health"),
+          tryFetch<GitHubStats>("/api/github/stats"),
+          tryFetch<ContributionCalendarData>("/api/github/calendar"),
+          tryFetch<ApplicationStats>("/api/applications/stats"),
+          tryFetch<TaskStatsResponse>("/api/tasks/stats"),
+          tryFetch<TimeStatsResponse>("/api/time/stats"),
+          tryFetch<Parameters<typeof parseStats>[0]>("/api/finances/stats"),
+        ]);
+        const financeStats = financeStatsRaw ? parseStats(financeStatsRaw) : null;
+        if (!cancelled) {
+          setData({
+            health,
+            stats,
+            calendar,
+            appStats,
+            taskStats,
+            timeStats,
+            financeStats,
+          });
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const greeting = getGreeting();
 
-  const commitsValue = stats !== null ? String(stats.commits_this_week) : "—";
+  if (loading || !data) {
+    return (
+      <div className="p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-slate-900">
+              {greeting}, <span className="text-emerald-600">Mathias</span>
+            </h1>
+            <p className="text-slate-500 mt-1">Chargement…</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div
+                key={i}
+                className="rounded-2xl border border-slate-200 bg-white p-5 h-32 animate-pulse"
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
+  const { health, stats, calendar, appStats, taskStats, timeStats, financeStats } =
+    data;
+
+  const commitsValue = stats !== null ? String(stats.commits_this_week) : "—";
   const activeTasksValue = taskStats
     ? String(
         (taskStats.by_status.todo ?? 0) +

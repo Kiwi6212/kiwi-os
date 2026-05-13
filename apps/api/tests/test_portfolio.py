@@ -73,6 +73,8 @@ async def session_factory() -> AsyncIterator[async_sessionmaker[AsyncSession]]:
 def _make_app(
     factory: async_sessionmaker[AsyncSession],
 ):
+    from tests._auth_helper import install_fake_auth_override
+
     app = create_app()
 
     async def override_get_db() -> AsyncIterator[AsyncSession]:
@@ -80,6 +82,7 @@ def _make_app(
             yield session
 
     app.dependency_overrides[get_db] = override_get_db
+    install_fake_auth_override(app)
     return app
 
 
