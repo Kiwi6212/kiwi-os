@@ -9,6 +9,7 @@ import {
   BarChart3,
   Briefcase,
   Home,
+  Rss,
   Settings as SettingsIcon,
   Target,
   Wallet,
@@ -24,6 +25,7 @@ const NAV_ITEMS = [
   { href: "/dev-activity", label: "Dev Activity", icon: Activity },
   { href: "/portfolio", label: "Portfolio", icon: Briefcase },
   { href: "/stats", label: "Stats", icon: BarChart3 },
+  { href: "/veille", label: "Veille", icon: Rss },
 ];
 
 const API_BASE = "http://localhost:8000";
