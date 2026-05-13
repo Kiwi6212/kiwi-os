@@ -6,6 +6,7 @@ import {
   LOG_LEVEL_LABELS,
   type LogLevel,
 } from "@/lib/types/settings";
+import { authFetch } from "@/lib/auth-fetch";
 
 const API_BASE = "http://localhost:8000";
 
@@ -29,7 +30,7 @@ export function LogStatsCards({ refreshKey = 0 }: Props) {
     (async () => {
       setLoading(true);
       try {
-        const res = await fetch(`${API_BASE}/api/settings/logs/stats`);
+        const res = await authFetch(`/api/settings/logs/stats`);
         if (!res.ok) return;
         const data = (await res.json()) as LogStats;
         if (!cancelled) setStats(data);

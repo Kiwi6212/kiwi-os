@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { AlertTriangle, Download, FileJson, Upload } from "lucide-react";
+import { authFetch } from "@/lib/auth-fetch";
 
 const API_BASE = "http://localhost:8000";
 
@@ -17,7 +18,7 @@ export function DataTab() {
   const handleExport = async () => {
     setExporting(true);
     try {
-      const res = await fetch(`${API_BASE}/api/settings/data/export`);
+      const res = await authFetch(`/api/settings/data/export`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);

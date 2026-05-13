@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import type { TimeEntry, TimeEntryType } from "@/lib/types/pomodoro";
 import type { Task } from "@/lib/types/task";
+import { authFetch } from "@/lib/auth-fetch";
 
 const API_BASE = "http://localhost:8000";
 
@@ -80,7 +81,7 @@ export function TimeEntriesHistory({ tasks, refreshKey, onChange }: Props) {
     let cancelled = false;
     void (async () => {
       try {
-        const res = await fetch(`${API_BASE}/api/time/entries?limit=20`);
+        const res = await authFetch(`/api/time/entries?limit=20`);
         if (!res.ok) return;
         const data = (await res.json()) as TimeEntry[];
         if (!cancelled) setEntries(data);
@@ -99,7 +100,7 @@ export function TimeEntriesHistory({ tasks, refreshKey, onChange }: Props) {
 
   const handleReassign = async (entryId: number, newTaskId: number | null) => {
     try {
-      await fetch(`${API_BASE}/api/time/entries/${entryId}`, {
+      await authFetch(`/api/time/entries/${entryId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ task_id: newTaskId }),
@@ -115,7 +116,7 @@ export function TimeEntriesHistory({ tasks, refreshKey, onChange }: Props) {
   const handleDelete = async (entryId: number) => {
     if (!confirm("Supprimer cette session ?")) return;
     try {
-      await fetch(`${API_BASE}/api/time/entries/${entryId}`, {
+      await authFetch(`/api/time/entries/${entryId}`, {
         method: "DELETE",
       });
     } catch (e) {

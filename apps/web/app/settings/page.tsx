@@ -8,6 +8,7 @@ import { LogsTab } from "@/components/settings/logs-tab";
 import { PreferencesTab } from "@/components/settings/preferences-tab";
 import { SettingsLayout } from "@/components/settings/settings-layout";
 import type { UserPreference } from "@/lib/types/settings";
+import { authFetch } from "@/lib/auth-fetch";
 
 const API_BASE = "http://localhost:8000";
 
@@ -20,7 +21,7 @@ export default function SettingsPage() {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch(`${API_BASE}/api/settings/preferences`);
+        const res = await authFetch(`/api/settings/preferences`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = (await res.json()) as UserPreference;
         if (!cancelled) setPreferences(data);
@@ -38,7 +39,7 @@ export default function SettingsPage() {
   }, []);
 
   const handleUpdate = async (updates: Partial<UserPreference>) => {
-    const res = await fetch(`${API_BASE}/api/settings/preferences`, {
+    const res = await authFetch(`/api/settings/preferences`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updates),

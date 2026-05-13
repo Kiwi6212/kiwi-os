@@ -42,6 +42,7 @@ import {
   type TransactionFilters,
   TransactionsTable,
 } from "./transactions-table";
+import { authFetch } from "@/lib/auth-fetch";
 
 const API_BASE = "http://localhost:8000";
 const PAGE_SIZE = 20;
@@ -116,12 +117,12 @@ export function FinancesClient() {
 
         const [accRes, catRes, statsRes, txRes, subRes, budgetRes] =
           await Promise.all([
-            fetch(`${API_BASE}/api/finances/accounts`),
-            fetch(`${API_BASE}/api/finances/categories`),
-            fetch(`${API_BASE}/api/finances/stats`),
-            fetch(`${API_BASE}/api/finances/transactions?${txParams}`),
-            fetch(`${API_BASE}/api/finances/subscriptions`),
-            fetch(`${API_BASE}/api/finances/budgets/current`),
+            authFetch(`/api/finances/accounts`),
+            authFetch(`/api/finances/categories`),
+            authFetch(`/api/finances/stats`),
+            authFetch(`/api/finances/transactions?${txParams}`),
+            authFetch(`/api/finances/subscriptions`),
+            authFetch(`/api/finances/budgets/current`),
           ]);
 
         if (cancelled) return;
@@ -178,7 +179,7 @@ export function FinancesClient() {
   const triggerRefresh = () => setRefreshKey((k) => k + 1);
 
   const handleCreateAccount = async (data: AccountCreate) => {
-    const res = await fetch(`${API_BASE}/api/finances/accounts`, {
+    const res = await authFetch(`/api/finances/accounts`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -202,7 +203,7 @@ export function FinancesClient() {
   };
 
   const handleToggleAccount = async (account: Account) => {
-    const res = await fetch(`${API_BASE}/api/finances/accounts/${account.id}`, {
+    const res = await authFetch(`/api/finances/accounts/${account.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ is_active: !account.is_active }),
@@ -212,7 +213,7 @@ export function FinancesClient() {
   };
 
   const handleCreateTx = async (data: TransactionCreate) => {
-    const res = await fetch(`${API_BASE}/api/finances/transactions`, {
+    const res = await authFetch(`/api/finances/transactions`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -236,7 +237,7 @@ export function FinancesClient() {
   };
 
   const handleDeleteTx = async (tx: Transaction) => {
-    const res = await fetch(`${API_BASE}/api/finances/transactions/${tx.id}`, {
+    const res = await authFetch(`/api/finances/transactions/${tx.id}`, {
       method: "DELETE",
     });
     if (!res.ok && res.status !== 204) throw new Error(`Erreur ${res.status}`);
@@ -260,7 +261,7 @@ export function FinancesClient() {
   };
 
   const handleCreateSub = async (data: SubscriptionCreate) => {
-    const res = await fetch(`${API_BASE}/api/finances/subscriptions`, {
+    const res = await authFetch(`/api/finances/subscriptions`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -306,7 +307,7 @@ export function FinancesClient() {
   };
 
   const handleCreateBudget = async (data: BudgetCreate) => {
-    const res = await fetch(`${API_BASE}/api/finances/budgets`, {
+    const res = await authFetch(`/api/finances/budgets`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -337,7 +338,7 @@ export function FinancesClient() {
   };
 
   const handleDeleteBudget = async (budget: BudgetWithSpending) => {
-    const res = await fetch(`${API_BASE}/api/finances/budgets/${budget.id}`, {
+    const res = await authFetch(`/api/finances/budgets/${budget.id}`, {
       method: "DELETE",
     });
     if (!res.ok && res.status !== 204) throw new Error(`Erreur ${res.status}`);

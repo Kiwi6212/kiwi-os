@@ -23,6 +23,7 @@ import {
   formatCurrency,
   parseStats,
 } from "@/lib/types/finance";
+import { authFetch } from "@/lib/auth-fetch";
 
 const API_BASE = "http://localhost:8000";
 
@@ -98,7 +99,7 @@ export function FinanceStatsClient() {
     void (async () => {
       try {
         const [sRes, cRes] = await Promise.all([
-          fetch(`${API_BASE}/api/finances/stats`),
+          authFetch(`/api/finances/stats`),
           fetch(
             `${API_BASE}/api/finances/stats/comparison?period=${period}`,
           ),

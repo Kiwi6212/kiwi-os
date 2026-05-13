@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
+import { authFetch } from "@/lib/auth-fetch";
 
 import {
   ApplicationTable,
@@ -86,7 +87,7 @@ export function ApplicationListClient() {
   }
 
   async function handleCreate(data: ApplicationFormData) {
-    const res = await fetch("http://localhost:8000/api/applications", {
+    const res = await authFetch("/api/applications", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),

@@ -9,12 +9,15 @@ import {
   BarChart3,
   Briefcase,
   Home,
+  LogOut,
   Rss,
   Settings as SettingsIcon,
   Target,
   Wallet,
   Zap,
 } from "lucide-react";
+import { useAuth } from "@/lib/auth-context";
+import { authFetch } from "@/lib/auth-fetch";
 import type { UserPreference } from "@/lib/types/settings";
 
 const NAV_ITEMS = [
@@ -28,7 +31,6 @@ const NAV_ITEMS = [
   { href: "/veille", label: "Veille", icon: Rss },
 ];
 
-const API_BASE = "http://localhost:8000";
 const FALLBACK_NAME = "Mathias";
 
 function initials(name: string): string {
@@ -40,13 +42,14 @@ function initials(name: string): string {
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { logout } = useAuth();
   const [preferences, setPreferences] = useState<UserPreference | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch(`${API_BASE}/api/settings/preferences`);
+        const res = await authFetch("/api/settings/preferences");
         if (!res.ok) return;
         const data = (await res.json()) as UserPreference;
         if (!cancelled) setPreferences(data);
@@ -151,6 +154,15 @@ export function Sidebar() {
               strokeWidth={1.5}
             />
           </Link>
+
+          <button
+            type="button"
+            onClick={() => void logout()}
+            className="mt-2 w-full flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+          >
+            <LogOut className="h-4 w-4" strokeWidth={1.5} />
+            Déconnexion
+          </button>
         </div>
       </div>
     </aside>

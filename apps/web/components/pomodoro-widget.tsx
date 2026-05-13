@@ -13,6 +13,7 @@ import { usePomodoro } from "@/lib/hooks/use-pomodoro";
 import { PomodoroPreferencesModal } from "./pomodoro-preferences-modal";
 import type { Task } from "@/lib/types/task";
 import type { PomodoroPhase, TimeStats } from "@/lib/types/pomodoro";
+import { authFetch } from "@/lib/auth-fetch";
 
 const API_BASE = "http://localhost:8000";
 
@@ -97,7 +98,7 @@ export function PomodoroWidget({ tasks, onSessionEnd }: Props) {
     let cancelled = false;
     void (async () => {
       try {
-        const res = await fetch(`${API_BASE}/api/time/stats`);
+        const res = await authFetch(`/api/time/stats`);
         if (!res.ok) return;
         const data = (await res.json()) as TimeStats;
         if (!cancelled) setTodaySeconds(data.total_seconds_today);
