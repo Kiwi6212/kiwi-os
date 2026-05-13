@@ -30,6 +30,14 @@ class Settings(BaseSettings):
     jwt_secret: str = Field(default="change-me-in-production")
     jwt_algorithm: str = Field(default="HS256")
     jwt_expiration_minutes: int = Field(default=60)
+    jwt_access_ttl_minutes: int = Field(default=15)
+    jwt_refresh_ttl_days: int = Field(default=30)
+
+    admin_email: str = Field(default="mathias@kiwi.local")
+    admin_password: str = Field(default="change-me-in-production")
+
+    cookie_secure: bool = Field(default=False)
+    cookie_samesite: str = Field(default="lax")
 
     cors_origins: list[str] = Field(default_factory=lambda: ["http://localhost:3000"])
 

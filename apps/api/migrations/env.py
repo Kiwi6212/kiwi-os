@@ -28,6 +28,8 @@ from app.models.portfolio import bio as portfolio_bio  # noqa: F401
 from app.models.portfolio import project as portfolio_project  # noqa: F401
 from app.models.rss import feed as rss_feed  # noqa: F401
 from app.models.rss import item as rss_item  # noqa: F401
+from app.models.auth import user as auth_user  # noqa: F401
+from app.models.auth import refresh_token as auth_refresh  # noqa: F401
 
 config = context.config
 

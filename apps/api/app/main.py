@@ -17,8 +17,13 @@ try:
     from app.core.database import create_engine, create_session_factory  # noqa: E402
     from app.core.redis import create_redis_client  # noqa: E402
     from app.middleware.log_errors import ErrorLogMiddleware  # noqa: E402
+    from slowapi import _rate_limit_exceeded_handler  # noqa: E402
+    from slowapi.errors import RateLimitExceeded  # noqa: E402
+
+    from app.core.rate_limit import limiter  # noqa: E402
     from app.routers import (  # noqa: E402
         applications,
+        auth as auth_router,
         github,
         health,
         pomodoro,
@@ -32,6 +37,7 @@ try:
         weather,
     )
     from app.services import rss_service  # noqa: E402
+    from app.services.auth_service import bootstrap_admin_user  # noqa: E402
     from app.routers.finance import (  # noqa: E402
         accounts,
         budgets,
@@ -92,6 +98,16 @@ async def _rss_startup_sync(
         logging.getLogger("rss").exception("Startup RSS sync failed")
 
 
+async def _bootstrap_admin(session_factory) -> None:
+    """Create the admin user from env vars on first startup. Idempotent."""
+    try:
+        async with session_factory() as session:
+            await bootstrap_admin_user(session)
+        logging.getLogger("auth").info("Admin user bootstrap OK")
+    except Exception:
+        logging.getLogger("auth").exception("Admin user bootstrap failed")
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     import asyncio
@@ -103,6 +119,10 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.db_engine = engine
     app.state.db_sessionmaker = session_factory
     app.state.redis = redis_client
+
+    # Bootstrap admin user synchronously so /api/auth/login is usable
+    # the moment uvicorn finishes startup.
+    await _bootstrap_admin(session_factory)
 
     # Kick off RSS sync without blocking startup. The task lives as long
     # as the event loop; it's only one short-lived coroutine.
@@ -130,6 +150,14 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
     app.add_middleware(ErrorLogMiddleware)
+
+    # Rate limiter (slowapi) — used today only by /api/auth/login.
+    app.state.limiter = limiter
+    app.add_exception_handler(
+        RateLimitExceeded, _rate_limit_exceeded_handler
+    )
+
+    app.include_router(auth_router.router, prefix="/api/auth", tags=["auth"])
     app.include_router(health.router, tags=["health"])
     app.include_router(
         settings_router.router, prefix="/api/settings", tags=["settings"]

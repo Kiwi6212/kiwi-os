@@ -1,4 +1,5 @@
 from app.models.application import Application, ApplicationStatus, ContractType
+from app.models.auth import RefreshToken, User
 from app.models.base import Base
 from app.models.finance.account import Account, AccountType
 from app.models.finance.budget import Budget
@@ -38,6 +39,7 @@ __all__ = [
     "PomodoroPreference",
     "PortfolioBio",
     "PortfolioProject",
+    "RefreshToken",
     "RSSFeed",
     "RSSItem",
     "Subscription",
@@ -54,5 +56,6 @@ __all__ = [
     "TransactionSource",
     "TransactionType",
     "UIDensity",
+    "User",
     "UserPreference",
 ]
