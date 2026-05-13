@@ -1,5 +1,6 @@
-"use client";
+﻿"use client";
 
+import { authFetch } from "@/lib/auth-fetch";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Image as ImageIcon, Plus, Trash2, X } from "lucide-react";
@@ -132,7 +133,7 @@ export function ProjectFormModal({
         ? `${API_BASE}/api/portfolio/projects/${initialProject!.id}`
         : `${API_BASE}/api/portfolio/projects`;
       const method = isEdit ? "PATCH" : "POST";
-      const res = await fetch(url, {
+      const res = await authFetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -161,7 +162,7 @@ export function ProjectFormModal({
     try {
       const fd = new FormData();
       fd.append("file", file);
-      const res = await fetch(
+      const res = await authFetch(
         `${API_BASE}/api/portfolio/projects/${initialProject.id}/screenshot`,
         { method: "POST", body: fd },
       );
@@ -174,7 +175,7 @@ export function ProjectFormModal({
       onSaved();
     } catch (e) {
       alert(
-        `Erreur upload : ${e instanceof Error ? e.message : "Erreur réseau"}`,
+        `Erreur upload : ${e instanceof Error ? e.message : "Erreur rÃ©seau"}`,
       );
     } finally {
       setUploading(false);
@@ -244,7 +245,7 @@ export function ProjectFormModal({
               rows={5}
               value={descLong}
               onChange={(e) => setDescLong(e.target.value)}
-              placeholder="Détaille le contexte, les choix techniques, le résultat."
+              placeholder="DÃ©taille le contexte, les choix techniques, le rÃ©sultat."
               className={`${INPUT_CLASS} resize-y`}
             />
           </div>
@@ -295,7 +296,7 @@ export function ProjectFormModal({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className={LABEL_CLASS}>URL de démo</label>
+              <label className={LABEL_CLASS}>URL de dÃ©mo</label>
               <input
                 type="url"
                 value={demoUrl}
@@ -329,7 +330,7 @@ export function ProjectFormModal({
                     addTech();
                   }
                 }}
-                placeholder="React (Entrée)"
+                placeholder="React (EntrÃ©e)"
                 className={INPUT_CLASS}
               />
               <button
@@ -415,10 +416,10 @@ export function ProjectFormModal({
               {saving
                 ? isEdit
                   ? "Sauvegarde..."
-                  : "Création..."
+                  : "CrÃ©ation..."
                 : isEdit
                   ? "Enregistrer"
-                  : "Créer"}
+                  : "CrÃ©er"}
             </button>
           </div>
         </form>

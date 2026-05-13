@@ -1,3 +1,4 @@
+﻿import { authFetch } from "@/lib/auth-fetch";
 import { Briefcase, Clock, Target, TrendingUp } from "lucide-react";
 
 import { ApplicationListClient } from "@/components/application-list-client";
@@ -19,7 +20,7 @@ type ApplicationStats = {
 
 async function getStats(): Promise<ApplicationStats | null> {
   try {
-    const res = await fetch(
+    const res = await authFetch(
       "http://localhost:8000/api/applications/stats",
       { cache: "no-store" },
     );
@@ -39,7 +40,7 @@ export default async function JobSearchPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900">Job Search</h1>
           <p className="text-slate-500 mt-1">
-            Suivi de tes candidatures. Création via Claude in Chrome + MCP.
+            Suivi de tes candidatures. CrÃ©ation via Claude in Chrome + MCP.
           </p>
         </div>
 
@@ -47,7 +48,7 @@ export default async function JobSearchPage() {
           <div className="col-span-12 md:col-span-3">
             <KpiCard
               label="Total candidatures"
-              value={stats ? String(stats.total) : "—"}
+              value={stats ? String(stats.total) : "â€”"}
               icon={<Briefcase className="h-5 w-5" strokeWidth={2} />}
               accent="kiwi"
               delay={0}
@@ -56,7 +57,7 @@ export default async function JobSearchPage() {
           <div className="col-span-12 md:col-span-3">
             <KpiCard
               label="Candidatures actives"
-              value={stats ? String(stats.active_count) : "—"}
+              value={stats ? String(stats.active_count) : "â€”"}
               icon={<Target className="h-5 w-5" strokeWidth={2} />}
               accent="cyan"
               delay={0.05}
@@ -64,8 +65,8 @@ export default async function JobSearchPage() {
           </div>
           <div className="col-span-12 md:col-span-3">
             <KpiCard
-              label="Taux de réponse"
-              value={stats ? String(stats.response_rate) : "—"}
+              label="Taux de rÃ©ponse"
+              value={stats ? String(stats.response_rate) : "â€”"}
               unit="%"
               icon={<Clock className="h-5 w-5" strokeWidth={2} />}
               accent="amber"
@@ -75,7 +76,7 @@ export default async function JobSearchPage() {
           <div className="col-span-12 md:col-span-3">
             <KpiCard
               label="Taux entretien"
-              value={stats ? String(stats.interview_rate) : "—"}
+              value={stats ? String(stats.interview_rate) : "â€”"}
               unit="%"
               icon={<TrendingUp className="h-5 w-5" strokeWidth={2} />}
               accent="violet"
@@ -88,7 +89,7 @@ export default async function JobSearchPage() {
           <div className="mb-6">
             <BentoCard delay={0.2}>
               <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-4">
-                Répartition par statut
+                RÃ©partition par statut
               </h2>
               <div className="space-y-2">
                 {Object.entries(stats.by_status).map(([statusName, count]) => {

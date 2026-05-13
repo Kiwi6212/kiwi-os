@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef, useState } from "react";
 import { AlertTriangle, Download, FileJson, Upload } from "lucide-react";
@@ -30,7 +30,7 @@ export function DataTab() {
     } catch (e) {
       alert(
         `Erreur lors de l'export : ${
-          e instanceof Error ? e.message : "Erreur réseau"
+          e instanceof Error ? e.message : "Erreur rÃ©seau"
         }`,
       );
     } finally {
@@ -43,8 +43,8 @@ export function DataTab() {
     if (!file) return;
 
     const confirmed = confirm(
-      `Importer "${file.name}" et REMPLACER toutes les données actuelles ?\n\n` +
-        `Cette action est irréversible. Fais un export de sauvegarde avant.`,
+      `Importer "${file.name}" et REMPLACER toutes les donnÃ©es actuelles ?\n\n` +
+        `Cette action est irrÃ©versible. Fais un export de sauvegarde avant.`,
     );
     if (!confirmed) {
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -57,7 +57,7 @@ export function DataTab() {
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await fetch(
+      const res = await authFetch(
         `${API_BASE}/api/settings/data/import?confirm_replace=true`,
         { method: "POST", body: formData },
       );
@@ -70,13 +70,13 @@ export function DataTab() {
       const data = (await res.json()) as { message?: string; total?: number };
       setImportResult({
         ok: true,
-        message: data.message ?? `Importé ${data.total ?? 0} entités`,
+        message: data.message ?? `ImportÃ© ${data.total ?? 0} entitÃ©s`,
       });
     } catch (err) {
       setImportResult({
         ok: false,
         message: `Erreur : ${
-          err instanceof Error ? err.message : "Erreur réseau"
+          err instanceof Error ? err.message : "Erreur rÃ©seau"
         }`,
       });
     } finally {
@@ -89,10 +89,10 @@ export function DataTab() {
     <div className="space-y-6">
       <div>
         <h2 className="text-xl font-bold text-slate-900 mb-1 font-display">
-          Données
+          DonnÃ©es
         </h2>
         <p className="text-sm text-slate-600">
-          Exporter ou importer toutes tes données Kiwi OS.
+          Exporter ou importer toutes tes donnÃ©es Kiwi OS.
         </p>
       </div>
 
@@ -106,12 +106,12 @@ export function DataTab() {
           </div>
           <div className="flex-1">
             <h3 className="text-sm font-semibold text-slate-900">
-              Exporter mes données
+              Exporter mes donnÃ©es
             </h3>
             <p className="text-xs text-slate-500 mt-1 mb-4">
-              Télécharge un fichier JSON contenant toutes tes données :
-              candidatures, tâches, sessions Pomodoro, comptes, transactions,
-              abonnements, budgets et préférences.
+              TÃ©lÃ©charge un fichier JSON contenant toutes tes donnÃ©es :
+              candidatures, tÃ¢ches, sessions Pomodoro, comptes, transactions,
+              abonnements, budgets et prÃ©fÃ©rences.
             </p>
             <button
               type="button"
@@ -120,7 +120,7 @@ export function DataTab() {
               className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-lg disabled:opacity-50 transition-colors"
             >
               <Download className="h-4 w-4" strokeWidth={2} />
-              {exporting ? "Export en cours..." : "Télécharger l'export"}
+              {exporting ? "Export en cours..." : "TÃ©lÃ©charger l'export"}
             </button>
           </div>
         </div>
@@ -136,7 +136,7 @@ export function DataTab() {
               Importer un export
             </h3>
             <p className="text-xs text-slate-500 mt-1 mb-4">
-              Restaure tes données depuis un fichier JSON précédemment exporté.
+              Restaure tes donnÃ©es depuis un fichier JSON prÃ©cÃ©demment exportÃ©.
             </p>
 
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4 flex items-start gap-2">
@@ -146,7 +146,7 @@ export function DataTab() {
               />
               <p className="text-xs text-amber-800">
                 <strong>Attention :</strong> l&apos;import remplace TOUTES les
-                données actuelles. Fais un export de sauvegarde avant.
+                donnÃ©es actuelles. Fais un export de sauvegarde avant.
               </p>
             </div>
 
@@ -175,7 +175,7 @@ export function DataTab() {
                   importResult.ok ? "text-emerald-700" : "text-rose-700"
                 }`}
               >
-                {importResult.ok ? "✓ " : ""}
+                {importResult.ok ? "âœ“ " : ""}
                 {importResult.message}
               </p>
             )}

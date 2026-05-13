@@ -1,5 +1,6 @@
-"use client";
+﻿"use client";
 
+import { authFetch } from "@/lib/auth-fetch";
 import { useEffect, useState } from "react";
 import {
   Area,
@@ -206,7 +207,7 @@ function ChartCard({
       <h3 className="text-sm text-slate-700 mb-3">{title}</h3>
       {empty ? (
         <div className="h-60 flex items-center justify-center text-sm text-slate-500">
-          Aucune donnée sur la période
+          Aucune donnÃ©e sur la pÃ©riode
         </div>
       ) : (
         children
@@ -238,9 +239,9 @@ export function StatsClient() {
       setError(null);
       try {
         const [jobsRes, ghRes, insRes] = await Promise.all([
-          fetch(`http://localhost:8000/api/stats/jobs?period=${period}`),
-          fetch(`http://localhost:8000/api/stats/github?period=${period}`),
-          fetch(`http://localhost:8000/api/stats/insights?period=${period}`),
+          authFetch(`http://localhost:8000/api/stats/jobs?period=${period}`),
+          authFetch(`http://localhost:8000/api/stats/github?period=${period}`),
+          authFetch(`http://localhost:8000/api/stats/insights?period=${period}`),
         ]);
         if (cancelled) return;
         const jobs = jobsRes.ok ? ((await jobsRes.json()) as JobStats) : null;
@@ -268,7 +269,7 @@ export function StatsClient() {
   if (loading) {
     return (
       <div className="text-slate-500 text-sm py-8">
-        Chargement des statistiques…
+        Chargement des statistiquesâ€¦
       </div>
     );
   }
@@ -309,12 +310,12 @@ export function StatsClient() {
 
       <section>
         <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-4">
-          KPIs comparatifs (vs période précédente)
+          KPIs comparatifs (vs pÃ©riode prÃ©cÃ©dente)
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <KpiBox label="Candidatures" metric={jobStats.applications_count} unit="" />
           <KpiBox label="Entretiens" metric={jobStats.interviews_count} unit="" />
-          <KpiBox label="Taux réponse" metric={jobStats.response_rate} unit="%" />
+          <KpiBox label="Taux rÃ©ponse" metric={jobStats.response_rate} unit="%" />
           {hasGithub ? (
             <KpiBox label="Commits" metric={githubStats.commits_count} unit="" />
           ) : (
@@ -327,7 +328,7 @@ export function StatsClient() {
 
       <section>
         <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-4">
-          Évolution temporelle
+          Ã‰volution temporelle
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <ChartCard title="Candidatures par jour" empty={appsSeries.length === 0}>
@@ -521,7 +522,7 @@ export function StatsClient() {
 
       <section>
         <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wide mb-4">
-          Productivité
+          ProductivitÃ©
         </h2>
         <ProductivityStatsClient />
       </section>

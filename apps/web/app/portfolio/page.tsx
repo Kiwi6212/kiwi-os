@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
@@ -51,7 +51,7 @@ export default function PortfolioEditorPage() {
         }
       } catch (e) {
         if (!cancelled) {
-          setError(e instanceof Error ? e.message : "Erreur réseau");
+          setError(e instanceof Error ? e.message : "Erreur rÃ©seau");
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -65,14 +65,14 @@ export default function PortfolioEditorPage() {
   const handleSync = async () => {
     if (
       !confirm(
-        "Lancer la sync depuis GitHub ? Les nouveaux repos seront ajoutés (cachés par défaut).",
+        "Lancer la sync depuis GitHub ? Les nouveaux repos seront ajoutÃ©s (cachÃ©s par dÃ©faut).",
       )
     ) {
       return;
     }
     setSyncing(true);
     try {
-      const res = await fetch(
+      const res = await authFetch(
         `${API_BASE}/api/portfolio/projects/sync-github`,
         { method: "POST" },
       );
@@ -83,12 +83,12 @@ export default function PortfolioEditorPage() {
         total_repos: number;
       };
       alert(
-        `Sync terminée : ${data.created} créés, ${data.updated} mis à jour (sur ${data.total_repos} repos).`,
+        `Sync terminÃ©e : ${data.created} crÃ©Ã©s, ${data.updated} mis Ã  jour (sur ${data.total_repos} repos).`,
       );
       refreshProjects();
     } catch (e) {
       alert(
-        `Erreur sync : ${e instanceof Error ? e.message : "Erreur réseau"}`,
+        `Erreur sync : ${e instanceof Error ? e.message : "Erreur rÃ©seau"}`,
       );
     } finally {
       setSyncing(false);
@@ -104,7 +104,7 @@ export default function PortfolioEditorPage() {
               Portfolio
             </h1>
             <p className="text-slate-600 mt-1">
-              Édite ta vitrine publique : bio, projets, compétences.
+              Ã‰dite ta vitrine publique : bio, projets, compÃ©tences.
             </p>
           </div>
           <div className="flex items-center gap-3">

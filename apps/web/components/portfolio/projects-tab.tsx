@@ -1,5 +1,6 @@
-"use client";
+﻿"use client";
 
+import { authFetch } from "@/lib/auth-fetch";
 import Image from "next/image";
 import { useState } from "react";
 import {
@@ -42,7 +43,7 @@ export function ProjectsTab({ projects, onRefresh }: Props) {
     field: "is_visible" | "is_featured",
   ) => {
     try {
-      const res = await fetch(
+      const res = await authFetch(
         `${API_BASE}/api/portfolio/projects/${project.id}`,
         {
           method: "PATCH",
@@ -54,7 +55,7 @@ export function ProjectsTab({ projects, onRefresh }: Props) {
       onRefresh();
     } catch (e) {
       alert(
-        `Erreur : ${e instanceof Error ? e.message : "Erreur réseau"}`,
+        `Erreur : ${e instanceof Error ? e.message : "Erreur rÃ©seau"}`,
       );
     }
   };
@@ -62,7 +63,7 @@ export function ProjectsTab({ projects, onRefresh }: Props) {
   const remove = async (project: PortfolioProject) => {
     if (!confirm(`Supprimer le projet "${project.name}" ?`)) return;
     try {
-      const res = await fetch(
+      const res = await authFetch(
         `${API_BASE}/api/portfolio/projects/${project.id}`,
         { method: "DELETE" },
       );
@@ -70,7 +71,7 @@ export function ProjectsTab({ projects, onRefresh }: Props) {
       onRefresh();
     } catch (e) {
       alert(
-        `Erreur suppression : ${e instanceof Error ? e.message : "Erreur réseau"}`,
+        `Erreur suppression : ${e instanceof Error ? e.message : "Erreur rÃ©seau"}`,
       );
     }
   };
@@ -83,8 +84,8 @@ export function ProjectsTab({ projects, onRefresh }: Props) {
             Projets
           </h2>
           <p className="text-sm text-slate-600">
-            Les projets affichés sur ta page publique (avec le toggle Visible
-            coché).
+            Les projets affichÃ©s sur ta page publique (avec le toggle Visible
+            cochÃ©).
           </p>
         </div>
         <button
@@ -143,7 +144,7 @@ export function ProjectsTab({ projects, onRefresh }: Props) {
                     {!project.is_visible && (
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-slate-100 text-slate-600 text-xs rounded-full border border-slate-200">
                         <EyeOff className="h-3 w-3" strokeWidth={2} />
-                        Caché
+                        CachÃ©
                       </span>
                     )}
                   </div>
@@ -206,7 +207,7 @@ export function ProjectsTab({ projects, onRefresh }: Props) {
                           className="inline-flex items-center gap-1 hover:text-emerald-700"
                         >
                           <ExternalLink className="h-3 w-3" strokeWidth={2} />
-                          Démo
+                          DÃ©mo
                         </a>
                       )}
                     </div>

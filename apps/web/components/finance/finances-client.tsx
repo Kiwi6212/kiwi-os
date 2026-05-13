@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import {
@@ -190,7 +190,7 @@ export function FinancesClient() {
 
   const handleEditAccount = async (data: AccountCreate) => {
     if (!editingAccount) return;
-    const res = await fetch(
+    const res = await authFetch(
       `${API_BASE}/api/finances/accounts/${editingAccount.id}`,
       {
         method: "PATCH",
@@ -224,7 +224,7 @@ export function FinancesClient() {
 
   const handleEditTx = async (data: TransactionCreate) => {
     if (!editingTx) return;
-    const res = await fetch(
+    const res = await authFetch(
       `${API_BASE}/api/finances/transactions/${editingTx.id}`,
       {
         method: "PATCH",
@@ -245,7 +245,7 @@ export function FinancesClient() {
   };
 
   const handleTransfer = async (data: TransferCreate) => {
-    const res = await fetch(
+    const res = await authFetch(
       `${API_BASE}/api/finances/transactions/transfer`,
       {
         method: "POST",
@@ -272,7 +272,7 @@ export function FinancesClient() {
 
   const handleEditSub = async (data: SubscriptionCreate) => {
     if (!editingSub) return;
-    const res = await fetch(
+    const res = await authFetch(
       `${API_BASE}/api/finances/subscriptions/${editingSub.id}`,
       {
         method: "PATCH",
@@ -285,7 +285,7 @@ export function FinancesClient() {
   };
 
   const handleToggleSub = async (sub: Subscription) => {
-    const res = await fetch(
+    const res = await authFetch(
       `${API_BASE}/api/finances/subscriptions/${sub.id}`,
       {
         method: "PATCH",
@@ -298,7 +298,7 @@ export function FinancesClient() {
   };
 
   const handleDeleteSub = async (sub: Subscription) => {
-    const res = await fetch(
+    const res = await authFetch(
       `${API_BASE}/api/finances/subscriptions/${sub.id}`,
       { method: "DELETE" },
     );
@@ -321,7 +321,7 @@ export function FinancesClient() {
 
   const handleEditBudget = async (data: BudgetCreate) => {
     if (!editingBudget) return;
-    const res = await fetch(
+    const res = await authFetch(
       `${API_BASE}/api/finances/budgets/${editingBudget.id}`,
       {
         method: "PATCH",
@@ -423,7 +423,7 @@ export function FinancesClient() {
             className="flex items-center gap-2 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-900 text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             title={
               accounts.length < 2
-                ? "Crée au moins 2 comptes pour faire un virement"
+                ? "CrÃ©e au moins 2 comptes pour faire un virement"
                 : "Virement entre comptes"
             }
           >
@@ -455,7 +455,7 @@ export function FinancesClient() {
           <button
             type="button"
             disabled
-            title="Bientôt disponible — en attente du retour des exports CSV LCL"
+            title="BientÃ´t disponible â€” en attente du retour des exports CSV LCL"
             className="flex items-center gap-2 px-3 py-2 bg-slate-100 text-slate-500 text-sm font-medium rounded-lg cursor-not-allowed"
           >
             <Upload className="h-4 w-4" />
@@ -471,7 +471,7 @@ export function FinancesClient() {
             className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             title={
               noActiveAccounts
-                ? "Crée d'abord un compte"
+                ? "CrÃ©e d'abord un compte"
                 : "Nouvelle transaction"
             }
           >
@@ -492,7 +492,7 @@ export function FinancesClient() {
             }
           />
           <KpiCard
-            label="Dépenses ce mois"
+            label="DÃ©penses ce mois"
             value={formatCurrency(stats.current_month_expense)}
             icon={TrendingDown}
             color="text-rose-600"
@@ -504,7 +504,7 @@ export function FinancesClient() {
             color="text-emerald-600"
           />
           <KpiCard
-            label={`Économies (${stats.current_month_savings_rate.toFixed(0)}%)`}
+            label={`Ã‰conomies (${stats.current_month_savings_rate.toFixed(0)}%)`}
             value={formatCurrency(stats.current_month_savings)}
             icon={Wallet}
             color={
@@ -567,7 +567,7 @@ export function FinancesClient() {
           </h2>
           {subscriptions.length > 0 && (
             <span className="text-xs text-slate-500 font-mono">
-              {activeSubsCount} actif{activeSubsCount !== 1 ? "s" : ""} ·{" "}
+              {activeSubsCount} actif{activeSubsCount !== 1 ? "s" : ""} Â·{" "}
               <span className="text-slate-700">
                 {formatCurrency(totalMonthly)}
               </span>
@@ -592,7 +592,7 @@ export function FinancesClient() {
           </h2>
           {overspentCount > 0 && (
             <span className="text-xs text-rose-600 font-medium">
-              ⚠️ {overspentCount} budget{overspentCount > 1 ? "s" : ""} dépassé
+              âš ï¸ {overspentCount} budget{overspentCount > 1 ? "s" : ""} dÃ©passÃ©
               {overspentCount > 1 ? "s" : ""}
             </span>
           )}

@@ -1,5 +1,6 @@
-"use client";
+﻿"use client";
 
+import { authFetch } from "@/lib/auth-fetch";
 import { useCallback, useEffect, useState } from "react";
 import {
   CheckCircle2,
@@ -34,7 +35,7 @@ function IntegrationCard({
     setTesting(true);
     setError(null);
     try {
-      const res = await fetch(
+      const res = await authFetch(
         `${API_BASE}/api/settings/integrations/${name}/status`,
       );
       if (!res.ok) {
@@ -43,7 +44,7 @@ function IntegrationCard({
       const data = (await res.json()) as IntegrationStatus;
       setStatus(data);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Erreur réseau");
+      setError(e instanceof Error ? e.message : "Erreur rÃ©seau");
     } finally {
       setTesting(false);
     }
@@ -81,7 +82,7 @@ function IntegrationCard({
                   healthy ? "text-emerald-700" : "text-rose-700"
                 }`}
               >
-                {healthy ? "Connecté" : "Erreur"}
+                {healthy ? "ConnectÃ©" : "Erreur"}
               </span>
             </div>
           )}
@@ -110,7 +111,7 @@ function IntegrationCard({
               <p className="text-xs text-slate-600">{status.message}</p>
               {status.last_check && (
                 <p className="text-xs text-slate-400 mt-1">
-                  Dernière vérification :{" "}
+                  DerniÃ¨re vÃ©rification :{" "}
                   {new Date(status.last_check).toLocaleString("fr-FR")}
                 </p>
               )}
@@ -127,10 +128,10 @@ export function IntegrationsTab() {
     <div className="space-y-6">
       <div>
         <h2 className="text-xl font-bold text-slate-900 mb-1 font-display">
-          Intégrations
+          IntÃ©grations
         </h2>
         <p className="text-sm text-slate-600">
-          État des connexions aux services externes.
+          Ã‰tat des connexions aux services externes.
         </p>
       </div>
 
@@ -138,14 +139,14 @@ export function IntegrationsTab() {
         name="github"
         label="GitHub"
         icon={GitBranch}
-        description="Sync des contributions, repos et activité"
+        description="Sync des contributions, repos et activitÃ©"
       />
 
       <IntegrationCard
         name="weather"
-        label="Météo"
+        label="MÃ©tÃ©o"
         icon={Cloud}
-        description="API Open-Meteo (pas de clé requise)"
+        description="API Open-Meteo (pas de clÃ© requise)"
       />
     </div>
   );

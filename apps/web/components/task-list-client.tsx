@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import {
@@ -53,7 +53,7 @@ export function TaskListClient() {
         }`;
 
         const [tasksRes, statsRes] = await Promise.all([
-          fetch(url),
+          authFetch(url),
           authFetch(`/api/tasks/stats`),
         ]);
 
@@ -176,7 +176,7 @@ export function TaskListClient() {
             }
             className="text-sm bg-white border border-slate-300 rounded-lg px-3 py-2 text-slate-700 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
           >
-            <option value="all">Toutes catégories</option>
+            <option value="all">Toutes catÃ©gories</option>
             {Object.entries(CATEGORY_LABELS).map(([k, v]) => (
               <option key={k} value={k}>
                 {v}
@@ -198,7 +198,7 @@ export function TaskListClient() {
             ))}
           </select>
           <p className="text-sm text-slate-500 ml-2">
-            {tasks.length} tâche{tasks.length !== 1 ? "s" : ""}
+            {tasks.length} tÃ¢che{tasks.length !== 1 ? "s" : ""}
           </p>
         </div>
         <button
@@ -210,13 +210,13 @@ export function TaskListClient() {
           className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors"
         >
           <Plus className="h-4 w-4" />
-          Nouvelle tâche
+          Nouvelle tÃ¢che
         </button>
       </div>
 
       {loading ? (
         <div className="text-slate-500 text-sm py-8 text-center">
-          Chargement des tâches...
+          Chargement des tÃ¢ches...
         </div>
       ) : error ? (
         <div className="text-rose-600 text-sm py-8 text-center bg-rose-50 border border-rose-200 rounded-2xl">

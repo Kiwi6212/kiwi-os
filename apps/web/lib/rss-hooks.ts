@@ -91,7 +91,11 @@ export function useItems({ feedId, category, filter }: UseItemsParams) {
       const res = await authFetch(buildUrl(offsetRef.current));
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = (await res.json()) as RSSItem[];
-      setItems((prev) => [...prev, ...data]);
+      setItems((prev) => {
+        const seen = new Set(prev.map((i) => i.id));
+        const fresh = data.filter((i) => !seen.has(i.id));
+        return [...prev, ...fresh];
+      });
       setHasMore(data.length === PAGE_SIZE);
       offsetRef.current += data.length;
     } catch (e) {

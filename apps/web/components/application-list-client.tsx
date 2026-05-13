@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
@@ -17,7 +17,7 @@ async function loadApplications(): Promise<
   { ok: true; data: Application[] } | { ok: false; error: string }
 > {
   try {
-    const res = await fetch(
+    const res = await authFetch(
       "http://localhost:8000/api/applications?limit=200",
     );
     if (!res.ok) {
@@ -70,7 +70,7 @@ export function ApplicationListClient() {
 
   async function handleUpdate(id: number, patch: Partial<Application>) {
     try {
-      const res = await fetch(
+      const res = await authFetch(
         `http://localhost:8000/api/applications/${id}`,
         {
           method: "PATCH",
@@ -100,7 +100,7 @@ export function ApplicationListClient() {
 
   async function handleDelete(id: number) {
     try {
-      const res = await fetch(
+      const res = await authFetch(
         `http://localhost:8000/api/applications/${id}`,
         { method: "DELETE" },
       );
@@ -113,7 +113,7 @@ export function ApplicationListClient() {
   }
 
   if (loading) {
-    return <div className="text-sm text-slate-500 py-4">Chargement…</div>;
+    return <div className="text-sm text-slate-500 py-4">Chargementâ€¦</div>;
   }
 
   if (error) {

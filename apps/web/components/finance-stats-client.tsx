@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import {
@@ -100,7 +100,7 @@ export function FinanceStatsClient() {
       try {
         const [sRes, cRes] = await Promise.all([
           authFetch(`/api/finances/stats`),
-          fetch(
+          authFetch(
             `${API_BASE}/api/finances/stats/comparison?period=${period}`,
           ),
         ]);
@@ -139,7 +139,7 @@ export function FinanceStatsClient() {
   const evolutionData = stats.last_12_months.map((m) => ({
     label: m.label,
     Revenus: m.income,
-    Dépenses: m.expense,
+    DÃ©penses: m.expense,
   }));
   const hasEvolution = stats.last_12_months.some(
     (m) => m.income > 0 || m.expense > 0,
@@ -151,8 +151,8 @@ export function FinanceStatsClient() {
         <h3 className="text-sm font-medium text-slate-700">
           Comparaison{" "}
           {period === "month"
-            ? "vs mois précédent"
-            : "vs année précédente"}
+            ? "vs mois prÃ©cÃ©dent"
+            : "vs annÃ©e prÃ©cÃ©dente"}
         </h3>
         <div className="flex gap-1 bg-slate-100 rounded-lg p-1">
           {(["month", "year"] as const).map((p) => (
@@ -166,7 +166,7 @@ export function FinanceStatsClient() {
                   : "text-slate-500 hover:text-slate-900"
               }`}
             >
-              {p === "month" ? "Mois" : "Année"}
+              {p === "month" ? "Mois" : "AnnÃ©e"}
             </button>
           ))}
         </div>
@@ -182,7 +182,7 @@ export function FinanceStatsClient() {
           previousLabel={comparison.previous_label}
         />
         <ComparisonCard
-          label="Dépenses"
+          label="DÃ©penses"
           icon={TrendingDown}
           current={comparison.current_expense}
           previous={comparison.previous_expense}
@@ -191,7 +191,7 @@ export function FinanceStatsClient() {
           invertedDelta
         />
         <ComparisonCard
-          label="Économies"
+          label="Ã‰conomies"
           icon={PiggyBank}
           current={comparison.current_savings}
           previous={comparison.previous_savings}
@@ -202,7 +202,7 @@ export function FinanceStatsClient() {
 
       <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
         <h3 className="text-sm font-medium text-slate-700 mb-4">
-          Évolution sur 12 mois
+          Ã‰volution sur 12 mois
         </h3>
         {hasEvolution ? (
           <ResponsiveContainer width="100%" height={280}>
@@ -250,7 +250,7 @@ export function FinanceStatsClient() {
               />
               <Area
                 type="monotone"
-                dataKey="Dépenses"
+                dataKey="DÃ©penses"
                 stroke="#dc2626"
                 fill="url(#colExpense2)"
                 strokeWidth={2}
@@ -259,7 +259,7 @@ export function FinanceStatsClient() {
           </ResponsiveContainer>
         ) : (
           <p className="text-sm text-slate-500 text-center py-8">
-            Pas assez de données pour afficher l&apos;évolution.
+            Pas assez de donnÃ©es pour afficher l&apos;Ã©volution.
           </p>
         )}
       </div>
@@ -307,7 +307,7 @@ export function FinanceStatsClient() {
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-slate-500">Aucun compte enregistré.</p>
+          <p className="text-sm text-slate-500">Aucun compte enregistrÃ©.</p>
         )}
       </div>
     </div>
@@ -332,7 +332,7 @@ function ComparisonCard({
   invertedDelta?: boolean;
 }) {
   const sign = delta !== null && delta >= 0 ? "+" : "";
-  const deltaText = delta !== null ? `${sign}${delta.toFixed(1)}%` : "—";
+  const deltaText = delta !== null ? `${sign}${delta.toFixed(1)}%` : "â€”";
 
   let deltaColor = "text-slate-500";
   if (delta !== null) {

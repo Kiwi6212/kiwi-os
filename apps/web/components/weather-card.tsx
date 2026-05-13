@@ -1,5 +1,6 @@
-"use client";
+﻿"use client";
 
+import { authFetch } from "@/lib/auth-fetch";
 import {
   AlertCircle,
   Cloud,
@@ -67,8 +68,8 @@ function renderWeatherIcon(
 }
 
 function getWeatherLabel(code: number): string {
-  if (code === 0) return "Ciel dégagé";
-  if (code === 1) return "Principalement dégagé";
+  if (code === 0) return "Ciel dÃ©gagÃ©";
+  if (code === 1) return "Principalement dÃ©gagÃ©";
   if (code === 2) return "Partiellement nuageux";
   if (code === 3) return "Couvert";
   if (code === 45 || code === 48) return "Brouillard";
@@ -78,7 +79,7 @@ function getWeatherLabel(code: number): string {
   if (code >= 80 && code <= 82) return "Averses";
   if (code === 85 || code === 86) return "Averses de neige";
   if (code >= 95) return "Orage";
-  return "—";
+  return "â€”";
 }
 
 function formatHour(iso: string): string {
@@ -141,13 +142,13 @@ export function WeatherCard() {
 
     async function fetchWeather(lat: number, lon: number) {
       try {
-        const res = await fetch(
+        const res = await authFetch(
           `http://localhost:8000/api/weather?lat=${lat}&lon=${lon}`,
           { cache: "no-store" },
         );
         if (cancelled) return;
         if (!res.ok) {
-          setError("Backend météo indisponible");
+          setError("Backend mÃ©tÃ©o indisponible");
           return;
         }
         const data = (await res.json()) as WeatherData;
@@ -196,7 +197,7 @@ export function WeatherCard() {
           className="h-10 w-10 text-slate-500 mx-auto mb-3 animate-pulse"
           strokeWidth={1.5}
         />
-        <p className="text-sm text-slate-500">Chargement de la météo…</p>
+        <p className="text-sm text-slate-500">Chargement de la mÃ©tÃ©oâ€¦</p>
       </div>
     );
   }
@@ -208,7 +209,7 @@ export function WeatherCard() {
           className="h-10 w-10 text-slate-500 mx-auto mb-3"
           strokeWidth={1.5}
         />
-        <p className="text-sm text-slate-500 mb-1">Météo indisponible</p>
+        <p className="text-sm text-slate-500 mb-1">MÃ©tÃ©o indisponible</p>
         <p className="text-xs text-slate-500">{error ?? "Erreur inconnue"}</p>
       </div>
     );
@@ -228,13 +229,13 @@ export function WeatherCard() {
             <span className="font-mono text-3xl font-semibold text-slate-900 tabular-nums">
               {Math.round(weather.current.temperature)}
             </span>
-            <span className="text-sm text-slate-500 font-mono">°C</span>
+            <span className="text-sm text-slate-500 font-mono">Â°C</span>
           </div>
           <p className="text-xs text-slate-500">
             {getWeatherLabel(weather.current.weather_code)}
           </p>
           <p className="text-xs text-slate-500 font-mono">
-            Ressenti {Math.round(weather.current.apparent_temperature)}°C
+            Ressenti {Math.round(weather.current.apparent_temperature)}Â°C
           </p>
         </div>
       </div>
@@ -259,14 +260,14 @@ export function WeatherCard() {
                     ? "border-r border-slate-100"
                     : ""
                 }`}
-                title={`${getWeatherLabel(h.weather_code)} · Pluie ${h.precipitation_probability}%`}
+                title={`${getWeatherLabel(h.weather_code)} Â· Pluie ${h.precipitation_probability}%`}
               >
                 <span className="text-xs text-slate-500 font-mono">
                   {formatHour(h.time)}
                 </span>
                 {renderWeatherIcon(h.weather_code, "h-4 w-4 text-slate-500")}
                 <span className="text-xs font-mono text-slate-700">
-                  {Math.round(h.temperature)}°
+                  {Math.round(h.temperature)}Â°
                 </span>
               </div>
             ))}
@@ -283,7 +284,7 @@ export function WeatherCard() {
             <div
               key={d.date}
               className="flex items-center justify-between text-sm"
-              title={`${getWeatherLabel(d.weather_code)} · Pluie ${d.precipitation_probability}%`}
+              title={`${getWeatherLabel(d.weather_code)} Â· Pluie ${d.precipitation_probability}%`}
             >
               <span className="text-slate-500 w-14 shrink-0">
                 {formatDayShort(d.date)}
@@ -301,10 +302,10 @@ export function WeatherCard() {
               </div>
               <div className="flex gap-2 font-mono text-xs shrink-0">
                 <span className="text-slate-500">
-                  {Math.round(d.temperature_min)}°
+                  {Math.round(d.temperature_min)}Â°
                 </span>
                 <span className="text-slate-900">
-                  {Math.round(d.temperature_max)}°
+                  {Math.round(d.temperature_max)}Â°
                 </span>
               </div>
             </div>
@@ -316,7 +317,7 @@ export function WeatherCard() {
         <div className="pt-2 border-t border-slate-200">
           <p className="text-xs text-slate-500 flex items-center gap-1">
             <MapPin className="h-3 w-3" strokeWidth={2} />
-            Paris (géoloc refusée)
+            Paris (gÃ©oloc refusÃ©e)
           </p>
         </div>
       )}
